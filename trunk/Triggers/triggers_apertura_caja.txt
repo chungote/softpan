@@ -1,0 +1,74 @@
+/*********************************tia_habilitaciones_det***************************************************/
+CREATE TRIGGER tia_habilitaciones_det after insert ON DETALLE_HABILITACIONES
+FOR EACH ROW
+BEGIN
+declare v_cod_cobro int;
+
+        set v_cod_cobro=new.cod_cobro;
+
+if v_cod_cobro=1 then /*efectivo*/
+
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+end if;
+
+if v_cod_cobro=2 then  /*cheque*/
+
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+end if;
+
+
+if v_cod_cobro=3 then /*targeta de credito*/
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+end if;
+
+
+if v_cod_cobro=4 then  /*nc de venta*/
+
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+end if;
+
+end
+
+/*********************************tua_habilitaciones_det***************************************************/
+
+CREATE TRIGGER tua_habilitaciones_det after update ON DETALLE_HABILITACIONES
+for each row
+begin
+if new.cod_cobro=1 then
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo-old.importe_neto+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+
+end if;
+
+if v_cod_cobro=2 then
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo-old.importe_neto+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+
+end if;
+
+
+if v_cod_cobro=3 then
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo-old.importe_neto+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+
+end if;
+
+
+if v_cod_cobro=4 then
+   UPDATE HABILITACIONES
+   SET total_efectivo = total_efectivo-old.importe_neto+new.importe_neto
+   WHERE nro_habilitacion=new.nro_habilitacion;
+end if;
+
+end

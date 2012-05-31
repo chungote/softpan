@@ -1,0 +1,22 @@
+DELIMITER //
+
+CREATE FUNcTION f_fecha(v_fecha datetime) RETURNS datetime
+BEGIN
+      declare v_fecha_fin DATE;
+      declare v_mes,v_anho,v_dia int;
+      declare v_fecha_1 varchar(8);
+      declare  vs_mes,vs_anho,vs_dia varchar(4);
+
+      set v_dia=day(v_fecha);
+      set v_mes=month(v_fecha);
+      set v_anho=year(v_fecha);
+
+      set vs_dia=right("0"+cast(v_dia as char(2)),2);
+      set vs_mes=right("0"+cast(v_mes as char(2)),2);
+      set vs_anho=cast(v_anho as char(4));
+
+      set v_fecha_1=vs_anho+"/"+vs_mes+"/"+vs_dia;
+
+      RETURN cast(v_fecha_1 as datetime);
+END
+//

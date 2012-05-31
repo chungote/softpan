@@ -1,0 +1,46 @@
+DROP TRIGGER tbu_pedido_cliente
+CREATE TRIGGER tbu_pedido_cliente BEFORE update ON pedido_cliente
+FOR EACH ROW
+ BEGIN
+        DECLARE v_nro_pedido integer;
+        DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+  if (new.aprobacion=old.aprobacion) or (new.financiero=old.financiero) or (new.deposito=old.deposito) or (new.expedicion=old.expedicion) then
+        if new.fecha_entrega=old.fecha_entrega then
+
+                if new.deposito!=old.deposito or new.expedicion!=old.expedicion then
+                        set new.fecha_deposito=current_date();
+                end if;
+
+                if new.expedicion!=old.expedicion then
+                        set new.fecha_expedicion=current_date();
+                end if;
+
+
+                if (new.cod_tipo_comprobante!=old.cod_tipo_comprobante) or (new.cod_condicion!=old.cod_condicion) or (new.importe_gravado!=old.importe_gravado) or (new.importe_exento!=old.importe_exento)or (new.cod_vendedor!=old.cod_vendedor) then
+                        if new.aprobacion = 1 or new.financiero = 1 or new.comercial= 1 or new.deposito  = 1 or new.expedicion = 1 then
+                         begin
+                                SIGNAL SQLSTATE VALUE '45000'
+                                SET MESSAGE_TEXT = 'No se puede modificar este/os campos de un pedido con algun tipo de aprobacion';
+                         end;
+                        end if;
+                end if;
+
+                IF new.conformada!=0 then
+
+                        set new.conformada = 1;
+
+                end if;
+                if (new.expedicion+new.financiero +new.comercial+new.deposito)=0 then
+                        set new.aprobacion =0;
+
+                end if;
+        end if;
+  end if;
+
+ END
+CREATE TRIGGER tai_detalle_pedido_cliente after insert ON detalle_pedido_cliente
+FOR EACH ROW
+ BEGIN
+ 
+ END 

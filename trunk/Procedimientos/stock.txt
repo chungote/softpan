@@ -1,0 +1,26 @@
+CREATE PROCEDURE Stock (v_cod_producto int, v_deposito INT, v_cantidad DECIMAL(12,5), v_Opcion INT)
+begin
+
+
+IF (SELECT COUNT(cod_producto) FROM movimiento_producto  WHERE movimiento_producto.cod_producto = v_cod_producto AND    movimiento_producto.Cod_deposito=v_deposito ) = 0 then
+
+
+    INSERT INTO movimiento_producto (Cod_deposito, cod_producto, Cantidad)
+    VALUES (v_deposito,v_cod_producto , 0);
+
+end if;
+if v_Opcion = 1 then
+
+    update movimiento_producto
+           set cantidad = cantidad + v_cantidad
+           where cod_deposito = v_deposito and cod_producto =v_cod_producto;
+
+end if;
+if v_Opcion = 0 then
+
+    update movimiento_producto
+           set cantidad = cantidad - v_cantidad
+           where cod_deposito = v_deposito and cod_producto =v_cod_producto;
+
+end if;
+end

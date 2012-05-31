@@ -1,0 +1,5 @@
+CLIENTES
+
+Codigo			Nombre
+  6			Asuncion de Negocios S.A
+  7			Armando's (Imp. y Exp.)

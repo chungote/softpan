@@ -1,0 +1,37 @@
+CREATE TRIGGER tbi_recetas before insert ON recetas
+FOR EACH ROW
+BEGIN
+       set new.fecha_alta=CURRENT_DATE();
+
+
+END
+
+
+CREATE TRIGGER tbu_recetas before update ON recetas
+FOR EACH ROW
+BEGIN
+       set new.fecha_alta=CURRENT_DATE();
+
+
+END
+
+
+DROP TRIGGER tbi_detalle_recetas;
+CREATE TRIGGER tbi_detalle_recetas before insert ON detalle_recetas
+FOR EACH ROW
+BEGIN
+  set new.equivalencia= (select f_calc_equivalencia(new.cod_medida,new.cod_medida_origen,  new.cantidad  )  from par_sys);
+
+END
+
+
+DROP TRIGGER tbu_detalle_recetas;
+CREATE TRIGGER tbu_detalle_recetas before update ON detalle_recetas
+FOR EACH ROW
+BEGIN
+  set new.equivalencia= (select f_calc_equivalencia(new.cod_medida,new.cod_medida_origen,  new.cantidad  )  from par_sys);
+
+END
+
+
+

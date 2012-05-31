@@ -1,0 +1,10 @@
+delete from cobros_facturas_doc
+delete from detalle_cobros_clientes
+delete from cobros_clientes
+
+delete from ctas_cobrar
+delete from  detalle_factura_cliente
+delete from factura_cliente
+
+delete from detalle_pedido_cliente
+delete from pedido_cliente

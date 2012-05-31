@@ -1,0 +1,44 @@
+colores primarios
+
+RGB(255,255,255)= Blanco
+RGB(192,192,192)= Gris claro
+RGB(0,0,0) = Negro
+RGB(128,128,128) = Gris oscuro
+RGB(255,0,0) = Rojo claro (o rojo brillante, o rojo intenso)
+RGB(0,255,0) = Verde claro (o verde brillante, o verde intenso)
+RGB(0,0,255) = Azul claro (o azul brillante, o azul intenso)
+RGB(128,0,0) = Rojo oscuro
+RGB(0,128,0) = Verde oscuro
+RGB(0,0,128) = Azul oscuro
+
+colores secundarios
+RGB(0,255,255) = Cian claro = verde claro + azul claro
+RGB(255,0,255) = Magenta claro = rojo claro + azul claro
+RGB(255,255,0) = Amarillo claro = rojo claro + verde claro
+RGB(0,128,128) = Cian oscuro = verde oscuro + azul oscuro
+RGB(128,0,128) = Magenta oscuro = rojo oscuro + azul oscuro
+RGB(128,128,0) = Amarillo oscuro = rojo oscuro + verde oscuro
+
+
+matiz y luminosidad
+RGB(255,128,0) = Naranja 100% luminosidad
+RGB(192,96,0) = Naranja 75% luminosidad
+RGB(128,64,0) = Naranja 50% luminosidad
+
+saturacion
+RGB(255,128,0) = Naranja claro 100% saturación
+RGB(192,128,64) = Naranja claro 50% saturación
+RGB(160,128,96) = Naranja claro 25% saturación
+RGB(144,128,112) = Naranja claro 12,5% saturación
+RGB(128,128,128) = Gris medio
+
+otros colores
+RGB(192,192,200) = gris claro con un poco de azul
+RGB(192,200,200) = gris claro con un poco de cian
+RGB(192,203,198) = ídem, más verde
+RGB(192,198,203) = ídem, más azulado
+RGB(255,255,239) = un amarillo claro insaturado
+RGB(192,192,192) = Gris claro
+RGB(245,245,255) = Gris más claro con un poco de azul
+RGB(248,242,255)
+RGB(232,242,255)
