@@ -1,0 +1,37 @@
+$PBExportHeader$dw_solicitud_anulacion_fac.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes name=sol_anulacion_tipo_documen dbname="sol_anulacion.tipo_documen" )
+ column=(type=long update=yes updatewhereclause=yes name=sol_anulacion_nro_factura dbname="sol_anulacion.nro_factura" )
+ column=(type=long update=yes updatewhereclause=yes name=sol_anulacion_cod_motivo dbname="sol_anulacion.cod_motivo" )
+ column=(type=datetime update=yes updatewhereclause=yes name=sol_anulacion_fecha dbname="sol_anulacion.fecha" )
+ column=(type=long update=yes updatewhereclause=yes name=sol_anulacion_autorizado dbname="sol_anulacion.autorizado" values="	1/	0" )
+ retrieve="  SELECT sol_anulacion.tipo_documen,
+			sol_anulacion.nro_factura,
+			sol_anulacion.cod_motivo,
+			sol_anulacion.fecha,
+			sol_anulacion.autorizado
+    FROM sol_anulacion
+   WHERE  (sol_anulacion.autorizado = 1) and
+			 (sol_anulacion.anulado = 0)" )
+text(band=header alignment="2" text="Tipo Documento" border="2" color="16777215" x="0" y="4" height="56" width="498" html.valueishtml="0"  name=nro_op_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Nro Factura" border="2" color="16777215" x="503" y="4" height="56" width="274" html.valueishtml="0"  name=cod_proveedor_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Motivo" border="2" color="16777215" x="782" y="4" height="56" width="1102" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Fecha" border="2" color="16777215" x="1888" y="4" height="56" width="293" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Aprob." border="2" color="16777215" x="2185" y="4" height="56" width="165" html.valueishtml="0"  name=aprobacion_a_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="0" x="782" y="0" height="56" width="201" format="[general]" html.valueishtml="0"  name=sol_anulacion_cod_motivo  tag="dddw:dw_busca_sol_motivo;1=4:@" visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="2" color="0" x="0" y="0" height="56" width="498" format="[general]" html.valueishtml="0"  name=sol_anulacion_tipo_documen visible="1" dddw.name=dw_combo_tipo_doc_vtas dddw.displaycolumn=tipo_descripcion dddw.datacolumn=tipo_documen dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=no dddw.case=any dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="2" color="0" x="503" y="0" height="56" width="274" format="[general]" html.valueishtml="0"  name=sol_anulacion_nro_factura visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="0" x="782" y="0" height="56" width="1102" format="[general]" html.valueishtml="0"  name=sol_anulacion_cod_motivo_1 visible="1" dddw.name=dw_combo_sol_motivo dddw.displaycolumn=descripcion dddw.datacolumn=cod_motivo dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="2" color="0" x="1888" y="0" height="56" width="293" format="[shortdate] [time]" html.valueishtml="0"  name=sol_anulacion_fecha visible="1" editmask.mask="dd/mm/yy" editmask.imemode=0 editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="2" tabsequence=32766 border="2" color="0" x="2185" y="0" height="56" width="165" format="[general]" html.valueishtml="0"  name=sol_anulacion_autorizado visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

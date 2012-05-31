@@ -1,0 +1,18 @@
+$PBExportHeader$filtro_depositos.srf
+$PBExportComments$x
+global type filtro_depositos from function_object
+end type
+
+forward prototypes
+global function string filtro_depositos (long mi_deposito)
+end prototypes
+
+global function string filtro_depositos (long mi_deposito);string v_depositos
+select Nombre_deposito
+into :v_depositos
+from dbo.Depositos
+where Depositos.Cod_deposito = :Mi_deposito ;
+
+return v_depositos
+end function
+

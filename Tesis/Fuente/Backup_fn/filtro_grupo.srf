@@ -1,0 +1,19 @@
+$PBExportHeader$filtro_grupo.srf
+$PBExportComments$x
+global type filtro_grupo from function_object
+end type
+
+forward prototypes
+global function string filtro_grupo (long mi_grupo)
+end prototypes
+
+global function string filtro_grupo (long mi_grupo);string v_Grupo
+
+select Descripcion_grupo
+into :v_Grupo
+from Grupo_producto
+where Grupo_producto.Cod_grupo = :Mi_Grupo ;
+
+return v_Grupo
+end function
+

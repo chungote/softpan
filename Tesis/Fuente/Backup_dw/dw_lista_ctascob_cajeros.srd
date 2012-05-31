@@ -1,0 +1,54 @@
+$PBExportHeader$dw_lista_ctascob_cajeros.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=356 color="536870912" )
+summary(height=76 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=60 color="536870912" )
+table(column=(type=long updatewhereclause=yes key=yes name=cod_cajero dbname="CAJEROS.COD_CAJERO" )
+ column=(type=char(35) updatewhereclause=yes name=nombre_cajero dbname="CAJEROS.NOMBRE_CAJERO" )
+ column=(type=char(15) updatewhereclause=yes name=telefono dbname="CAJEROS.Telefono" )
+ column=(type=char(30) updatewhereclause=yes name=direccion dbname="CAJEROS.Direccion" )
+ column=(type=decimal(2) updatewhereclause=yes name=comision dbname="CAJEROS.Comision" )
+ column=(type=number updatewhereclause=yes name=nro_planilla dbname="CAJEROS.Nro_planilla" )
+ column=(type=char(10) updatewhereclause=yes name=clave dbname="CAJEROS.Clave" )
+ column=(type=number updatewhereclause=yes name=nro_cuenta dbname="CAJEROS.Nro_cuenta" )
+ retrieve="  SELECT CAJEROS.COD_CAJERO,   
+         CAJEROS.NOMBRE_CAJERO,   
+         CAJEROS.Telefono,   
+         CAJEROS.Direccion,   
+         CAJEROS.Comision,   
+         CAJEROS.Nro_planilla,   
+         CAJEROS.Clave,   
+         CAJEROS.Nro_cuenta  
+
+    FROM CAJEROS  
+ORDER BY CAJEROS.COD_CAJERO ASC   
+" update="CAJEROS" updatewhere=1 updatekeyinplace=no )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="128" width="3237" format="[general]"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1413" y="32" height="88" width="178" format="[general]"  name=cf_paginas  tag="*" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:"border="0" color="0" x="2482" y="52" height="72" width="197"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2706" y="52" height="64" width="571" format="dd/mm/yyyy hh:mm"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2706" y="140" height="64" width="571" format="[general]"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:"border="0" color="0" x="2482" y="140" height="72" width="197"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=header x1="37" y1="348" x2="3323" y2="348" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+line(band=summary x1="37" y1="0" x2="3273" y2="0" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+line(band=footer x1="91" y1="4" x2="3328" y2="4" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+column(band=detail id=6 alignment="0" tabsequence=0 border="0" color="0" x="7195" y="0" height="56" width="987"  name=nro_planilla  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=7 alignment="0" tabsequence=0 border="0" color="0" x="8183" y="0" height="56" width="229"  name=clave  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=8 alignment="0" tabsequence=0 border="0" color="0" x="8411" y="0" height="56" width="992"  name=nro_cuenta  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="2" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="140" height="76" width="3237" format="[general]"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Listado de Cajeros"border="0" color="0" x="37" y="220" height="64" width="3237"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="Código"border="0" color="8388608" x="37" y="288" height="56" width="233"  name=servicios_nro_servicio_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="0" x="37" y="0" height="56" width="233"  name=cod_cajero  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="Nombre Cajero"border="0" color="8388608" x="283" y="288" height="56" width="443"  name=servicios_fecha_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=0 border="0" color="0" x="283" y="0" height="56" width="1006"  name=nombre_cajero  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="Teléfono"border="0" color="8388608" x="1303" y="288" height="56" width="594"  name=clientes_nombre_cliente_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=0 border="0" color="0" x="1303" y="0" height="56" width="594"  name=telefono  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="Dirección"border="0" color="8388608" x="1911" y="288" height="56" width="1138"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="1911" y="0" height="56" width="1138"  name=direccion  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Comisión"border="0" color="8388608" x="3063" y="288" height="56" width="251"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="1" tabsequence=0 border="0" color="0" x="3063" y="0" height="56" width="251" format="#,##0.00"  name=comision  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Lineas"border="0" color="0" x="46" y="12" height="56" width="155"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="2" expression="count(   cod_cajero for all)  "border="0" color="0" x="206" y="12" height="56" width="146" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,147 @@
+$PBExportHeader$dw_lista_ventas_clientes_tot_meses.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=4 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no  crosstab.dynamic = yes grid.lines=0 grid.columnmove=no selected.mouse=no )
+header[1](height=292 color="536870912" )
+header[2](height=0 color="536870912" )
+header[3](height=72 color="536870912" )
+summary(height=644 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(20) updatewhereclause=yes name=c_nombre_cliente dbname="c_nombre_cliente" )
+ column=(type=number updatewhereclause=yes name=ventas_tot dbname="ventas_tot" )
+ retrieve="  SELECT 
+case datepart(month, v.fecha)
+when 1 then
+'ENE'
+when 2 then
+'FEB'
+when 3 then
+'MAR'
+when 4 then
+'ABR'
+when 5 then
+'MAY'
+when 6 then
+'JUN'
+when 7 then
+'JUL'
+when 8 then
+'AGO'
+when 9 then
+'SET'
+when 10 then
+'OCT'
+when 11 then
+'NOV'
+else
+'DIC'
+end as mes,
+case datepart(month, v.fecha)
+when 1 then
+1
+when 2 then
+2
+when 3 then
+3
+when 4 then
+4
+when 5 then
+5
+when 6 then
+6
+when 7 then
+7
+when 8 then
+8
+when 9 then
+9
+when 10 then
+10
+when 11 then
+11
+else
+12
+end as nro_mes,
+
+c.NOMBRE_CLIENTE,
+		/*ISNULL((SELECT */ sum( dbo.Cambiar2( V.Cod_moneda, ps.cod_moneda, V.Fecha,
+					case v.iva_incluido
+						when 0 then							
+							case t.calc_imp
+								when 1 then 
+
+									case vd.tipo_fiscal
+										when 0 then
+											((( (vd.unidades + vd.cant_desc ) * vd.precio) * vd.imp_imp) / 100)
+										when 1 then
+											0
+									end
+
+								when 0 then 
+									0 
+							end
+							+
+							((vd.unidades + vd.cant_desc) * vd.Precio)
+						else
+							/*sum( dbo.Cambiar3( V.Cod_moneda, ps.cod_moneda, V.Fecha,*/
+									((vd.unidades + vd.cant_desc) * vd.Precio)/*, 0))*/ 
+					end , 0 )  )
+ /*
+    			FROM 	
+         				VENTAS V with (nolock),   
+         				VENTAS_DET VD with (nolock),
+							tipo_documentos T with (nolock), 
+						Par_sys ps  with (nolock)
+				
+   			WHERE 		( V.NRO_REG = VD.NRO_REG ) AND 
+								( T.tipo_documen = V.tipo_documen) AND
+								( V.cod_cliente = vv.cod_cliente) AND
+								( datepart(month, V.FECHA) = datepart(month, vv.fecha))
+						),0)*/ AS VENTAS_TOT
+   
+FROM clientes c with (nolock), ventas_det vd with (nolock), ventas v with (nolock), 
+par_sys ps with (nolock), tipo_documentos T with (nolock), depositos d
+WHERE vd.nro_reg = v.nro_reg and
+( T.tipo_documen = v.tipo_documen) AND
+v.cod_cliente = c.cod_cliente and
+(v.cod_vendedor = :v_vend or :v_vend = 0) and
+(c.cod_cliente = :v_cli or :v_cli = 0) and
+(c.zona = :v_zona or :v_zona = 0) and
+(c.cod_categoria  = :v_cate or :v_cate = 0) and
+(datepart(year, v.fecha) = :v_ano) and
+v.cod_deposito = d.cod_deposito and
+(d.cod_sucursal = :v_suc or :v_suc=0) 
+group by datepart(month, v.fecha), v.cod_cliente, c.nombre_cliente
+order by nro_mes" arguments=(("v_cate", number),("v_vend", number),("v_zona", number),("v_suc", number),("v_cli", number),("v_ano", number))  sort="c_nombre_cliente A " )
+compute(band=header[1] alignment="0" expression="pageCount()"border="0" color="0" x="1061" y="84" height="76" width="398" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_clizona_anho_suc" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+compute(band=header[1] alignment="0" expression="empresa_rrhh()"border="0" color="0" x="9" y="8" height="108" width="750" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-15" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header[1] alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="9" y="120" height="72" width="750" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header[1] alignment="0" text="Resumen Mensual de Ventas por Clientes" border="0" color="0" x="9" y="220" height="64" width="3301" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header[1] alignment="0" text="Fecha:" border="0" color="0" x="1061" y="12" height="56" width="197" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header[1] alignment="0" expression="today()"border="0" color="0" x="1061" y="80" height="64" width="178" format="dd/mm/yyyy" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[1] alignment="0" text="Página:" border="0" color="0" x="1061" y="148" height="56" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="0" text="@nro_mes" border="0" color="33554432" x="763" y="52" height="64" width="288" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="0" text="Cliente" border="0" color="33554432" x="9" y="4" height="64" width="745" html.valueishtml="0"  name=c_nombre_cliente_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="0" text="@mes" border="0" color="33554432" x="763" y="4" height="64" width="288" html.valueishtml="0"  name=ventas_tot_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="0" text="Grand Total " border="0" color="33554432" x="1061" y="4" height="64" width="347" html.valueishtml="0"  name=grand_sum_ventas_tot_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="4" height="76" width="745" format="[general]" html.valueishtml="0"  name=c_nombre_cliente visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="33554432" x="763" y="4" height="76" width="288" format="#,##0" html.valueishtml="0"  name=ventas_tot visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.imemode=0 crosstab.repeat=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression="crosstabsum(1)"border="0" color="33554432" x="1061" y="4" height="76" width="347" format="#,##0" html.valueishtml="0"  name=grand_sum_ventas_tot visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="0" expression="~"Grand Total~""border="0" color="33554432" x="9" y="4" height="76" width="745" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="0" text="Filtros:" border="0" color="0" x="9" y="128" height="52" width="745" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="0" expression="'Categoría: '+if(v_cate = 0, 'TODOS', filtro_clientes_cate( v_cate ))"border="0" color="0" x="9" y="192" height="52" width="745" format="[GENERAL]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="'Cliente: '+if(v_cli = 0, 'TODOS', filtro_clientes( v_cli ))"border="0" color="0" x="9" y="256" height="56" width="745" format="[GENERAL]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="'Vendedor: '+if(v_vend = 0, 'TODOS', filtro_vendedores( v_vend ))"border="0" color="0" x="9" y="324" height="56" width="745" format="[GENERAL]" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="'Zona: '+if(v_zona = 0, 'TODOS', filtro_zonas( v_zona ))"border="0" color="0" x="9" y="392" height="56" width="745" format="[GENERAL]" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="'Sucursal: '+if(v_suc = 0, 'TODOS', filtro_sucursales( v_suc ))"border="0" color="0" x="9" y="460" height="56" width="745" format="[GENERAL]" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="'Año: '+ v_ano "border="0" color="0" x="9" y="528" height="56" width="745" format="[GENERAL]" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(ventas_tot for all )"border="0" color="33554432" x="763" y="4" height="76" width="288" format="#,##0" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(grand_sum_ventas_tot for all )"border="0" color="33554432" x="1061" y="4" height="76" width="347" format="#,##0" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header[1] alignment="0" expression="page() + ' de ' + pagecount() + ' - '+f_user()"border="0" color="0" x="1061" y="220" height="56" width="347" format="[GENERAL]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+ crosstab(band = foreground  crosstabonly = yes 
+ columns = "nro_mes, mes" rows = "c_nombre_cliente" values = "sum(ventas_tot for crosstab)" sourcenames = "mes, nro_mes, c_nombre_cliente, ventas_tot")htmltable(border="0" cellpadding="1" cellspacing="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

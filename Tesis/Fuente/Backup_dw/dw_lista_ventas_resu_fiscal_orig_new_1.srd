@@ -1,0 +1,619 @@
+$PBExportHeader$dw_lista_ventas_resu_fiscal_orig_new_1.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 100 print.margin.right = 100 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=256 color="536870912" )
+summary(height=568 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=52 color="536870912" )
+table(column=(type=number updatewhereclause=yes name=ventas_nro_reg dbname="VENTAS.Nro_reg" initial="0" )
+ column=(type=long updatewhereclause=yes name=ventas_tipo_documen dbname="VENTAS.Tipo_documen" )
+ column=(type=char(20) updatewhereclause=yes name=tipo_documentos_tipo_descripcion dbname="TIPO_DOCUMENTOS.Tipo_descripcion" )
+ column=(type=long updatewhereclause=yes name=ventas_nro_factura dbname="VENTAS.nro_factura" )
+ column=(type=datetime updatewhereclause=yes name=ventas_fecha dbname="VENTAS.Fecha" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_cliente dbname="VENTAS.Cod_Cliente" )
+ column=(type=char(100) updatewhereclause=yes name=ventas_nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_vendedor dbname="VENTAS.Cod_Vendedor" )
+ column=(type=decimal(8) updatewhereclause=yes name=ventas_importe_exento dbname="VENTAS.Importe_exento" initial="0" )
+ column=(type=decimal(5) updatewhereclause=yes name=importe_gravado_5 dbname="Importe_gravado_5" )
+ column=(type=decimal(9) updatewhereclause=yes name=importe_gravado_10 dbname="Importe_gravado_10" )
+ column=(type=decimal(5) updatewhereclause=yes name=importe_impuesto_5 dbname="Importe_Impuesto_5" )
+ column=(type=decimal(5) updatewhereclause=yes name=importe_impuesto_10 dbname="Importe_Impuesto_10" )
+ column=(type=char(2) updatewhereclause=yes name=cond dbname="Cond" )
+ column=(type=long updatewhereclause=yes name=ventas_orden dbname="orden" )
+ column=(type=char(50) updatewhereclause=yes name=nombre_cliente dbname="NOMBRE_CLIENTE" )
+ column=(type=long updatewhereclause=yes name=sal dbname="Sal" values="Sí	1/No	0/" )
+ column=(type=char(14) updatewhereclause=yes name=deposito dbname="deposito" )
+ retrieve="  SELECT Ventas.Nro_reg,
+		   Ventas.Tipo_documen as Tipo_documen,  
+		  
+         Tipo_documentos.Tipo_descripcion,   
+         Ventas.Nro_factura as nro_factura,
+         Ventas.Fecha,
+         Ventas.Cod_Cliente,
+         Clientes.Nombre_cliente,   
+         Ventas.Cod_Vendedor,
+         Ventas.Importe_exento,   
+			isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case Ventas.iva_incluido
+									when 0 then
+											case ventas_det.imp_imp
+												when 5 then
+													ventas_det.tot_precio
+												else
+												0
+												end
+									when 1 then	
+										case Tipo_documentos.calc_imp
+											when 1 then					
+												case ventas_det.imp_imp
+													when 5 then
+														ventas_det.tot_precio/*/((ventas_det.imp_imp/100)+1)*/
+													else
+														0
+													end
+											when 0 then
+												case ventas_det.imp_imp
+													when 5 then
+														ventas_det.tot_precio
+													else
+														0
+													end
+											end
+									end
+							when 1 then
+								0
+							end),0) as Importe_gravado_5,
+
+			isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case Ventas.iva_incluido
+									when 0 then
+										case 
+											when ventas_det.imp_imp = 10 then
+													ventas_det.tot_precio
+											when ventas_det.imp_imp = 2 then
+													((ventas_det.tot_precio * 20) /100)
+											else
+													0
+											end
+									when 1 then
+										case Tipo_documentos.calc_imp
+											when 1 then
+												case 
+													when ventas_det.imp_imp = 10 then
+															(ventas_det.tot_precio)/*((ventas_det.imp_imp/100)+1))*/
+													when ventas_det.imp_imp = 2 then
+															(((ventas_det.tot_precio * 20) /100))/*/((ventas_det.imp_imp/100)+1))*/
+													else
+														0
+												end
+											when 0 then
+												case 
+													when ventas_det.imp_imp = 10 then
+															ventas_det.tot_precio
+													when ventas_det.imp_imp = 2 then
+															((ventas_det.tot_precio * 20) /100)
+													else
+														0
+												end
+											end
+									end
+							when 1 then
+								0
+							end),0) as   Importe_gravado_10,
+			case Tipo_documentos.calc_imp
+				when 1 then
+					isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case ventas_det.imp_imp
+									when 5 then
+										ventas_det.tot_imp
+									else
+										0
+								end
+							when 1 then
+								0
+							end),0)
+				else
+					0
+			end as   Importe_Impuesto_5,
+			case Tipo_documentos.calc_imp
+				when 1 then
+					isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case 
+									when ventas_det.imp_imp <> 5 then
+										ventas_det.tot_imp
+									else
+										0
+								end
+							when 1 then
+								0
+							end),0) 
+				else
+					0
+			end as   Importe_Impuesto_10,
+			'No' as Cond,
+			1 as orden,
+         Ventas.NOMBRE_CLIENTE,
+			isnull((select count(*) from ventas_pedidos, pedidos_clientes 
+			where ventas_pedidos.Nro_reg = ventas.Nro_reg and 
+					ventas_pedidos.nro_pedido = pedidos_clientes.nro_pedido and
+					pedidos_clientes.finiquito = 1), 0) as Sal,
+ 				case 
+					when (select resumen_fiscal from depositos where Cod_deposito = Ventas.Cod_deposito) = 0 then
+						'Mercaderías'
+					when (select resumen_fiscal from depositos where Cod_deposito = Ventas.Cod_deposito) = 1 then
+						'No Mercaderías' 
+					end as deposito
+			
+    FROM Ventas,   
+         Clientes,   
+         Tipo_documentos,
+			depositos,
+			ventas_det 
+   WHERE ( Ventas.Cod_cliente = Clientes.Cod_cliente ) and
+			( Ventas.nro_reg = ventas_det.nro_reg ) and  
+         ( Ventas.Cod_deposito = depositos.Cod_deposito ) and  
+         ( Ventas.Tipo_documen = Tipo_documentos.Tipo_documen ) and
+         ( depositos.cod_sucursal = :ar_suc or :ar_suc = 0 ) and
+         ( Ventas.Tipo_documen = :ar_doc or :ar_doc = 0 ) and
+			(( dbo.f_fecha(Ventas.Fecha) >= :v_fecha_ini or :v_fecha_ini is null) and
+			( dbo.f_fecha(Ventas.Fecha) <= :v_fecha_fin or :v_fecha_fin is null)) and
+			(( dbo.f_fecha(Ventas.Fecha_alta) >= :v_fecha_ini_alt or :v_fecha_ini_alt is null) and
+			( dbo.f_fecha(Ventas.Fecha_alta) < dateadd(day,1,:v_fecha_fin_alt) or :v_fecha_fin_alt is null)) and
+			(( dbo.f_fecha(Ventas.Fecha_mod) >= :v_fecha_ini_mod or :v_fecha_ini_mod is null) and
+			( dbo.f_fecha(Ventas.Fecha_mod) < dateadd(day,1,:v_fecha_fin_mod) or :v_fecha_fin_mod is null))
+group by Ventas.Nro_reg,   
+			Ventas.Tipo_documen,   
+         Tipo_documentos.Tipo_descripcion,   
+         Ventas.Nro_factura,   
+         Ventas.Fecha,
+         Ventas.Cod_Cliente,
+         Clientes.Nombre_cliente,   
+         Ventas.Cod_Vendedor,
+         Ventas.Importe_exento,
+			Ventas.NOMBRE_CLIENTE,
+			Ventas.Cod_deposito,
+			Tipo_documentos.calc_imp,Ventas.porc_vta,Ventas.Nro_factura_otras,tipo_factura_otras
+
+union SELECT Ventas_anu.Nro_reg,
+			Ventas_anu.Tipo_documen,      
+         Tipo_documentos.Tipo_descripcion,   
+         Ventas_anu.Nro_factura,   
+         Ventas_anu.Fecha,  
+         Ventas_anu.Cod_Cliente, 
+         Clientes.Nombre_cliente,   
+         Ventas_anu.Cod_Vendedor,
+         0,   
+         0,   
+         0,
+			0,   
+         0,
+			'Sí' as Cond,
+			2 as orden,
+			''  AS NOMBRE_CLIENTE,
+			0 as Sal,
+			case 
+				when (select resumen_fiscal from depositos where Cod_deposito = Ventas_anu.Cod_deposito) = 0 then
+					'Mercaderías'
+				when (select resumen_fiscal from depositos where Cod_deposito = Ventas_anu.Cod_deposito) = 1 then
+					'No Mercaderías' 
+			end as deposito
+    FROM Ventas_anu,   
+         Clientes,   
+         Tipo_documentos,
+			depositos  
+   WHERE ( Ventas_anu.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( Ventas_anu.Cod_deposito = depositos.Cod_deposito ) and  
+         ( Ventas_anu.Tipo_documen = Tipo_documentos.Tipo_documen ) and
+         ( depositos.cod_sucursal = :ar_suc or :ar_suc = 0 ) and
+         ( Ventas_anu.Tipo_documen = :ar_doc or :ar_doc = 0 ) and
+			(( dbo.f_fecha(Ventas_anu.Fecha) >= :v_fecha_ini or :v_fecha_ini is null) and
+			( dbo.f_fecha(Ventas_anu.Fecha) <= :v_fecha_fin or :v_fecha_fin is null)) and
+			(( dbo.f_fecha(Ventas_anu.Fecha_alta) >= :v_fecha_ini_alt or :v_fecha_ini_alt is null) and
+			( dbo.f_fecha(Ventas_anu.Fecha_alta) < dateadd(day,1,:v_fecha_fin_alt) or :v_fecha_fin_alt is null)) and
+			(( dbo.f_fecha(Ventas_anu.Fecha_mod) >= :v_fecha_ini_mod or :v_fecha_ini_mod is null) and
+			( dbo.f_fecha(Ventas_anu.Fecha_mod) < dateadd(day,1,:v_fecha_fin_mod) or :v_fecha_fin_mod is null))
+
+union all
+ SELECT Ventas.Nro_reg,
+			Case Ventas.porc_vta
+				when 0 then
+					Ventas.Tipo_documen
+				else
+					Ventas.tipo_factura_otras
+			end as Tipo_documen,  
+		  
+         Tipo_documentos.Tipo_descripcion,   
+         Case Ventas.porc_vta
+				when 0 then
+					Ventas.Nro_factura
+				else
+					Ventas.Nro_factura_otras
+			end as nro_factura,
+         Ventas.Fecha,
+         Ventas.Cod_Cliente,
+         Clientes.Nombre_cliente,   
+         Ventas.Cod_Vendedor,
+			case ventas.porc_vta
+					when 0 then
+							Ventas.Importe_exento
+					else
+							(Ventas.Importe_exento * ventas.porc_vta)/100
+					end		
+         as Importe_exento,   
+			isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case Ventas.iva_incluido
+									when 0 then
+										case ventas_det.imp_imp
+											when 5 then
+												case ventas.porc_vta
+													when 0 then
+														ventas_det.tot_precio
+													else
+														(ventas_det.tot_precio * ventas.porc_vta)/100
+													end
+											else
+													0
+											end
+									when 1 then
+										Case Tipo_documentos.calc_imp
+											when 1 then
+												case ventas_det.imp_imp
+													when 5 then
+														case ventas.porc_vta
+															when 0 then
+																ventas_det.tot_precio/(ventas_det.imp_imp/100+1) 
+															else
+																((ventas_det.tot_precio * ventas.porc_vta)/100)/(ventas_det.imp_imp/100+1) 
+															end
+													else
+														0
+												end
+											when 0 then
+												case ventas_det.imp_imp
+													when 5 then
+														case ventas.porc_vta
+															when 0 then
+																ventas_det.tot_precio
+															else
+																((ventas_det.tot_precio * ventas.porc_vta)/100) 
+															end
+													else
+														0
+													end
+											end
+									end										
+							when 1 then
+								0
+							end),0) as  Importe_gravado_5,
+			isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case ventas.iva_incluido
+									when 0 then
+										case 
+											when ventas_det.imp_imp <> 5 then
+												case ventas.porc_vta
+													when 0 then
+														ventas_det.tot_precio
+													else
+														(ventas_det.tot_precio * ventas.porc_vta)/100
+													end
+											else
+												0
+											end
+									when 1 then
+										case Tipo_documentos.calc_imp
+											when 1 then
+														case 
+														when ventas_det.imp_imp <> 5 then
+															case ventas.porc_vta
+																when 0 then
+																	(ventas_det.tot_precio/(ventas_det.imp_imp/100 + 1))
+																else
+																	((ventas_det.tot_precio * ventas.porc_vta)/100)/(ventas_det.imp_imp/100 + 1)
+																end
+														else
+															0
+														end
+											when 0 then
+														case 
+														when ventas_det.imp_imp <> 5 then
+															case ventas.porc_vta
+																when 0 then
+																	(ventas_det.tot_precio)
+																else
+																	((ventas_det.tot_precio * ventas.porc_vta)/100)
+																end
+														else
+															0
+														end
+											end
+									end
+							when 1 then
+									0
+							end),0) as Importe_gravado_10,
+			case Tipo_documentos.calc_imp
+				when 1 then
+					isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case ventas.iva_incluido
+									when 0 then
+											case ventas_det.imp_imp
+													when 5 then
+														case ventas.porc_vta
+															when 0 then
+																(ventas_det.tot_precio * ventas_det.imp_imp/100)
+															else
+																(((ventas_det.tot_precio * ventas_det.imp_imp/100)) * ventas.porc_vta)/100
+															end										
+													else
+															0
+													end
+									when 1 then
+											case ventas_det.imp_imp
+													when 5 then
+														case ventas.porc_vta
+															when 0 then
+																(ventas_det.tot_precio) - (ventas_det.tot_precio /(ventas_det.imp_imp/100 + 1))
+															else
+																((ventas_det.tot_precio) - (ventas_det.tot_precio /(ventas_det.imp_imp/100 + 1))) *(ventas.porc_vta/100)
+															end										
+													else
+															0
+													end
+									end
+							when 1 then
+								0
+							end),0)
+				else
+					0
+			end as  Importe_Impuesto_5,
+			case Tipo_documentos.calc_imp
+				when 1 then
+					isnull(sum(case ventas_det.tipo_fiscal
+							when 0 then
+								case ventas.iva_incluido
+									when 0 then
+										case 
+											when ventas_det.imp_imp <> 5 then
+												case ventas.porc_vta
+													when 0 then
+														(ventas_det.tot_precio * ventas_det.imp_imp/100)
+													else
+														(((ventas_det.tot_precio * ventas_det.imp_imp/100)) * ventas.porc_vta)/100
+													end										
+											else
+												0
+											end
+									when 1 then
+										case 
+											when ventas_det.imp_imp <> 5 then
+												case ventas.porc_vta
+													when 0 then
+														(ventas_det.tot_precio) - (ventas_det.tot_precio /(ventas_det.imp_imp/100 + 1))
+													else
+														((ventas_det.tot_precio) - (ventas_det.tot_precio /(ventas_det.imp_imp/100 + 1))) *(ventas.porc_vta/100)
+													end										
+											else
+												0
+											end
+									end
+							when 1 then
+								0
+							end),0) 
+				else
+					0
+			end as   Importe_Impuesto_10,
+			'No' as Cond,
+			1 as orden,
+         Ventas.NOMBRE_CLIENTE,
+			isnull((select count(*) from ventas_pedidos, pedidos_clientes 
+			where ventas_pedidos.Nro_reg = ventas.Nro_reg and 
+					ventas_pedidos.nro_pedido = pedidos_clientes.nro_pedido and
+					pedidos_clientes.finiquito = 1), 0) as Sal,
+ 		Case Ventas.porc_vta
+				when 0 then
+				case 
+					when (select resumen_fiscal from depositos where Cod_deposito = Ventas.Cod_deposito) = 0 then
+						'Mercaderías'
+					when (select resumen_fiscal from depositos where Cod_deposito = Ventas.Cod_deposito) = 1 then
+						'No Mercaderías' 
+					end
+				else
+					'Otras' 
+			end as deposito 
+			
+    FROM Ventas,   
+         Clientes,   
+         Tipo_documentos,
+			depositos,
+			ventas_det 
+   WHERE ( Ventas.Cod_cliente = Clientes.Cod_cliente ) and
+			( Ventas.nro_reg = ventas_det.nro_reg ) and  
+         ( Ventas.Cod_deposito = depositos.Cod_deposito ) and  
+         ( Ventas.tipo_factura_otras = Tipo_documentos.Tipo_documen ) and
+         ( depositos.cod_sucursal = :ar_suc or :ar_suc = 0 ) and
+         ( Ventas.Tipo_documen = :ar_doc or :ar_doc = 0 ) and
+			(( dbo.f_fecha(Ventas.Fecha) >= :v_fecha_ini or :v_fecha_ini is null) and
+			( dbo.f_fecha(Ventas.Fecha) <= :v_fecha_fin or :v_fecha_fin is null)) and
+			(( dbo.f_fecha(Ventas.Fecha_alta) >= :v_fecha_ini_alt or :v_fecha_ini_alt is null) and
+			( dbo.f_fecha(Ventas.Fecha_alta) < dateadd(day,1,:v_fecha_fin_alt) or :v_fecha_fin_alt is null)) and
+			(( dbo.f_fecha(Ventas.Fecha_mod) >= :v_fecha_ini_mod or :v_fecha_ini_mod is null) and
+			( dbo.f_fecha(Ventas.Fecha_mod) < dateadd(day,1,:v_fecha_fin_mod) or :v_fecha_fin_mod is null)) and
+			(Ventas.porc_vta >0)
+group by Ventas.Nro_reg,   
+			Ventas.Tipo_documen,   
+         Tipo_documentos.Tipo_descripcion,   
+         Ventas.Nro_factura,   
+         Ventas.Fecha,
+         Ventas.Cod_Cliente,
+         Clientes.Nombre_cliente,   
+         Ventas.Cod_Vendedor,
+         Ventas.Importe_exento,
+			Ventas.NOMBRE_CLIENTE,
+			Ventas.Cod_deposito,
+			Tipo_documentos.calc_imp,Ventas.porc_vta,Ventas.Nro_factura_otras,tipo_factura_otras
+
+
+union all
+
+SELECT   Ventas_anu.Nro_reg,
+	 		Case Ventas_anu.porc_vta
+				when 0 then
+						Ventas_anu.Tipo_documen
+				else
+						Ventas_anu.tipo_factura_otras
+				end as Tipo_documen,      
+         Tipo_documentos.Tipo_descripcion,   
+         
+			Case Ventas_anu.porc_vta
+				when 0 then
+					Ventas_anu.Nro_factura
+				else
+					Ventas_anu.Nro_factura_otras
+				end as nro_factura,         
+	 		Ventas_anu.Fecha,  
+         Ventas_anu.Cod_Cliente, 
+         Clientes.Nombre_cliente,   
+         Ventas_anu.Cod_Vendedor,
+         0,   
+         0,   
+         0,
+	      0,   
+         0,
+			'Sí' as Cond,
+			2 as orden,
+			''  AS NOMBRE_CLIENTE,
+			0 as Sal,
+			
+			Case Ventas_anu.porc_vta
+				when 0 then
+				case 
+					when (select resumen_fiscal from depositos where Cod_deposito = Ventas_anu.Cod_deposito) = 0 then
+						'Mercaderías'
+					when (select resumen_fiscal from depositos where Cod_deposito = Ventas_anu.Cod_deposito) = 1 then
+						'No Mercaderías' 
+					end
+				else
+					'Otras' 	 
+			end as deposito
+    FROM Ventas_anu,   
+         Clientes,   
+         Tipo_documentos,
+			depositos  
+   WHERE ( Ventas_anu.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( Ventas_anu.Cod_deposito = depositos.Cod_deposito ) and  
+         ( Ventas_anu.tipo_factura_otras = Tipo_documentos.Tipo_documen ) and
+         ( depositos.cod_sucursal = :ar_suc or :ar_suc = 0 ) and
+         ( Ventas_anu.Tipo_documen = :ar_doc or :ar_doc = 0 ) and
+			(( dbo.f_fecha(Ventas_anu.Fecha) >= :v_fecha_ini or :v_fecha_ini is null) and
+			( dbo.f_fecha(Ventas_anu.Fecha) <= :v_fecha_fin or :v_fecha_fin is null)) and
+			(( dbo.f_fecha(Ventas_anu.Fecha_alta) >= :v_fecha_ini_alt or :v_fecha_ini_alt is null) and
+			( dbo.f_fecha(Ventas_anu.Fecha_alta) < dateadd(day,1,:v_fecha_fin_alt) or :v_fecha_fin_alt is null)) and
+			(( dbo.f_fecha(Ventas_anu.Fecha_mod) >= :v_fecha_ini_mod or :v_fecha_ini_mod is null) and
+			(dbo.f_fecha(Ventas_anu.Fecha_mod) < dateadd(day,1,:v_fecha_fin_mod) or :v_fecha_fin_mod is null) and
+			(Ventas_anu.porc_vta >0))
+
+
+
+" arguments=(("v_fecha_ini", date),("v_fecha_fin", date),("ar_suc", number),("ar_doc", number),("v_fecha_ini_alt", date),("v_fecha_fin_alt", date),("v_fecha_ini_mod", date),("v_fecha_fin_mod", date))  sort="tipo_documentos_tipo_descripcion A deposito A ventas_nro_factura A ventas_orden A " )
+group(level=1 header.height=184 trailer.height=168 by=("ventas_tipo_documen" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=68 trailer.height=164 by=("deposito" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="104" width="2409" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-14" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1353" y="24" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_fr_vtas_res_fiscal" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="2" text="Resumen de Ventas" border="0" color="0" x="37" y="196" height="64" width="3237" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="116" height="76" width="2409" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2459" y="36" height="72" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2683" y="36" height="64" width="571" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2459" y="124" height="72" width="197" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount() + ' - ' + f_user()"border="0" color="0" x="2683" y="124" height="64" width="571" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="0" text="Tipo Documento" border="0" color="8388608" x="32" y="0" height="44" width="800" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=3 alignment="0" tabsequence=32766 border="0" color="0" x="32" y="48" height="56" width="800" format="[general]" html.valueishtml="0"  name=tipo_documentos_tipo_descripcion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Doc." border="0" color="8388608" x="27" y="128" height="44" width="174" html.valueishtml="0"  name=clientes_nombre_cliente_t visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="Cliente" border="0" color="8388608" x="206" y="128" height="44" width="827" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="Fecha" border="0" color="8388608" x="1038" y="128" height="44" width="201" html.valueishtml="0"  name=servicios_fecha_t visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Exenta" border="0" color="8388608" x="1390" y="128" height="44" width="320" html.valueishtml="0"  name=t_12 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="Vend." border="0" color="8388608" x="1243" y="128" height="44" width="142" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header.1 x1="9" y1="172" x2="3360" y2="172"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="1" text="Gravadas 5%" border="0" color="8388608" x="1714" y="128" height="44" width="325" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Gravadas 10%" border="0" color="8388608" x="2043" y="128" height="44" width="325" html.valueishtml="0"  name=t_21 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Imp. 5%" border="0" color="8388608" x="2373" y="128" height="44" width="251" html.valueishtml="0"  name=t_22 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Imp. 10%" border="0" color="8388608" x="2629" y="128" height="44" width="251" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="Anul." border="0" color="8388608" x="3182" y="128" height="44" width="105" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="Sal." border="0" color="8388608" x="3291" y="128" height="44" width="78" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Total" border="0" color="8388608" x="2885" y="128" height="44" width="293" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.2 id=18 alignment="0" tabsequence=32766 border="0" color="0" x="329" y="4" height="56" width="750" format="[general]" html.valueishtml="0"  name=deposito visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="0" text="Tipo Venta:" border="0" color="0" x="23" y="4" height="56" width="283" html.valueishtml="0"  name=t_20 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="27" y="0" height="48" width="174" format="[general]" html.valueishtml="0"  name=ventas_nro_factura visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="206" y="0" height="48" width="105" format="[general]" html.valueishtml="0"  name=ventas_cod_cliente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression=" if(len( ventas_nombre_cliente ) > 0 ,  ventas_nombre_cliente  ,  nombre_cliente  ) "border="0" color="0" x="315" y="0" height="48" width="718" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="2" tabsequence=32766 border="0" color="0" x="1038" y="0" height="48" width="201" format="dd/mm/yy" html.valueishtml="0"  name=ventas_fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=14 alignment="2" tabsequence=32766 border="0" color="0" x="3182" y="0" height="48" width="105" format="[general]" html.valueishtml="0"  name=cond visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=17 alignment="2" tabsequence=32766 border="0" color="0" x="3291" y="0" height="48" width="78" format="[general]" html.valueishtml="0"  name=sal visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="2" tabsequence=32766 border="0" color="0" x="1243" y="0" height="48" width="142" format="#,##0" html.valueishtml="0"  name=ventas_cod_vendedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression=" ventas_importe_exento +   importe_gravado_5  +  importe_gravado_10  +  importe_impuesto_5  +  importe_impuesto_10 "border="0" color="0" x="2885" y="0" height="48" width="293" format="#,##0.0" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="1" tabsequence=32766 border="0" color="0" x="2629" y="0" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=importe_impuesto_10 visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="0" x="2373" y="0" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=importe_impuesto_5 visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="0" color="0" x="2043" y="0" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=importe_gravado_10 visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="1" tabsequence=32766 border="0" color="0" x="1714" y="0" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=importe_gravado_5 visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="0" x="1385" y="0" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=ventas_importe_exento visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=trailer.2 x1="9" y1="4" x2="3360" y2="4"  name=l_5 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=trailer.2 alignment="1" text="Sub Total Tipo Venta" border="0" color="0" x="855" y="28" height="44" width="430" html.valueishtml="0"  name=t_19 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.2 alignment="1" expression="sum(  ventas_importe_exento +   importe_gravado_5  +  importe_gravado_10  +  importe_impuesto_5  +  importe_impuesto_10  for group 2) "border="0" color="0" x="2885" y="24" height="48" width="293" format="#,##0.0" html.valueishtml="0"  name=compute_16 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="sum( importe_impuesto_10  for group 2)"border="0" color="0" x="2629" y="24" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_17 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="sum(  importe_impuesto_5    +  importe_impuesto_10 for group 2)"border="0" color="0" x="2629" y="96" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_31 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="sum(  importe_impuesto_5   for group 2)"border="0" color="0" x="2373" y="24" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_20 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="sum( importe_gravado_10  for group 2)"border="0" color="0" x="2043" y="24" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_18 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="sum(  importe_gravado_5   +  importe_gravado_10   for group 2)"border="0" color="0" x="2043" y="96" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_30 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="sum( importe_impuesto_5   for group 2)"border="0" color="0" x="1714" y="24" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_21 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=trailer.2 alignment="1" text="Sub Total Tipo Venta Gravado e Impuesto" border="0" color="0" x="699" y="100" height="44" width="859" html.valueishtml="0"  name=t_25 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.2 alignment="1" expression="sum(ventas_importe_exento for group 2)"border="0" color="0" x="1385" y="24" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_19 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=trailer.1 x1="9" y1="4" x2="3360" y2="4"  name=l_2 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+column(band=trailer.1 id=3 alignment="0" tabsequence=32766 border="0" color="0" x="443" y="24" height="48" width="823" format="[general]" html.valueishtml="0"  name=tipo_documentos_tipo_descripcion_1 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=trailer.1 alignment="1" text="Sub Total" border="0" color="0" x="146" y="28" height="44" width="279" html.valueishtml="0"  name=t_13 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=trailer.1 alignment="1" text="Sub Total Gravado e Impuesto" border="0" color="0" x="933" y="92" height="44" width="626" html.valueishtml="0"  name=t_24 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum( ventas_importe_exento +   importe_gravado_5  +  importe_gravado_10  +  importe_impuesto_5  +  importe_impuesto_10  for group 1) "border="0" color="0" x="2885" y="24" height="48" width="293" format="#,##0.0" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression=" sum(importe_impuesto_10  for group 1) "border="0" color="0" x="2629" y="24" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression=" sum( importe_impuesto_5  +  importe_impuesto_10   for group 1) "border="0" color="0" x="2629" y="92" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_29 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum(importe_impuesto_5  for group 1) "border="0" color="0" x="2373" y="24" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum( importe_gravado_10  for group 1) "border="0" color="0" x="2043" y="24" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_22 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum( importe_gravado_10  +  importe_gravado_5  for group 1) "border="0" color="0" x="2043" y="92" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_28 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum( importe_gravado_5  for group 1) "border="0" color="0" x="1714" y="24" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_23 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum(ventas_importe_exento for group 1)"border="0" color="0" x="1385" y="24" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="1" text="Lineas :" border="0" color="0" x="2734" y="176" height="56" width="201" html.valueishtml="0"  name=t_18 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="count(ventas_nro_reg for all)"border="0" color="0" x="2949" y="176" height="56" width="242" format="#,##0" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=summary x1="9" y1="8" x2="3360" y2="8"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="148" height="52" width="590" html.valueishtml="0"  name=t_14 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total General" border="0" color="8388608" x="571" y="32" height="48" width="398" html.valueishtml="0"  name=t_17 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total Imp. Gravado e Impuesto" border="0" color="8388608" x="923" y="104" height="44" width="635" html.valueishtml="0"  name=t_23 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Fecha Ini Alta" border="0" color="0" x="50" y="320" height="48" width="329" html.valueishtml="0"  name=t_26 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Fecha Fin" border="0" color="0" x="50" y="268" height="48" width="329" html.valueishtml="0"  name=t_16 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Fecha Ini" border="0" color="0" x="50" y="216" height="48" width="329" html.valueishtml="0"  name=t_15 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Fecha Fin Mod." border="0" color="0" x="50" y="476" height="48" width="329" html.valueishtml="0"  name=t_31 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Fecha Ini Mod." border="0" color="0" x="50" y="424" height="48" width="329" html.valueishtml="0"  name=t_30 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Fecha Fin Alta" border="0" color="0" x="50" y="372" height="48" width="329" html.valueishtml="0"  name=t_27 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="389" y="216" height="48" width="430" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="389" y="268" height="48" width="430" html.valueishtml="0"  name=filtro5 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="389" y="320" height="48" width="430" html.valueishtml="0"  name=filtro6 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="389" y="372" height="48" width="430" html.valueishtml="0"  name=filtro7 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="389" y="424" height="48" width="430" html.valueishtml="0"  name=filtro8 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="389" y="476" height="48" width="430" html.valueishtml="0"  name=filtro9 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum( ventas_importe_exento +   importe_gravado_5  +  importe_gravado_10  +  importe_impuesto_5  +  importe_impuesto_10  for all) "border="0" color="0" x="2885" y="32" height="48" width="293" format="#,##0.0" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(importe_impuesto_10 for all) "border="0" color="0" x="2629" y="32" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum( importe_impuesto_5  +  importe_impuesto_10  for all)"border="0" color="0" x="2629" y="100" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_27 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(importe_impuesto_5 for all) "border="0" color="0" x="2373" y="32" height="48" width="251" format="#,##0.0" html.valueishtml="0"  name=compute_24 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(importe_gravado_10 for all)"border="0" color="0" x="2043" y="32" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_14 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(importe_gravado_10 +  importe_gravado_5 for all)"border="0" color="0" x="2043" y="100" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_26 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(importe_gravado_5 for all)"border="0" color="0" x="1714" y="32" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_25 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(ventas_importe_exento for all)"border="0" color="0" x="1385" y="32" height="48" width="325" format="#,##0.0" html.valueishtml="0"  name=compute_15 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="9" y1="4" x2="3360" y2="4"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

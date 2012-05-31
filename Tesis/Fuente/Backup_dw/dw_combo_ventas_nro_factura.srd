@@ -1,0 +1,32 @@
+$PBExportHeader$dw_combo_ventas_nro_factura.srd
+$PBExportComments$x
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=68 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=number update=yes updatewhereclause=yes key=yes name=nro_reg dbname="VENTAS.Nro_reg" initial="0" )
+ column=(type=long update=yes updatewhereclause=yes name=nro_factura dbname="VENTAS.Nro_factura" initial="0" )
+ column=(type=datetime updatewhereclause=yes name=fecha dbname="VENTAS.fecha" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_cliente dbname="VENTAS.Cod_cliente" initial="0" )
+ retrieve="  SELECT Ventas.Nro_reg,   
+         Ventas.Nro_factura,   
+			ventas.fecha,
+         Ventas.Cod_cliente  
+    FROM dbo.Ventas  
+   WHERE ( Ventas.Cod_cliente = :V_Cod_Cli ) AND  
+         ( Ventas.Tipo_documen = :V_TipoDoc )   
+ORDER BY Ventas.Cod_cliente ASC,   
+         Ventas.Nro_factura ASC   
+" update="Ventas" updatewhere=1 updatekeyinplace=no arguments=(("V_Cod_Cli", number),("V_TipoDoc", number)) )
+text(band=header alignment="0" text="Nro Factura" border="6" color="16777215" x="0" y="0" height="64" width="366" html.valueishtml="0"  name=cod_vendedor_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8388608" )
+text(band=header alignment="2" text="Fecha" border="6" color="16777215" x="379" y="0" height="64" width="229" html.valueishtml="0"  name=t_1 visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8388608" )
+column(band=detail id=2 alignment="2" tabsequence=32766 border="5" color="0" x="0" y="8" height="64" width="366" format="#,##0" html.valueishtml="0"  name=nro_factura visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="5" color="0" x="379" y="8" height="64" width="229" format="dd/mm/yy" html.valueishtml="0"  name=fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

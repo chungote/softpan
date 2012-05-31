@@ -1,0 +1,3 @@
+[Ultima_venta]
+Cobrado=1
+Impreso=1

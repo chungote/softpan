@@ -1,0 +1,17 @@
+$PBExportHeader$filtro_proveedores.srf
+$PBExportComments$x
+global type filtro_proveedores from function_object
+end type
+
+forward prototypes
+global function string filtro_proveedores (long mi_proveedor)
+end prototypes
+
+global function string filtro_proveedores (long mi_proveedor);string v_proveedores
+select Nombre_proveedor
+into :v_proveedores
+from dbo.Proveedores
+where Proveedores.Cod_proveedor = :Mi_proveedor ;
+return v_proveedores
+end function
+

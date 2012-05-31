@@ -1,0 +1,51 @@
+$PBExportHeader$dw_lista_prod_ot_pedidos_mp.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=144 color="536870912" )
+summary(height=72 color="536870912" )
+footer(height=0 color="553648127" )
+detail(height=52 color="536870912" )
+table(column=(type=char(14) updatewhereclause=yes name=orden_trabajo_material_codigo dbname="ORDEN_TRABAJO_MATERIAL.Codigo" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto dbname="PRODUCTOS.Descripcion_producto" )
+ column=(type=char(4) updatewhereclause=yes name=productos_unidad dbname="PRODUCTOS.Unidad" )
+ column=(type=decimal(5) updatewhereclause=yes name=cantidad dbname="Cantidad" )
+ column=(type=decimal(10) updatewhereclause=yes name=costo dbname="Costo" )
+ retrieve="SELECT   Orden_trabajo_material.Codigo,   
+         Productos.Descripcion_producto,   
+         Productos.Unidad,   
+         sum(Orden_trabajo_material.Cantidad_real) as Cantidad,   
+         sum(Orden_trabajo_material.Cantidad_real * Orden_trabajo_material.Costo_comp) as Costo   
+    FROM Orden_trabajo,   
+         Orden_trabajo_material,   
+         Productos  
+   WHERE ( Orden_trabajo.Nro_orden = Orden_trabajo_material.Nro_orden ) and  
+         ( Orden_trabajo_material.Codigo = Productos.Codigo ) and  
+         ( Orden_trabajo.nro_doc = :V_NroOT OR :V_NroOT = 0 ) AND  
+         ( Orden_trabajo.tipo_ot >= :V_tipo OR :V_tipo = 0 ) AND  
+         ( Orden_trabajo.tipo_ot <= :v_tipo_hasta OR :v_tipo_hasta = 0 ) AND  
+
+		   ( Orden_trabajo.Fecha >= :V_FecIni or :V_FecIni Is NULL ) AND  
+		   ( Orden_trabajo.Fecha <= :V_FecFin or :V_FecFin Is NULL )  
+
+group by Orden_trabajo_material.Codigo,   
+         Productos.Descripcion_producto,   
+         Productos.Unidad   
+" arguments=(("V_tipo", number),("V_NroOT", number),("V_FecIni", date),("V_FecFin", date),("v_tipo_hasta", number)) )
+text(band=header alignment="2" text="Materia Prima Utilizada"border="0" color="0" x="1271" y="12" height="64" width="699"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Codigo"border="0" color="8388608" x="50" y="88" height="48" width="480"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Descripción "border="0" color="8388608" x="535" y="88" height="48" width="1385"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="U/M"border="0" color="8388608" x="1925" y="88" height="48" width="265"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Elaborado"border="0" color="8388608" x="2194" y="88" height="48" width="425"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Costo"border="0" color="8388608" x="2624" y="88" height="48" width="407"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header x1="41" y1="140" x2="3022" y2="140" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="50" y="0" height="48" width="480" format="[general]"  name=orden_trabajo_material_codigo edit.limit=14 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="535" y="0" height="48" width="1385" format="[general]"  name=productos_descripcion_producto edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="0" color="0" x="1925" y="0" height="48" width="265" format="[general]"  name=productos_unidad edit.limit=4 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="2194" y="0" height="48" width="425" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_CANTIDAD~", ~"#,##0.00~")"  name=cantidad edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="2624" y="0" height="48" width="407" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")"  name=costo edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="2" text="Totales"border="0" color="8388608" x="2272" y="8" height="56" width="343"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(costo for all)"border="0" color="0" x="2624" y="8" height="56" width="407" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Lineas"border="0" color="0" x="1879" y="16" height="48" width="201"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="count(orden_trabajo_material_codigo for all)"border="0" color="0" x="2039" y="16" height="48" width="142" format="[general]"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=summary x1="41" y1="0" x2="3022" y2="0" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

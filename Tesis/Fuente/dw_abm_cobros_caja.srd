@@ -1,0 +1,85 @@
+$PBExportHeader$dw_abm_cobros_caja.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=780 color="536870912" )
+table(column=(type=number update=yes updatewhereclause=yes name=nro_cobro dbname="COBROS_FAC_DET.Nro_cobro" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_condicion dbname="COBROS_FAC_DET.Cod_condicion" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_banco dbname="COBROS_FAC_DET.Cod_banco" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=cuenta dbname="COBROS_FAC_DET.Cuenta" )
+ column=(type=number update=yes updatewhereclause=yes name=nro_cheque dbname="COBROS_FAC_DET.Nro_cheque" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=cotizacion dbname="COBROS_FAC_DET.Cotizacion" initial="0" )
+ column=(type=datetime update=yes updatewhereclause=yes name=fecha_cheque dbname="COBROS_FAC_DET.Fecha_cheque" )
+ column=(type=number update=yes updatewhereclause=yes name=descontado dbname="COBROS_FAC_DET.Descontado" )
+ column=(type=long update=yes updatewhereclause=yes name=rechazado dbname="COBROS_FAC_DET.Rechazado" )
+ column=(type=decimal(3) update=yes updatewhereclause=yes name=porc_desc_che dbname="COBROS_FAC_DET.Porc_desc_che" initial="0" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_banco_desc dbname="COBROS_FAC_DET.Cod_banco_desc" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=librador dbname="COBROS_FAC_DET.Librador" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_tarjeta dbname="COBROS_FAC_DET.Cod_tarjeta" )
+ column=(type=number update=yes updatewhereclause=yes name=nro_nota dbname="COBROS_FAC_DET.Nro_nota" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_moneda dbname="COBROS_FAC_DET.Cod_moneda" initial="parsys_codmoneda()" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes identity=yes name=primario dbname="COBROS_FAC_DET.Primario" initial="0" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=importe dbname="COBROS_FAC_DET.Importe" initial="0" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=efectivo dbname="COBROS_FAC_DET.Efectivo" initial="0" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=vueldo dbname="COBROS_FAC_DET.Vueldo" initial="0" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_moneda_vueldo dbname="COBROS_FAC_DET.Cod_moneda_vueldo" initial="0" )
+ column=(type=number update=yes updatewhereclause=yes name=nro_cuenta dbname="COBROS_FAC_DET.nro_cuenta" )
+ retrieve="  SELECT Cobros_fac_det.Nro_cobro,   
+         Cobros_fac_det.Cod_condicion,   
+         Cobros_fac_det.Cod_banco,   
+         Cobros_fac_det.Cuenta,   
+         Cobros_fac_det.Nro_cheque,   
+         Cobros_fac_det.Cotizacion,   
+         Cobros_fac_det.Fecha_cheque,   
+         Cobros_fac_det.Descontado,   
+         Cobros_fac_det.Rechazado,   
+         Cobros_fac_det.Porc_desc_che,   
+         Cobros_fac_det.Cod_banco_desc,   
+         Cobros_fac_det.Librador,   
+         Cobros_fac_det.Cod_tarjeta,   
+         Cobros_fac_det.Nro_nota,   
+         Cobros_fac_det.Cod_moneda,   
+         Cobros_fac_det.Primario,   
+         Cobros_fac_det.Importe,   
+         Cobros_fac_det.Efectivo,   
+         Cobros_fac_det.Vueldo,   
+         Cobros_fac_det.Cod_moneda_vueldo,
+			Cobros_fac_det.nro_cuenta
+    FROM dbo.Cobros_fac_det  
+   WHERE Cobros_fac_det.Nro_cobro = :V_NroCob    
+" update="Cobros_fac_det" updatewhere=0 updatekeyinplace=yes arguments=(("V_NroCob", number)) )
+groupbox(band=detail text="   Pago con cheque   "border="5" color="8388608" x="1339" y="0" height="528" width="1349"  name=gb_1 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="0" text="Cond. de Pago:" border="2" color="0" x="18" y="36" height="76" width="640" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="2" color="0" x="681" y="36" height="76" width="622" format="[general]" html.valueishtml="0"  name=cod_condicion visible="1" dddw.name=dw_combo_pagos_cond_pagos dddw.displaycolumn=condicion dddw.datacolumn=cod_condicion dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Moneda:" border="2" color="0" x="18" y="128" height="76" width="640" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=15 alignment="0" tabsequence=20 border="2" color="0" x="681" y="128" height="76" width="622" format="[general]" html.valueishtml="0"  name=cod_moneda visible="1" dddw.name=dw_combo_cobros_monedas dddw.displaycolumn=moneda dddw.datacolumn=cod_moneda dddw.percentwidth=100 dddw.lines=10 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Cotización:" border="2" color="0" x="18" y="220" height="76" width="640" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=6 alignment="1" tabsequence=30 border="2" color="0" x="681" y="220" height="76" width="622" format="#,##0.00" html.valueishtml="0"  name=cotizacion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Valor a cobrar" border="2" color="0" x="18" y="312" height="76" width="640" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=17 alignment="1" tabsequence=32766 border="2" color="0" x="681" y="312" height="76" width="622" format="#,##0.00" html.valueishtml="0"  name=importe visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Efectivo:" border="2" color="0" x="18" y="404" height="76" width="640" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=18 alignment="1" tabsequence=40 border="2" color="0" x="681" y="404" height="76" width="622" format="#,##0.00" html.valueishtml="0"  name=efectivo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Moneda vuelto:" border="2" color="0" x="18" y="496" height="76" width="640" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=20 alignment="0" tabsequence=50 border="0" color="0" x="681" y="496" height="76" width="622" format="[general]" html.valueishtml="0"  name=cod_moneda_vueldo visible="1" dddw.name=dw_combo_monedas dddw.displaycolumn=moneda dddw.datacolumn=cod_moneda dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Tarjeta:" border="2" color="0" x="18" y="588" height="76" width="640" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=13 alignment="1" tabsequence=60 border="2" color="0" x="681" y="588" height="76" width="622" format="[general]" html.valueishtml="0"  name=cod_tarjeta visible="1" dddw.name=dw_combo_cobros_tarjetas dddw.displaycolumn=tarjeta dddw.datacolumn=cod_tarjeta dddw.percentwidth=100 dddw.lines=10 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="2" text="VUELTO" border="2" color="16711680" x="1339" y="568" height="100" width="928" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-16" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="0" text="Nro Nota Crédito:" border="2" color="0" x="18" y="680" height="76" width="640" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=14 alignment="0" tabsequence=70 border="2" color="0" x="681" y="680" height="76" width="622" format="[general]" html.valueishtml="0"  name=nro_nota visible="1" dddw.name=dw_combo_cobros_notas_credito dddw.displaycolumn=nro_nota dddw.datacolumn=nro_nota dddw.percentwidth=100 dddw.lines=10 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=19 alignment="2" tabsequence=32766 border="2" color="16711680" x="1339" y="664" height="92" width="928" format="#,##0" html.valueishtml="0"  name=vueldo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-16" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Banco:" border="2" color="0" x="1385" y="108" height="76" width="571" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=3 alignment="1" tabsequence=80 border="2" color="0" x="1970" y="108" height="76" width="681" format="[general]" html.valueishtml="0"  name=cod_banco visible="1" dddw.name=dw_combo_cajas_bancos dddw.displaycolumn=nombre_banco dddw.datacolumn=cod_banco dddw.percentwidth=100 dddw.lines=10 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Nro. de Cuenta:" border="2" color="0" x="1385" y="204" height="76" width="571" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=4 alignment="0" tabsequence=90 border="2" color="0" x="1970" y="204" height="76" width="681" format="[general]" html.valueishtml="0"  name=cuenta visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Nro Cheque:" border="2" color="0" x="1385" y="300" height="76" width="571" html.valueishtml="0"  name=t_12 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=5 alignment="1" tabsequence=100 border="2" color="0" x="1970" y="300" height="76" width="681" format="#,##0" html.valueishtml="0"  name=nro_cheque visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Fecha Cheque:" border="2" color="0" x="1385" y="396" height="76" width="571" html.valueishtml="0"  name=t_13 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=7 alignment="2" tabsequence=110 border="2" color="0" x="1970" y="396" height="76" width="681" format="dd/mm/yy" html.valueishtml="0"  name=fecha_cheque visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=21 alignment="0" tabsequence=120 border="2" color="0" x="2395" y="600" height="76" width="1376" html.valueishtml="0"  name=nro_cuenta visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

@@ -1,0 +1,151 @@
+$PBExportHeader$dw_lista_ventas_pedidos_clientes.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 9 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=352 color="536870912" )
+summary(height=188 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=60 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=pedidos_clientes_nro_pedido dbname="PEDIDOS_CLIENTES.Nro_pedido" )
+ column=(type=datetime updatewhereclause=yes name=pedidos_clientes_fecha dbname="PEDIDOS_CLIENTES.Fecha" )
+ column=(type=char(50) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=char(4099) updatewhereclause=yes name=pedidos_clientes_observacion dbname="PEDIDOS_CLIENTES.Observacion" )
+ column=(type=char(14) updatewhereclause=yes name=pedidos_clientes_det_codigo dbname="PEDIDOS_CLIENTES_DET.Codigo" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto dbname="PRODUCTOS.Descripcion_producto" )
+ column=(type=decimal(2) updatewhereclause=yes name=pedidos_clientes_det_cantidad dbname="PEDIDOS_CLIENTES_DET.Cantidad" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_precio_venta_a dbname="PRODUCTOS.Precio_venta_a" )
+ column=(type=char(255) updatewhereclause=yes name=pedidos_clientes_det_observacion dbname="PEDIDOS_CLIENTES_DET.Observacion" )
+ column=(type=long updatewhereclause=yes name=clientes_lista_precio dbname="CLIENTES.Lista_precio" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_precio_venta_b dbname="PRODUCTOS.Precio_venta_b" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_precio_venta_c dbname="PRODUCTOS.Precio_venta_c" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_precio_venta_d dbname="PRODUCTOS.Precio_venta_d" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_precio_venta_e dbname="PRODUCTOS.Precio_venta_e" )
+ column=(type=decimal(3) updatewhereclause=yes name=productos_imp_imp dbname="PRODUCTOS.Imp_imp" )
+ column=(type=char(30) updatewhereclause=yes name=vendedor dbname="vendedor" )
+ column=(type=decimal(5) updatewhereclause=yes name=pedidos_clientes_det_precio dbname="PEDIDOS_CLIENTES_DET.Precio" )
+ column=(type=char(50) updatewhereclause=yes name=pedidos_clientes_nombre_cliente dbname="PEDIDOS_CLIENTES.NOMBRE_CLIENTE" )
+ column=(type=decimal(2) updatewhereclause=yes name=pedidos_clientes_descuento dbname="PEDIDOS_CLIENTES.descuento" )
+ column=(type=long updatewhereclause=yes name=pedidos_clientes_cod_moneda dbname="PEDIDOS_CLIENTES.Cod_moneda" )
+ column=(type=long updatewhereclause=yes name=pedidos_clientes_cod_aso dbname="PEDIDOS_CLIENTES.COD_ASO" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_aso_nombre_asociado dbname="CLIENTES_ASO.NOMBRE_ASOCIADO" )
+ column=(type=char(15) updatewhereclause=yes name=clientes_aso_telefono dbname="CLIENTES_ASO.TELEFONO" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_aso_direccion dbname="CLIENTES_ASO.DIRECCION" )
+ retrieve="  SELECT Pedidos_clientes.Nro_pedido,   
+         Pedidos_clientes.Fecha,   
+         Clientes.Nombre_cliente,   
+         Pedidos_clientes.Observacion,   
+         Pedidos_clientes_det.Codigo,   
+         Productos.Descripcion_producto,   
+         Pedidos_clientes_det.Cantidad,     
+         Productos.Precio_venta_a,    
+         Pedidos_clientes_det.Observacion,   
+         Clientes.Lista_precio,   
+         Productos.Precio_venta_b,   
+         Productos.Precio_venta_c,    
+         Productos.Precio_venta_d,   
+         Productos.Precio_venta_e,  
+	      Productos.Imp_imp,
+			(select nombre_apellido from vendedores
+			where vendedores.cod_vendedor = Pedidos_clientes.cod_vendedor) as vendedor,
+         Pedidos_clientes_det.Precio,   
+         Pedidos_clientes.NOMBRE_CLIENTE,
+			Pedidos_clientes.descuento,
+   		Pedidos_clientes.Cod_moneda,
+
+Pedidos_clientes.COD_ASO,
+CLIENTES_ASO.NOMBRE_ASOCIADO,
+CLIENTES_ASO.TELEFONO,
+CLIENTES_ASO.DIRECCION
+
+    FROM Pedidos_clientes,   
+         Pedidos_clientes_det,   
+         Clientes,   
+         Productos,
+
+CLIENTES_ASO   
+   WHERE ( Pedidos_clientes.Nro_pedido = Pedidos_clientes_det.Nro_pedido ) and  
+         ( Pedidos_clientes.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( Pedidos_clientes_det.Codigo = Productos.Codigo ) and  
+
+(Pedidos_clientes.COD_CLIENTE *= CLIENTES_ASO.COD_CLIENTE) and
+(Pedidos_clientes.COD_ASO *= CLIENTES_ASO.COD_ASOCIADO) and
+
+        (( Pedidos_clientes.Nro_pedido = :V_NroPed OR :V_NroPed = 0 ) and
+	      ( Pedidos_clientes_det.Codigo = :v_Produc OR :v_Produc = '') AND
+			( Pedidos_clientes.Reservar = :V_Res OR :V_Res = 2 ) and
+			( Pedidos_clientes.Entregado = :V_Fac OR :V_Fac = 2 ) and
+
+		   ( Pedidos_clientes.Fecha >= :V_Fech_ini or :V_Fech_ini Is NULL ) AND  
+		   ( Pedidos_clientes.Fecha <= :V_Fech_fin or :V_Fech_fin Is NULL ) )   
+
+" arguments=(("v_Produc", string),("V_NroPed", number),("V_Res", number),("V_Fac", number),("V_Fech_ini", date),("V_Fech_fin", date))  sort="pedidos_clientes_nro_pedido A " )
+group(level=1 header.height=296 trailer.height=632 by=("pedidos_clientes_nro_pedido" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="55" y="132" height="76" width="3237" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2437" y="768" height="72" width="197" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2661" y="768" height="64" width="603" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="55" y="0" height="128" width="3237" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1399" y="20" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_fec_pro_ped_chxs" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+line(band=header x1="55" y1="280" x2="3291" y2="280"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2437" y="132" height="72" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount() + ' - ' + f_user()"border="0" color="0" x="2661" y="132" height="64" width="603" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2665" y="44" height="64" width="603" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2441" y="44" height="72" width="197" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Pedido de Clientes" border="0" color="0" x="55" y="212" height="64" width="3237" html.valueishtml="0"  name=t_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="No valido como Presupuesto, solo para uso interno." border="0" color="0" x="55" y="284" height="56" width="3237" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=header x1="55" y1="344" x2="3291" y2="344"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text=" Nro de Pedido" border="0" color="8388608" x="55" y="20" height="56" width="439" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="498" y="20" height="56" width="347" format="#,##0" html.valueishtml="0"  name=pedidos_clientes_nro_pedido visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=10 alignment="0" tabsequence=32766 border="0" color="16777215" x="2706" y="16" height="56" width="517" format="[general]" html.valueishtml="0"  name=clientes_lista_precio visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+column(band=header.1 id=2 alignment="0" tabsequence=32766 border="0" color="0" x="498" y="92" height="56" width="347" format="dd-mmm-yyyy" html.valueishtml="0"  name=pedidos_clientes_fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text=" Cliente" border="0" color="8388608" x="55" y="164" height="56" width="439" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header.1 alignment="0" expression="if(len( pedidos_clientes_nombre_cliente ) > 0 ,  pedidos_clientes_nombre_cliente ,  if( pedidos_clientes_cod_aso  > 0 ,   clientes_aso_nombre_asociado ,   clientes_nombre_cliente ) )"border="0" color="0" x="498" y="164" height="56" width="1623" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text=" Fecha de Pedido" border="0" color="8388608" x="55" y="92" height="56" width="439" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text=" Descuento %" border="0" color="8388608" x="923" y="92" height="56" width="320" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=19 alignment="1" tabsequence=32766 border="0" color="0" x="1248" y="92" height="56" width="270" format="#,##0.00" html.valueishtml="0"  name=pedidos_clientes_descuento visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text="Código" border="0" color="8388608" x="27" y="232" height="56" width="389" html.valueishtml="0"  name=servicios_nro_servicio_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Cantidad" border="0" color="8388608" x="430" y="232" height="56" width="261" html.valueishtml="0"  name=clientes_nombre_cliente_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text="Descripción de Producto" border="0" color="8388608" x="704" y="232" height="56" width="1166" html.valueishtml="0"  name=servicios_fecha_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Precio Venta " border="0" color="8388608" x="1883" y="232" height="56" width="389" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Total" border="0" color="8388608" x="2286" y="232" height="56" width="489" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="Observación" border="0" color="8388608" x="2789" y="232" height="56" width="498" html.valueishtml="0"  name=t_12 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header.1 x1="23" y1="292" x2="3291" y2="292"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+column(band=header.1 id=16 alignment="0" tabsequence=32766 border="0" color="0" x="1879" y="92" height="56" width="1211" format="[general]" html.valueishtml="0"  name=vendedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="1" text="Vendedor:" border="0" color="8388608" x="1563" y="92" height="56" width="297" html.valueishtml="0"  name=t_13 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="27" y="0" height="56" width="389" format="[general]" html.valueishtml="0"  name=pedidos_clientes_det_codigo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="430" y="0" height="56" width="261" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_CANTIDAD~", ~"#,##0.00~")" html.valueishtml="0"  name=pedidos_clientes_det_cantidad visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="704" y="0" height="56" width="1166" format="[general]" html.valueishtml="0"  name=productos_descripcion_producto visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=17 alignment="1" tabsequence=32766 border="0" color="0" x="1883" y="0" height="56" width="389" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=pedidos_clientes_det_precio visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="2789" y="0" height="56" width="489" format="[general]" html.valueishtml="0"  name=pedidos_clientes_det_observacion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression=" pedidos_clientes_det_cantidad  *  pedidos_clientes_det_precio "border="0" color="0" x="2286" y="0" height="56" width="489" format="#,##0.00" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=trailer.1 alignment="1" text="OBS:" border="0" color="8388608" x="32" y="20" height="56" width="137" html.valueishtml="0"  name=t_14 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=trailer.1 id=4 alignment="0" tabsequence=32766 border="0" color="0" x="183" y="20" height="600" width="1289" format="[general]" html.valueishtml="0"  name=pedidos_clientes_observacion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.autovscroll=yes edit.imemode=0  font.face="Arial" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum( pedidos_clientes_det_cantidad  *  ((pedidos_clientes_det_precio *  productos_imp_imp) /100) for GROUP 1)"border="0" color="16777215" x="2807" y="40" height="56" width="457" format="#,##0.00" html.valueishtml="0"  name=bbb visible="1~t0"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+text(band=trailer.1 alignment="0" text="Sub Total:" border="0" color="8388608" x="1509" y="20" height="56" width="731" html.valueishtml="0"  name=t_15 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="1477" y1="148" x2="2789" y2="148"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="1477" y1="348" x2="2789" y2="348"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="1477" y1="356" x2="2789" y2="356"  name=l_6 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="0" expression="'Descuento ' + string( pedidos_clientes_descuento ) + '%:'"border="0" color="8388608" x="1509" y="88" height="56" width="731" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=trailer.1 alignment="0" text="Total:" border="0" color="8388608" x="1509" y="156" height="56" width="731" html.valueishtml="0"  name=t_16 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=trailer.1 alignment="0" text="I.V.A.:" border="0" color="8388608" x="1509" y="224" height="56" width="731" html.valueishtml="0"  name=t_17 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="0" expression="if ( pedidos_clientes_cod_moneda = 2 , 'Total Presupuesto Dólares:' , 'Total Presupuesto Guaranies:' )"border="0" color="8388608" x="1509" y="292" height="56" width="731" format="[general]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="23" y1="0" x2="3291" y2="0"  name=l_7 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="23" y1="8" x2="3291" y2="8"  name=l_8 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum( pedidos_clientes_det_cantidad  *  pedidos_clientes_det_precio  for group 1)"border="0" color="0" x="2286" y="20" height="56" width="489" format="#,##0.00" html.valueishtml="0"  name=aaa visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="aaa *  pedidos_clientes_descuento / 100"border="0" color="0" x="2286" y="88" height="56" width="489" format="#,##0.00" html.valueishtml="0"  name=des visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="aaa - des"border="0" color="0" x="2286" y="156" height="56" width="489" format="#,##0.00" html.valueishtml="0"  name=cccc visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="(bbb - (bbb *  pedidos_clientes_descuento / 100)  )"border="0" color="0" x="2286" y="224" height="56" width="489" format="#,##0.00" html.valueishtml="0"  name=tot_iva visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="cccc + tot_iva"border="0" color="0" x="2286" y="292" height="56" width="489" format="#,##0.00" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="8" height="52" width="590" html.valueishtml="0"  name=t_18 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Pedido Nro" border="0" color="0" x="50" y="76" height="48" width="261" html.valueishtml="0"  name=t_19 visible="1~t0"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="76" height="48" width="18" html.valueishtml="0"  name=filtro2 visible="1~t0"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Producto" border="0" color="0" x="50" y="76" height="48" width="261" html.valueishtml="0"  name=t_20 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="76" height="48" width="713" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Fecha" border="0" color="0" x="50" y="128" height="48" width="261" html.valueishtml="0"  name=t_21 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="128" height="48" width="357" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="677" y="128" height="48" width="352" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="23" y1="4" x2="3291" y2="4"  name=l_9 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

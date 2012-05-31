@@ -1,0 +1,11 @@
+$PBExportHeader$f_etiqueta.srf
+global type f_etiqueta from function_object
+end type
+
+forward prototypes
+global function string f_etiqueta (integer v_archivo, integer v_tipo, string v_etiqueta)
+end prototypes
+
+global function string f_etiqueta (integer v_archivo, integer v_tipo, string v_etiqueta);return guo_func.of_etiqueta(v_archivo,v_tipo,v_etiqueta)
+end function
+

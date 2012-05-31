@@ -1,0 +1,18 @@
+$PBExportHeader$parsys_ventacodvendedor.srf
+$PBExportComments$x
+global type parsys_ventacodvendedor from function_object
+end type
+
+forward prototypes
+global function long parsys_ventacodvendedor ()
+end prototypes
+
+global function long parsys_ventacodvendedor ();long v_ventacodvendedor
+
+	select Venta_cod_vendedor
+	into :v_ventacodvendedor
+	from par_sys;
+
+return v_ventacodvendedor
+end function
+

@@ -1,0 +1,37 @@
+lineas detalle1=19
+otros2
+otros3
+otros4
+otros5
+CA=  
+CA=  
+CA=  
+CA=  
+CA=  
+CA=                                                                                   #L010,c_nro_factura#
+CA=
+CA= 
+CA=  
+CA=                      #L003,c_dia#   #L010,c_mes#   #L004,c_anio#  	                                      #L001,contado#        #L001,credito#	
+CA=                          #L050,c_cliente#   #L015,c_ruc#
+CA=             #L040,c_direccion#                                     #L040,c_nro_reg#
+CA=             #L040,c_telefono#              #L025,c_condicion#
+CA=  
+CA=  
+D1= #R011,c_codigo# #R006,c_cantidad#  #L029,productos_descripcion_producto# #R012,c_precio##R012,c_exento##R012,c_gravado5##R012,c_gravado10#
+TO=                                                           ----------------------------------------
+FI=   #L090,c_chapa# 
+FI=   #L050,c_ci_ruc# 
+FI=   #L090,c_partida# 
+FI=  #L090,c_llegada# 
+FI=   #L090,c_plazo# 
+FI=                                                              #R012,t_exe# #R012,t_gravado5##R012,t_gravado10#
+FI=
+FI=    #L080,t_letras1#     #R010,c_total_fac#
+FI=    #L080,t_letras2#
+FI=                          #R012,s_imp_5#             #R012,s_imp_10#                        #R012,s_imp#
+FI= 
+FI=  
+FI=  
+FI=  
+FI=

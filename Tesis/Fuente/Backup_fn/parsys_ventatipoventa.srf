@@ -1,0 +1,23 @@
+$PBExportHeader$parsys_ventatipoventa.srf
+$PBExportComments$x
+global type parsys_ventatipoventa from function_object
+end type
+
+forward prototypes
+global function long parsys_ventatipoventa ()
+end prototypes
+
+global function long parsys_ventatipoventa ();long v_ventatipoventa
+
+if driver() = 2 then
+select venta_tipo_venta
+into :v_ventatipoventa
+from par_sys;
+else
+select venta_tipo_venta
+into :v_ventatipoventa
+from dbo.par_sys;
+end if
+return v_ventatipoventa
+end function
+

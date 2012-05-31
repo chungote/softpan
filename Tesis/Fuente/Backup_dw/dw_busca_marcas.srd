@@ -1,0 +1,15 @@
+$PBExportHeader$dw_busca_marcas.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=72 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=cod_marca dbname="MARCAS.COD_MARCA" )
+ column=(type=char(30) updatewhereclause=yes name=marca dbname="MARCAS.MARCA" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"MARCAS~" ) COLUMN(NAME=~"MARCAS.COD_MARCA~") COLUMN(NAME=~"MARCAS.MARCA~")WHERE(    EXP1 =~"MARCAS.MARCA~"   OP =~"like~"    EXP2 =~":v_marca~"    LOGIC =~"or~" ) WHERE(    EXP1 =~"MARCAS.COD_MARCA~"   OP =~"=~"    EXP2 =~":v_cod~" ) ) ORDER(NAME=~"MARCAS.MARCA~" ASC=yes ) ARG(NAME = ~"v_marca~" TYPE = string)  ARG(NAME = ~"v_cod~" TYPE = number) " arguments=(("v_marca", string),("v_cod", number)) )
+text(band=header alignment="2" text="Cod Marca"border="6" color="0" x="5" y="4" height="64" width="329"  name=cod_marca_t  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Marca"border="6" color="0" x="338" y="4" height="64" width="850"  name=marca_t  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="1" tabsequence=10 border="2" color="0" x="5" y="4" height="76" width="329" format="[general]"  name=cod_marca edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="2" color="0" x="338" y="4" height="76" width="850" format="[general]"  name=marca edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

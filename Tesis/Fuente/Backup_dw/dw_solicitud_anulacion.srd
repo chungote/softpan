@@ -1,0 +1,71 @@
+$PBExportHeader$dw_solicitud_anulacion.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=128 color="536870912" )
+summary(height=120 color="536870912" )
+footer(height=92 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=decimal(0) update=yes updatewhereclause=yes key=yes identity=yes name=solicitud_anulacion_factura_nro_sol dbname="solicitud_anulacion_factura.nro_sol" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_tipo_documen dbname="solicitud_anulacion_factura.tipo_documen" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_nro_factura dbname="solicitud_anulacion_factura.nro_factura" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_cod_motivo dbname="solicitud_anulacion_factura.cod_motivo" )
+ column=(type=datetime update=yes updatewhereclause=yes name=solicitud_anulacion_factura_fecha dbname="solicitud_anulacion_factura.fecha" )
+ column=(type=datetime update=yes updatewhereclause=yes name=solicitud_anulacion_factura_fecha_hora_alta dbname="solicitud_anulacion_factura.fecha_hora_alta" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=solicitud_anulacion_factura_usuario_alta dbname="solicitud_anulacion_factura.usuario_alta" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_aut_fin dbname="solicitud_anulacion_factura.aut_fin" values="	1/	0" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_aut_exp dbname="solicitud_anulacion_factura.aut_exp" values="	1/	0" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_aut_dir dbname="solicitud_anulacion_factura.aut_dir" values="	1/	0" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_autorizado dbname="solicitud_anulacion_factura.autorizado" values="	1/	0" )
+ column=(type=long update=yes updatewhereclause=yes name=solicitud_anulacion_factura_anulado dbname="solicitud_anulacion_factura.anulado" values="	1/	0" )
+ column=(type=char(200) updatewhereclause=yes name=sol_motivo_descripcion dbname="sol_motivo.descripcion" )
+ retrieve="  SELECT solicitud_anulacion_factura.nro_solicitud,
+			solicitud_anulacion_factura.tipo_documen,
+			solicitud_anulacion_factura.nro_factura,
+			solicitud_anulacion_factura.cod_motivo,
+			solicitud_anulacion_factura.fecha,
+			solicitud_anulacion_factura.fecha_hora_alta,
+			solicitud_anulacion_factura.usuario_alta,
+			solicitud_anulacion_factura.aut_fin,
+			solicitud_anulacion_factura.aut_exp,
+			solicitud_anulacion_factura.aut_dir,
+			solicitud_anulacion_factura.autorizado,
+			solicitud_anulacion_factura.anulado,
+			sol_motivo.descripcion
+    FROM solicitud_anulacion_factura,
+			sol_motivo
+   WHERE ((solicitud_anulacion_factura.fecha >= :v_fecha_ini or :v_fecha_ini is null ) and (solicitud_anulacion_factura.fecha <= :v_fecha_fin or :v_fecha_fin is null )) and 
+			(solicitud_anulacion_factura.tipo_documen = :v_tipo_doc or :v_tipo_doc = 0 ) and
+			 (solicitud_anulacion_factura.nro_factura = :v_nro_factura or :v_nro_factura = 0 ) and
+			 (solicitud_anulacion_factura.autorizado = :v_autorizado or :v_autorizado = 2 ) and
+			(solicitud_anulacion_factura.cod_motivo = sol_motivo.cod_motivo)" update="solicitud_anulacion_factura" updatewhere=0 updatekeyinplace=no arguments=(("v_tipo_doc", number),("v_nro_factura", number),("v_autorizado", number),("v_fecha_ini", date),("v_fecha_fin", date)) )
+text(band=header alignment="2" text="Tipo Documento" border="2" color="0" x="0" y="68" height="56" width="498" html.valueishtml="0"  name=nro_op_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Motivo" border="2" color="0" x="782" y="68" height="56" width="1362" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Nro Factura" border="2" color="0" x="503" y="68" height="56" width="274" html.valueishtml="0"  name=cod_proveedor_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Fecha" border="2" color="0" x="2149" y="68" height="56" width="293" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Fact" border="2" color="0" x="2446" y="68" height="56" width="174" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1371" y="12" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_fr_vtas_solicitud_anulacion_factura" visible="0~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="2" text="Final" border="2" color="0" x="2624" y="68" height="56" width="146" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Exped." border="2" color="0" x="2775" y="68" height="56" width="133" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Aprob." border="2" color="0" x="2912" y="68" height="56" width="165" html.valueishtml="0"  name=aprobacion_a_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Solicitud Anulacion de Factura" border="2" color="0" x="0" y="8" height="56" width="3195" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Anu" border="2" color="0" x="3081" y="68" height="56" width="114" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="3058" y="188" height="56" width="50" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_nro_sol visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="3118" y="188" height="56" width="59" format="[shortdate] [time]" html.valueishtml="0"  name=solicitud_anulacion_factura_fecha_hora_alta visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="3186" y="188" height="56" width="59" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_usuario_alta visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="2" color="0" x="0" y="0" height="56" width="498" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_tipo_documen visible="1" dddw.name=dw_combo_tipo_doc_vtas dddw.displaycolumn=tipo_descripcion dddw.datacolumn=tipo_documen dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.imemode=0 dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=20 border="2" color="0" x="503" y="0" height="56" width="274" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_nro_factura visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="2" tabsequence=40 border="2" color="0" x="2149" y="0" height="56" width="293" format="[shortdate] [time]" html.valueishtml="0"  name=solicitud_anulacion_factura_fecha visible="1" editmask.mask="dd/mm/yy" editmask.imemode=0 editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="2" tabsequence=50 border="2" color="0" x="2446" y="0" height="56" width="174" format="[general]" html.valueishtml="0" protect="0~t1"  name=solicitud_anulacion_factura_aut_fin visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=30 border="2" color="0" x="782" y="0" height="56" width="201" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_cod_motivo  tag="dddw:dw_busca_sol_motivo;1=4;2=12:@" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="0" tabsequence=70 border="2" color="0" x="987" y="0" height="56" width="1157" format="[general]" html.valueishtml="0"  name=sol_motivo_descripcion visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=10 alignment="2" tabsequence=80 border="2" color="0" x="2624" y="0" height="56" width="142" format="[general]" html.valueishtml="0" protect="0~t1"  name=solicitud_anulacion_factura_aut_dir visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="2" tabsequence=60 border="2" color="0" x="2770" y="0" height="56" width="137" format="[general]" html.valueishtml="0" protect="0~t1"  name=solicitud_anulacion_factura_aut_exp visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="2" tabsequence=32766 border="2" color="0" x="2912" y="0" height="56" width="165" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_autorizado visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+column(band=detail id=12 alignment="2" tabsequence=32766 border="2" color="0" x="3081" y="0" height="56" width="114" format="[general]" html.valueishtml="0"  name=solicitud_anulacion_factura_anulado visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="14" y1="8" x2="3246" y2="8"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

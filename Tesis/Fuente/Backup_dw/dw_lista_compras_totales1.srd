@@ -1,0 +1,662 @@
+$PBExportHeader$dw_lista_compras_totales1.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 150 print.margin.right = 90 print.margin.top = 90 print.margin.bottom = 90 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=280 color="536870912" )
+summary(height=576 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=48 color="536870912" )
+table(column=(type=number updatewhereclause=yes name=compras_nro_reg dbname="COMPRAS.Nro_reg" )
+ column=(type=char(20) updatewhereclause=yes name=tipo_documentos_tipo_descripcion dbname="TIPO_DOCUMENTOS.Tipo_descripcion" )
+ column=(type=long updatewhereclause=yes name=tipo_documentos_tipo_nc dbname="TIPO_DOCUMENTOS.tipo_nc" )
+ column=(type=char(50) updatewhereclause=yes name=compras_nro_factura dbname="COMPRAS.Nro_factura" )
+ column=(type=datetime updatewhereclause=yes name=compras_fecha dbname="COMPRAS.Fecha" )
+ column=(type=datetime updatewhereclause=yes name=fecha_factura dbname="COMPRAS.Fecha_factura" )
+ column=(type=char(4) updatewhereclause=yes name=monedas_sigla dbname="MONEDAS.sigla" )
+ column=(type=char(20) updatewhereclause=yes name=depositos_nombre_deposito dbname="DEPOSITOS.Nombre_deposito" )
+ column=(type=char(60) updatewhereclause=yes name=proveedores_nombre_proveedor dbname="PROVEEDORES.Nombre_proveedor" )
+ column=(type=decimal(4) updatewhereclause=yes name=compra dbname="Compra" )
+ column=(type=decimal(4) updatewhereclause=yes name=impuesto_5 dbname="Impuesto_5" )
+ column=(type=decimal(4) updatewhereclause=yes name=impuesto_10 dbname="Impuesto_10" )
+ column=(type=decimal(4) updatewhereclause=yes name=importe_gravado_5 dbname="importe_gravado_5" )
+ column=(type=decimal(4) updatewhereclause=yes name=importe_gravado_10 dbname="importe_gravado_10" )
+ column=(type=decimal(4) updatewhereclause=yes name=importe_exento dbname="importe_exento" )
+ column=(type=long updatewhereclause=yes name=compras_concepto dbname="COMPRAS.concepto" )
+ column=(type=datetime updatewhereclause=yes name=compras_fecha_alta dbname="COMPRAS.Fecha_alta" )
+ column=(type=long updatewhereclause=yes name=compras_iva_incluido dbname="COMPRAS.iva_incluido" )
+ retrieve=" SELECT  Compras.Nro_reg,   
+         Tipo_documentos.Tipo_descripcion, 
+			Tipo_documentos.tipo_nc, 
+         Compras.Nro_factura,   
+         Compras.Fecha,  
+         Compras.Fecha_factura,
+         Monedas.sigla,
+         Depositos.Nombre_deposito,   
+			Proveedores.Nombre_proveedor,
+			SUM( dbo.Cambiar_moneda1 (  Compras.Cod_moneda,	Par_sys.cod_moneda,	Compras.Fecha,	valor) ) as Compra,   
+			case tipo_documentos.calc_imp
+					when 1 then 
+							isnull(sum(case compras_det.tipo_fiscal
+									when 0 then
+										case compras.iva_incluido
+											when 0 then
+													case compras_det.imp_imp
+															when 5 then
+																dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100)) * compras_det.imp_imp) / 100) )
+													else
+															0
+													end
+											else
+													case compras_det.imp_imp
+															when 5 then
+																dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100)) - (((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))/1.05))  )
+															else
+																0
+															end
+											end
+									else
+										0
+					  				end),0)
+					when 0 then 
+								0 
+			end AS Impuesto_5,
+				case tipo_documentos.calc_imp
+					when 1 then 
+						isnull(sum(case compras_det.tipo_fiscal
+								when 0 then
+								  	case compras.iva_incluido
+										when 0 then
+											case compras_det.imp_imp
+												when 10 then
+													dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100)) * compras_det.imp_imp) / 100))
+													/*dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, round(((( (compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) * compras_det.imp_imp) / 100),0) )*/
+												when 2 then
+													dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100)) * compras_det.imp_imp) / 100) )
+													/*dbo.Cambiar_moneda2(  Compras.Cod_moneda,Par_sys.cod_moneda, Compras.Fecha, round(((( (compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) * compras_det.imp_imp) / 100),0) )*/
+												end
+										else
+											case compras_det.imp_imp
+												when 10 then
+													dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100)) - (((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))/1.1)) )
+												when 2 then
+													dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100)) - (((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.Precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))/1.02)) )
+												end
+										end
+
+								else
+									0
+							end),0) 
+					when 0 then 
+								0 
+			end AS Impuesto_10,
+
+			isnull(SUM( case tipo_documentos.calc_imp
+							when 1 then 
+								   case compras.iva_incluido
+										when 0 then
+												case compras_det.tipo_fiscal
+													when 0 then
+														case compras_det.imp_imp
+															when 5 then
+																/*dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  round(((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio_bruto),0)) */
+																dbo.Cambiar_moneda1 (Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))) 
+															else
+																0
+															end
+													else
+														  0
+													end
+										else
+														case compras_det.tipo_fiscal
+															when 0 then
+																case compras_det.imp_imp
+																	when 5 then
+																		dbo.Cambiar_moneda1 (Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))/1.05) 
+																	else
+																		0
+																	end
+															else
+																0
+															end
+										end
+							ELSE
+								0
+											
+							end),0) as importe_gravado_5,
+
+			isnull(SUM(case tipo_documentos.calc_imp
+							when 1 then 
+										case compras_det.tipo_fiscal
+												when 0 then
+													case compras.iva_incluido
+														when 0 then
+															case compras_det.imp_imp
+																when 10 then 																	
+																	  dbo.Cambiar_moneda1 (Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))) 
+																when 2 then 
+																	  dbo.Cambiar_moneda1 (Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))) 
+																end
+
+														 else
+																case compras_det.imp_imp
+																	when 10 then 																		
+																		dbo.Cambiar_moneda1 (Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))/1.1) 
+																	when 2 then 																
+																		dbo.Cambiar_moneda1 (Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  (((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio_bruto) - ((compras_det.cantidad * compras_det.Precio_bruto)* compras_det.descuento/100))/1.02) 
+																	end
+														end
+				 								else
+														0
+												end
+										else
+												0															
+				 			end),0) as importe_gravado_10,
+
+			isnull(SUM( case tipo_documentos.calc_imp
+							when 1 then 
+									case compras_det.tipo_fiscal
+										when 1 then
+											dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  ((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio_bruto)) 
+										else
+											0
+										end
+							else
+									dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, 
+																			Case compras.iva_incluido
+																				when 1 then
+																			 		(((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio_bruto) - (((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio_bruto) * compras_det.descuento/100))/ (1 +(compras_det.imp_imp/100))
+																			   else
+																			 		(((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio_bruto) - (((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio_bruto) * compras_det.descuento/100))
+																				end ) 
+							end ),0) as importe_exento,
+
+			compras.nro_concepto as concepto,			
+			compras.Fecha_alta,
+			compras.iva_incluido
+    FROM dbo.compras,
+			dbo.compras_det,
+         dbo.Tipo_documentos,
+         dbo.Depositos,
+         dbo.Monedas,
+         dbo.Proveedores,
+         dbo.Par_sys  
+   WHERE ( Compras.nro_reg = compras_det.nro_reg ) and ( Tipo_documentos.tipo_nc = 0 ) AND  ( Tipo_documentos.snc = 0 ) and 
+			( Compras.Tipo_documen = Tipo_documentos.Tipo_documen ) and  
+         ( Compras.Cod_deposito = Depositos.Cod_deposito ) and  
+         ( Compras.Cod_moneda = Monedas.Cod_moneda ) and  
+         ( Compras.Cod_proveedor = Proveedores.Cod_proveedor ) AND
+			(compras.nro_concepto = :v_nro_concepto or :v_nro_concepto is null) and
+			( Depositos.cod_sucursal = :v_suc or :v_suc = 0 ) and
+			(pedido_activo=0) and
+        (( Compras.TIPO_COMPRA =  :v_tipo) or (:v_tipo = 0)) AND  
+        (( Compras.Cod_deposito = :V_CodDep ) OR ( :V_CodDep = 0 )) AND  
+        (( Compras.Cod_proveedor = :V_CodProv ) OR ( :V_CodProv = 0 )) AND  
+         (( Compras.Fecha >= :V_FecIni or :V_FecIni is null) AND  
+         ( Compras.Fecha <= :V_FecFin or :V_FecFin is null  )) and
+			(( Compras.Fecha_factura >= :V_FecIni1 or :V_FecIni1 is null) AND  
+         ( Compras.Fecha_factura <= :V_FecFin1 or :V_FecFin1 is null  )) and
+			(( Compras.Fecha_alta >= :V_FecIni2 or :V_FecIni2 is null) AND  
+         ( Compras.Fecha_alta < dateadd(day,1,:V_FecFin2) or :V_FecFin2 is null  )) and  
+			((:v_tipo <> 1) and (:v_tipo <> 2))
+GROUP BY Compras.Nro_reg,
+         Tipo_documentos.Tipo_descripcion,
+			Tipo_documentos.tipo_nc,
+			tipo_documentos.calc_imp,
+         Compras.Nro_factura,
+         Compras.Fecha,
+         Compras.Fecha_factura,
+         Depositos.Nombre_deposito,
+         Compras.Cod_moneda,
+         Monedas.Sigla,
+			Proveedores.Nombre_proveedor,
+			compras.nro_concepto,
+			compras.Fecha_alta,
+			compras.iva_incluido
+
+union all
+
+
+SELECT  Compras.Nro_reg,   
+         Tipo_documentos.Tipo_descripcion, 
+			Tipo_documentos.tipo_nc, 
+         Compras.Nro_factura,   
+         Compras.Fecha,
+         Compras.Fecha_factura,
+         Monedas.sigla,
+         Depositos.Nombre_deposito,   
+			Proveedores.Nombre_proveedor,
+			SUM( dbo.Cambiar_moneda1 (  Compras.Cod_moneda,	Par_sys.cod_moneda,	Compras.Fecha,	valor) ) as Compra,   
+			case tipo_documentos.calc_imp
+					when 1 then 
+							isnull(sum(case compras_det.tipo_fiscal
+									when 0 then
+										case compras_det.imp_imp
+											when 5 then
+												dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, ((((compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio) * compras_det.imp_imp) / 100))
+											else
+												0
+										end
+									else
+										0
+					  				end),0)
+					when 0 then 
+								0 
+			end AS Impuesto_5,
+				case tipo_documentos.calc_imp
+					when 1 then 
+						isnull(sum(case compras_det.tipo_fiscal
+								when 0 then
+									case compras_det.imp_imp
+										when 10 then
+											dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, ((( (compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio) * compras_det.imp_imp) / 100) )
+										when 2 then
+											dbo.Cambiar_moneda2(  Compras.Cod_moneda,Par_sys.cod_moneda, Compras.Fecha, ((( (compras_det.cantidad + compras_det.cant_desc ) * compras_det.precio) * compras_det.imp_imp) / 100) )
+									end
+							else
+									0
+							end),0) 
+					when 0 then 
+								0 
+			end AS Impuesto_10,
+
+
+
+			isnull(SUM( case tipo_documentos.calc_imp
+							when 1 then 
+									case compras_det.tipo_fiscal
+										when 0 then
+												case compras_det.imp_imp
+													when 5 then
+													dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  ((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio)) 
+												else
+													0
+												end
+										else
+											0
+										end
+							else
+								0						
+							end),0) as importe_gravado_5,
+
+			isnull(SUM(case tipo_documentos.calc_imp
+							when 1 then 
+										case compras_det.tipo_fiscal
+											when 0 then
+												case compras_det.imp_imp
+													when 10 then 
+														dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  ((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio)) 
+													when 2 then 
+														dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  ((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio)/*importe_gravado*/) 												
+													end
+				 						else
+											0
+										end
+							else
+								0
+				 			end),0) as importe_gravado_10,
+
+			isnull(SUM( case tipo_documentos.calc_imp
+							when 1 then 
+									case compras_det.tipo_fiscal
+										when 1 then
+											dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  ((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio)) 
+										else
+											0
+										end
+							else
+								dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  ((Compras_det.Cantidad + Compras_det.cant_desc) * Compras_det.Precio)) 
+							end ),0) as importe_exento,
+
+			compras.nro_concepto as concepto,			
+			compras.Fecha_alta,
+			compras.iva_incluido
+    FROM dbo.compras,
+			dbo.compras_det,
+         dbo.Tipo_documentos,
+         dbo.Depositos,
+         dbo.Monedas,
+         dbo.Proveedores,
+         dbo.Par_sys  
+   WHERE ( Compras.nro_reg = compras_det.nro_reg ) and (( Tipo_documentos.tipo_nc = 1 ) OR  ( Tipo_documentos.snc = 1 )) and 
+			( Compras.Tipo_documen = Tipo_documentos.Tipo_documen ) and  
+         ( Compras.Cod_deposito = Depositos.Cod_deposito ) and  
+         ( Compras.Cod_moneda = Monedas.Cod_moneda ) and  
+         ( Compras.Cod_proveedor = Proveedores.Cod_proveedor ) AND
+			(compras.nro_concepto = :v_nro_concepto or :v_nro_concepto is null) and
+			( Depositos.cod_sucursal = :v_suc or :v_suc = 0 ) and
+			(pedido_activo=0) and
+        (( Compras.TIPO_COMPRA =  :v_tipo) or (:v_tipo = 0)) AND  
+        (( Compras.Cod_deposito = :V_CodDep ) OR ( :V_CodDep = 0 )) AND  
+        (( Compras.Cod_proveedor = :V_CodProv ) OR ( :V_CodProv = 0 )) AND  
+         (( Compras.Fecha >= :V_FecIni or :V_FecIni is null) AND  
+         ( Compras.Fecha <= :V_FecFin or :V_FecFin is null  )) and
+			(( Compras.Fecha_factura >= :V_FecIni1 or :V_FecIni1 is null) AND  
+         ( Compras.Fecha_factura <= :V_FecFin1 or :V_FecFin1 is null  )) and
+			(( Compras.Fecha_alta >= :V_FecIni2 or :V_FecIni2 is null) AND  
+         ( Compras.Fecha_alta < dateadd(day,1,:V_FecFin2) or :V_FecFin2 is null  )) and  
+			((:v_tipo <> 1) and (:v_tipo <> 2))
+GROUP BY Compras.Nro_reg,
+         Tipo_documentos.Tipo_descripcion,
+			Tipo_documentos.tipo_nc,
+			tipo_documentos.calc_imp,
+         Compras.Nro_factura,
+         Compras.Fecha,
+         Compras.Fecha_factura,
+         Depositos.Nombre_deposito,
+         Compras.Cod_moneda,
+         Monedas.Sigla,
+			Proveedores.Nombre_proveedor,
+			compras.nro_concepto,
+			compras.Fecha_alta,
+			compras.iva_incluido
+
+
+
+
+
+UNION ALL
+SELECT 	Compras.Nro_reg,   
+         Tipo_documentos.Tipo_descripcion, 
+			Tipo_documentos.tipo_nc, 
+         Compras.Nro_factura,   
+         Compras.Fecha,
+         Compras.Fecha_factura,
+         Monedas.sigla,   
+         Depositos.Nombre_deposito,   
+			Proveedores.Nombre_proveedor,
+			SUM( dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  valor) ) as Compra,
+			/*0 AS Impuesto_5,*/
+			sum(dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, round(((importe_gravado_5 * 5)/100),0))) AS Impuesto_5,
+			/*sum(dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, imp_iva )) AS Impuesto_10,*/
+			sum(dbo.Cambiar_moneda2(  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, round(((importe_gravado_10 * 10)/100),0))) AS Impuesto_10,
+			/*0 as importe_gravado_5,*/
+			SUM( dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, round(importe_gravado_5,0)) ) as importe_gravado_5,
+			SUM( dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha, round(importe_gravado_10,0)) ) as importe_gravado_10,
+			SUM( dbo.Cambiar_moneda1 (  Compras.Cod_moneda, Par_sys.cod_moneda, Compras.Fecha,  round(importe_exento,0)) ) as importe_exento,
+			compras.nro_concepto as concepto,
+			compras.Fecha_alta,
+			compras.iva_incluido        
+        FROM dbo.compras,   
+         dbo.Tipo_documentos, 
+         dbo.Depositos,   
+         dbo.Monedas,   
+         dbo.Proveedores,
+         dbo.Par_sys  
+   
+        
+        WHERE ( Compras.Tipo_documen = Tipo_documentos.Tipo_documen ) AND
+         ( Compras.Cod_deposito = Depositos.Cod_deposito ) and  
+         ( Compras.Cod_moneda = Monedas.Cod_moneda ) and  
+         ( Compras.Cod_proveedor = Proveedores.Cod_proveedor ) AND
+			(compras.nro_concepto = :v_nro_concepto or :v_nro_concepto is null) and
+			( Depositos.cod_sucursal = :v_suc or :v_suc = 0 ) and
+        ((( Compras.TIPO_COMPRA =  :v_tipo) or (:v_tipo = 0))and (( Compras.TIPO_COMPRA <> 3) and ( Compras.TIPO_COMPRA <> 4))) AND  
+        (( Compras.Cod_deposito = :V_CodDep ) OR ( :V_CodDep = 0 )) AND  
+        (( Compras.Cod_proveedor = :V_CodProv ) OR ( :V_CodProv = 0 )) AND  
+         (( Compras.Fecha >= :V_FecIni or :V_FecIni is null) AND  
+         ( Compras.Fecha <= :V_FecFin or :V_FecFin is null  )) and
+			(( Compras.Fecha_factura >= :V_FecIni1 or :V_FecIni1 is null) AND  
+         ( Compras.Fecha_factura <= :V_FecFin1 or :V_FecFin1 is null  )) and
+			(( Compras.Fecha_alta >= :V_FecIni2 or :V_FecIni2 is null) AND  
+         ( Compras.Fecha_alta <= dateadd(day,1,:V_FecFin2) or :V_FecFin2 is null  ))
+        
+        GROUP BY Compras.Nro_reg,
+         Tipo_documentos.Tipo_descripcion,
+			Tipo_documentos.tipo_nc,
+         Compras.Nro_factura,
+         Compras.Fecha,
+         Compras.Fecha_factura,
+         Depositos.Nombre_deposito,
+         Compras.Cod_moneda,
+         Monedas.Sigla,
+			Proveedores.Nombre_proveedor,
+			compras.nro_concepto,
+			compras.Fecha_alta,
+			compras.iva_incluido
+union all
+
+  SELECT envios.nro_nota,   
+         'Transferencia' as Tipo_descripcion,
+			0,
+         cast (envios.nro_nota as varchar(50)), 
+         envios.Fecha_envio,
+         envios.Fecha_envio,
+         Monedas.sigla,  
+         dep_d.Nombre_deposito, 
+         suc_o.nombre_sucursal,
+/*NOMBRE_PROVEEDOR*/
+			isnull(sum(dbo.Cambiar2(  productos.precio_costo_mon, Par_sys.cod_moneda, envios.FECHA_envio,
+							case productos.tipo_fiscal
+							when 0 then
+								case productos.imp_imp
+								 	when 5 then
+										(((envios_det.cantidad * envios_det.costo) * productos.imp_imp) / 100)
+									else
+										0
+								end
+							when 1 then 
+								0 
+							end, 0 )),0) AS IMPORTE_IMPUESTO_5,
+
+			isnull(sum(dbo.Cambiar2(  productos.precio_costo_mon, Par_sys.cod_moneda, envios.FECHA_envio,
+						case productos.tipo_fiscal
+							when 0 then
+								case productos.imp_imp
+								 	when 10 then
+								 		(((envios_det.cantidad * envios_det.costo) * productos.imp_imp) / 100)
+									when 2 then
+								 		(((envios_det.cantidad * envios_det.costo) * productos.imp_imp) / 100)
+								end
+							when 1 then 
+								0 
+							end	, 0 )),0) AS IMPORTE_IMPUESTO_10,
+
+			sum(dbo.Cambiar1(  productos.precio_costo_mon, Par_sys.cod_moneda, envios.FECHA_envio, envios_det.cantidad * envios_det.costo, 0 )) AS tot,
+		  0 as importe_gravado_5,
+		  0 as importe_gravado_10,
+		  0 as importe_exento,
+   	  0 as concepto,
+		  envios.Fecha_alta,
+		  0 as iva_inclido
+
+    FROM envios,
+			envios_det,
+         depositos as dep_o,   
+         depositos as dep_d,   
+			sucursales as suc_o,
+			sucursales as suc_d,
+         PRODUCTOS,
+			par_sys,
+			monedas
+  
+   WHERE ( envios.nro_nota = envios_DET.nro_nota ) and  
+         ( envios.cod_deposito = dep_o.cod_deposito ) and  
+         ( envios.cod_deposito_destino = dep_d.cod_deposito ) and  
+         ( dep_o.cod_sucursal = suc_o.cod_sucursal) and  
+         ( dep_d.cod_sucursal = suc_d.cod_sucursal) and  
+         ( suc_d.cod_sucursal != suc_o.cod_sucursal) and
+			( dep_d.cod_sucursal = :v_suc) and
+			( dep_d.Cod_deposito = :V_CodDep  OR  :V_CodDep = 0 ) and
+         ( envios_DET.CODIGO = PRODUCTOS.CODIGO ) and
+			( par_sys.cod_moneda = monedas.cod_moneda ) and
+			( envios.FECHA_envio >= :v_fecini ) and
+			( envios.FECHA_envio <= :v_fecfin ) and
+			( :v_envios = 1) and ((:v_tipo = 3) or (:v_tipo = 4) or (:v_tipo = 0))
+group by envios.nro_nota,
+         envios.Fecha_envio,
+         envios.Fecha_envio,
+         Monedas.sigla,   
+         dep_d.Nombre_deposito, 
+         suc_o.nombre_sucursal,
+			envios.Fecha_alta
+
+union all
+  SELECT envios.nro_nota,
+         'Transferencia' as Tipo_descripcion, 
+			0,
+         cast (envios.nro_nota as varchar(50)),
+         envios.Fecha_envio,
+         envios.Fecha_envio,
+         Monedas.sigla,   
+         dep_o.Nombre_deposito, 
+         suc_o.nombre_sucursal,
+/*NOMBRE_PROVEEDOR*/
+			sum(dbo.Cambiar2(  productos.precio_costo_mon, Par_sys.cod_moneda, envios.FECHA_envio,
+							case productos.tipo_fiscal
+							when 0 then
+								case productos.imp_imp
+								 	when 5 then
+								 		(((envios_det.cantidad *-1 * envios_det.costo) * productos.imp_imp) / 100)
+									else
+										0
+								end
+							when 1 then 
+								0 
+							end,0 )) AS IMPORTE_IMPUESTO_5,
+
+			sum(dbo.Cambiar2(  productos.precio_costo_mon, Par_sys.cod_moneda, envios.FECHA_envio, 
+							case productos.tipo_fiscal
+							when 0 then
+								case productos.imp_imp
+								 	when 10 then
+								 		(((envios_det.cantidad *-1 * envios_det.costo) * productos.imp_imp) / 100)
+									when 2 then
+								 		(((envios_det.cantidad *-1 * envios_det.costo) * productos.imp_imp) / 100)
+								end
+							when 1 then 
+								0 
+							end, 0 )) AS IMPORTE_IMPUESTO_10,
+			sum(dbo.Cambiar1(  productos.precio_costo_mon, Par_sys.cod_moneda, envios.FECHA_envio, envios_det.cantidad * -1 * envios_det.costo, 0 )) AS tot,
+			0 as importe_gravado_5,
+			0 as importe_gravado_10,
+			0 as importe_exento,
+			0 as concepto,
+			envios.Fecha_alta,
+			 0 as iva_inclido
+
+    FROM envios,
+			envios_det,
+         depositos as dep_o,
+         depositos as dep_d,
+			sucursales as suc_o,
+   		sucursales as suc_d,
+         PRODUCTOS,
+			par_sys,
+			monedas 
+   WHERE ( envios.nro_nota = envios_DET.nro_nota ) and  
+         ( envios.cod_deposito = dep_o.cod_deposito ) and  
+         ( envios.cod_deposito_destino = dep_d.cod_deposito ) and  
+         ( dep_o.cod_sucursal = suc_o.cod_sucursal) and  
+         ( dep_d.cod_sucursal = suc_d.cod_sucursal) and  
+         ( suc_d.cod_sucursal != suc_o.cod_sucursal) and  
+			( dep_o.cod_sucursal = :v_suc) and
+			( dep_o.Cod_deposito = :V_CodDep  OR  :V_CodDep = 0 ) and
+         ( envios_DET.CODIGO = PRODUCTOS.CODIGO ) and
+			( par_sys.cod_moneda = monedas.cod_moneda ) and
+			( envios.FECHA_envio >= :v_fecini ) and
+			( envios.FECHA_envio <= :v_fecfin ) and
+			( :v_envios = 1) and  ((:v_tipo = 3) or (:v_tipo = 4) or (:v_tipo = 0))
+group by envios.nro_nota,   
+         envios.Fecha_envio,
+         envios.Fecha_envio,
+         Monedas.sigla,   
+         dep_o.Nombre_deposito, 
+         suc_o.nombre_sucursal,
+			envios.Fecha_alta
+" arguments=(("V_CodDep", number),("V_CodProv", number),("V_FecIni", date),("V_FecFin", date),("v_tipo", number),("v_suc", number),("v_envios", number),("V_FecIni1", date),("V_FecFin1", date),("v_nro_concepto", number),("V_FecIni2", date),("V_FecFin2", date))  sort="proveedores_nombre_proveedor A compras_nro_reg A " )
+group(level=1 header.height=148 trailer.height=96 by=("proveedores_nombre_proveedor" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="41" y="4" height="128" width="2400" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1381" y="24" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_fec_dep_prov_1" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="0" text="proveedores_nombre_proveedor A" border="0" color="0" x="663" y="28" height="76" width="242" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="41" y="136" height="76" width="2391" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Totales de Compras" border="0" color="0" x="41" y="216" height="64" width="4133" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="3314" y="48" height="72" width="197" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="3314" y="136" height="72" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="3538" y="48" height="64" width="603" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount() + ' - ' + f_user()
+"border="0" color="0" x="3538" y="136" height="64" width="603" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header.1 alignment="0" expression=" proveedores_nombre_proveedor "border="0" color="0" x="32" y="4" height="56" width="1710" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15793151" )
+text(band=header.1 alignment="0" text="Tot. Imp. 5%" border="0" color="8388608" x="2866" y="84" height="48" width="279" html.valueishtml="0"  name=t_27 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Total Grav. 10%" border="0" color="8388608" x="3141" y="88" height="48" width="320" html.valueishtml="0"  name=t_29 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Tot. Imp. 5%" border="0" color="8388608" x="2857" y="84" height="48" width="279" html.valueishtml="0"  name=t_13 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Total Grav. 5%" border="0" color="8388608" x="2528" y="88" height="48" width="311" html.valueishtml="0"  name=t_12 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="1" text="Total Exento" border="0" color="8388608" x="2226" y="88" height="48" width="293" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="1" text="Total Compra" border="0" color="8388608" x="3762" y="88" height="48" width="274" html.valueishtml="0"  name=t_14 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Tot. Imp. 10%" border="0" color="8388608" x="3474" y="88" height="48" width="274" html.valueishtml="0"  name=t_28 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Conc." border="0" color="8388608" x="4059" y="88" height="48" width="114" html.valueishtml="0"  name=t_15 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Mon" border="0" color="8388608" x="2126" y="88" height="48" width="91" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header.1 x1="32" y1="140" x2="4169" y2="140"  name=l_1 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+text(band=header.1 alignment="1" text="Nro Ped." border="0" color="8388608" x="27" y="88" height="48" width="297" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="F. Alta" border="0" color="8388608" x="357" y="88" height="48" width="229" html.valueishtml="0"  name=t_38 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Tipo de Doc." border="0" color="8388608" x="603" y="88" height="48" width="366" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="1" text="Nro Doc." border="0" color="8388608" x="983" y="88" height="48" width="338" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Fecha" border="0" color="8388608" x="1349" y="88" height="48" width="187" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Fecha Doc" border="0" color="8388608" x="1563" y="88" height="48" width="224" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Depósito" border="0" color="8388608" x="1810" y="88" height="48" width="297" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="importe_gravado_10 "border="0" color="0" x="3141" y="0" height="56" width="320" format="#,##0" html.valueishtml="0"  name=c_importe_gravado_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="impuesto_5"border="0" color="0" x="2857" y="0" height="56" width="279" format="#,##0" html.valueishtml="0"  name=c_impuesto_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="importe_gravado_5 "border="0" color="0" x="2528" y="0" height="56" width="311" format="#,##0" html.valueishtml="0"  name=c_importe_gravado_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=15 alignment="1" tabsequence=32766 border="0" color="0" x="2226" y="0" height="56" width="293" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=importe_exento visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="impuesto_10"border="0" color="0" x="3474" y="0" height="56" width="274" format="#,##0" html.valueishtml="0"  name=c_impuesto_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=16 alignment="1" tabsequence=32766 border="0" color="0" x="4059" y="0" height="56" width="105" format="[general]" html.valueishtml="0"  name=compras_concepto visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="c_impuesto_5  +  c_impuesto_10  +  c_importe_gravado_5  +  c_importe_gravado_10  +  importe_exento "border="0" color="0" x="3762" y="0" height="56" width="274" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=tot_compra visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression=" monedas_sigla "border="0" color="0" x="2126" y="0" height="56" width="91" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="1" tabsequence=32766 border="0" color="0" x="23" y="0" height="56" width="306" format="#,##0" html.valueishtml="0"  name=compras_nro_reg visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="0" x="352" y="4" height="56" width="229" format="dd/mm/yy " html.valueishtml="0"  name=compras_fecha_alta visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression=" tipo_documentos_tipo_descripcion "border="0" color="0" x="603" y="0" height="56" width="366" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="983" y="0" height="56" width="338" format="[general]" html.valueishtml="0"  name=compras_nro_factura visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="1349" y="0" height="56" width="187" format="dd/mm/yy" html.valueishtml="0"  name=compras_fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="1563" y="0" height="56" width="224" format="dd/mm/yy" html.valueishtml="0"  name=fecha_factura visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression=" depositos_nombre_deposito "border="0" color="0" x="1797" y="0" height="56" width="306" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=trailer.1 alignment="0" text="Lineas" border="0" color="0" x="18" y="16" height="56" width="155" html.valueishtml="0"  name=t_16 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="0" expression="count(compras_nro_reg for group 1)"border="0" color="0" x="178" y="16" height="56" width="169" format="#,##0" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="23" y1="152" x2="3360" y2="152"  name=l_4 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+compute(band=trailer.1 alignment="1" expression="sum(  c_importe_gravado_10   for group 1)"border="0" color="0" x="3136" y="24" height="56" width="320" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum( c_impuesto_5   for group 1)"border="0" color="0" x="2857" y="24" height="56" width="279" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=bbb visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum( c_importe_gravado_5  for group 1)"border="0" color="0" x="2528" y="24" height="56" width="311" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=ddd visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=trailer.1 alignment="0" text="Tot. Impuesto:" border="0" color="8388608" x="1426" y="24" height="56" width="306" html.valueishtml="0"  name=t_34 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum( c_impuesto_5 for group 1) + sum( c_impuesto_10  for group 1)"border="0" color="0" x="1847" y="24" height="56" width="366" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_17 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum(importe_exento for group 1)"border="0" color="0" x="2231" y="24" height="56" width="288" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=ccc visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum(  c_impuesto_10    for group 1)"border="0" color="0" x="3474" y="24" height="56" width="274" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="32" y1="4" x2="4169" y2="4"  name=l_2 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+compute(band=trailer.1 alignment="1" expression="sum((  c_impuesto_5  +  c_impuesto_10  +  c_importe_gravado_5  +  c_importe_gravado_10  +  importe_exento  ) for group 1) "border="0" color="0" x="3762" y="24" height="56" width="274" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=aaa visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="total_impuesto  + total_gravada + ccc_g"border="0" color="0" x="1755" y="48" height="56" width="507" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=aaa_g visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total  General Compras :" border="0" color="8388608" x="1147" y="48" height="56" width="590" html.valueishtml="0"  name=t_20 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(  c_impuesto_5 for all )"border="0" color="0" x="1755" y="120" height="56" width="507" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=bbb_g visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(  c_impuesto_10   for all ) "border="0" color="0" x="1755" y="200" height="56" width="507" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=ddd_g visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum( c_importe_gravado_10 for all ) "border="0" color="0" x="1751" y="352" height="56" width="507" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=tot_grav_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(  importe_exento     for all ) "border="0" color="0" x="1755" y="428" height="56" width="507" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=ccc_g visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="aaa_g"border="0" color="0" x="1755" y="504" height="56" width="507" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total Impuesto 5%:" border="0" color="8388608" x="1147" y="124" height="56" width="590" html.valueishtml="0"  name=t_21 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total Impuesto 10%:" border="0" color="8388608" x="1147" y="200" height="56" width="590" html.valueishtml="0"  name=t_22 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(   c_importe_gravado_5  for all )"border="0" color="0" x="1755" y="272" height="56" width="507" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=tot_grav_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total Gravados 5%:" border="0" color="8388608" x="1147" y="272" height="56" width="590" html.valueishtml="0"  name=t_32 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total Gravados 10%:" border="0" color="8388608" x="1147" y="352" height="56" width="590" html.valueishtml="0"  name=t_33 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total General Exentos:" border="0" color="8388608" x="1147" y="428" height="56" width="590" html.valueishtml="0"  name=t_23 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total General :" border="0" color="8388608" x="1147" y="504" height="56" width="590" html.valueishtml="0"  name=t_24 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total General Impuesto :" border="0" color="8388608" x="2295" y="160" height="56" width="544" html.valueishtml="0"  name=t_30 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="bbb_g  + ddd_g"border="0" color="0" x="2857" y="160" height="56" width="434" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=total_impuesto visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total  Gral. Gravados :" border="0" color="8388608" x="2295" y="316" height="56" width="544" html.valueishtml="0"  name=t_31 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="tot_grav_5 + tot_grav_10"border="0" color="0" x="2857" y="316" height="56" width="434" format="[general]~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=total_gravada visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="128" height="52" width="590" html.valueishtml="0"  name=t_17 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Deposito" border="0" color="0" x="50" y="196" height="48" width="261" html.valueishtml="0"  name=t_18 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="196" height="48" width="713" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Proveedor" border="0" color="0" x="50" y="248" height="48" width="261" html.valueishtml="0"  name=t_19 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="248" height="48" width="713" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="300" height="48" width="713" html.valueishtml="0"  name=filtro7 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="352" height="48" width="713" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="404" height="48" width="713" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="508" height="48" width="713" html.valueishtml="0"  name=filtro6 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="456" height="48" width="713" html.valueishtml="0"  name=filtro5 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Final" border="0" color="0" x="50" y="404" height="48" width="261" html.valueishtml="0"  name=t_26 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="F. Ant. Ini." border="0" color="0" x="50" y="456" height="48" width="261" html.valueishtml="0"  name=t_35 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="F. alt. Fin" border="0" color="0" x="50" y="508" height="48" width="261" html.valueishtml="0"  name=t_37 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="F. Inicial" border="0" color="0" x="50" y="352" height="48" width="261" html.valueishtml="0"  name=t_25 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Sucursal" border="0" color="0" x="50" y="300" height="48" width="261" html.valueishtml="0"  name=t_36 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Total Lineas" border="0" color="0" x="18" y="28" height="56" width="270" html.valueishtml="0"  name=t_39 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="count(compras_nro_reg for all)"border="0" color="0" x="311" y="28" height="56" width="169" format="#,##0" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=summary x1="32" y1="0" x2="4169" y2="0"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

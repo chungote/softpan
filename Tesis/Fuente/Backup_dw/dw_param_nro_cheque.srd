@@ -1,0 +1,10 @@
+$PBExportHeader$dw_param_nro_cheque.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=number updatewhereclause=yes name=nro_cheque dbname="chequeras_det.nro_cheque" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"chequeras_det~" ) COLUMN(NAME=~"chequeras_det.nro_cheque~")) " )
+column(band=detail id=1 alignment="1" tabsequence=10 border="2" color="0" x="14" y="4" height="76" width="855" format="[general]"  name=nro_cheque dddw.name=dw_combo_nro_cheque dddw.displaycolumn=chequeras_det_nro_cheque dddw.datacolumn=chequeras_det_nro_cheque dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

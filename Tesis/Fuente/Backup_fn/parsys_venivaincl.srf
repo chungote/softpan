@@ -1,0 +1,22 @@
+$PBExportHeader$parsys_venivaincl.srf
+$PBExportComments$x
+global type parsys_venivaincl from function_object
+end type
+
+forward prototypes
+global function long parsys_venivaincl ()
+end prototypes
+
+global function long parsys_venivaincl ();long v_ven_iva_inc
+if driver() = 2 then
+	select ven_iva_inc
+	into :v_ven_iva_inc
+	from par_sys;
+else
+	select ven_iva_inc
+	into :v_ven_iva_inc
+	from dbo.par_sys;	
+end if	
+return v_ven_iva_inc
+end function
+

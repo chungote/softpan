@@ -1,0 +1,26 @@
+$PBExportHeader$filtro_tipo_doc.srf
+$PBExportComments$x
+global type filtro_tipo_doc from function_object
+end type
+
+forward prototypes
+global function string filtro_tipo_doc (long mi_cliente)
+end prototypes
+
+global function string filtro_tipo_doc (long mi_cliente);string v_tipo_doc
+//
+//if driver() = 2 then
+//	select Tipo_descripcion
+//	into :v_tipo_doc
+//	from Tipo_documentos
+//	where Tipo_documentos.Tipo_documen = :Mi_Cliente ;
+//else
+//	select Tipo_descripcion
+//	into :v_tipo_doc
+//	from dbo.Tipo_documentos
+//	where Tipo_documentos.Tipo_documen = :Mi_Cliente ;
+//end if
+//
+return v_tipo_doc
+end function
+

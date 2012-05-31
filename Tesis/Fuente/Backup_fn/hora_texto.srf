@@ -1,0 +1,11 @@
+$PBExportHeader$hora_texto.srf
+global type hora_texto from function_object
+end type
+
+forward prototypes
+global function string hora_texto (long v_hora)
+end prototypes
+
+global function string hora_texto (long v_hora);RETURN left(right('00' + trim(string(v_hora)), 4),2) + ':' + right('00' + trim(string(v_hora)), 2)
+end function
+

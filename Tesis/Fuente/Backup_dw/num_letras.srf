@@ -1,0 +1,148 @@
+$PBExportHeader$num_letras.srf
+$PBExportComments$x
+global type num_letras from function_object
+end type
+
+forward prototypes
+global function string num_letras (string numero)
+end prototypes
+
+global function string num_letras (string numero);
+String ls_unidades[], ls_decenas[], ls_centenas[], ls_numero, ls_numdesc[], ls_Aux01, ls_Aux02
+string ls_valor1[] = {' mil ', ' millones ', ' mil '}
+string ls_valor2[] = {' mil ', ' millón ', ' mil '}
+String ls_decimal, ls_PartNum
+Integer li_len, i
+double ld_nro
+int li_dec
+boolean lb_millon = false
+boolean lb_millones = false
+
+ls_unidades[1] = 'un'
+ls_unidades[2] = 'dos'
+ls_unidades[3] = 'tres'
+ls_unidades[4] = 'cuatro'
+ls_unidades[5] = 'cinco'
+ls_unidades[6] = 'seis'
+ls_unidades[7] = 'siete'
+ls_unidades[8] = 'ocho'
+ls_unidades[9] = 'nueve'
+ls_unidades[10] = 'diez'
+ls_unidades[11] = 'once'
+ls_unidades[12] = 'doce'
+ls_unidades[13] = 'trece'
+ls_unidades[14] = 'catorce'
+ls_unidades[15] = 'quince'
+ls_unidades[16] = 'dieciseis'
+ls_unidades[17] = 'diecisiete'
+ls_unidades[18] = 'dieciocho'
+ls_unidades[19] = 'diecinueve'
+ls_unidades[20] = 'veinte'
+ls_unidades[21] = 'veintiun'
+ls_unidades[22] = 'veintidos'
+ls_unidades[23] = 'veintitres'
+ls_unidades[24] = 'veinticuatro'
+ls_unidades[25] = 'veinticinco'
+ls_unidades[26] = 'veintiseis'
+ls_unidades[27] = 'veintisiete'
+ls_unidades[28] = 'veintiocho'
+ls_unidades[29] = 'veintinueve'
+
+ls_decenas[3] = 'treinta'
+ls_decenas[4] = 'cuarenta'
+ls_decenas[5] = 'cincuenta'
+ls_decenas[6] = 'sesenta'
+ls_decenas[7] = 'setenta'
+ls_decenas[8] = 'ochenta'
+ls_decenas[9] = 'noventa'
+
+ls_centenas[1] = 'ciento'
+ls_centenas[2] = 'doscientos'
+ls_centenas[3] = 'trescientos'
+ls_centenas[4] = 'cuatrocientos'
+ls_centenas[5] = 'quinientos'
+ls_centenas[6] = 'seiscientos'
+ls_centenas[7] = 'setecientos'
+ls_centenas[8] = 'ochocientos'
+ls_centenas[9] = 'novecientos'
+
+//COMENTADO PARA AJUSTAR AL DE PEGASUS
+//ls_numero = string(dec_numero,'0.00')
+
+//INSERTADO PARA AJUSTAR A PEGASUS POR CARLOS LOPEZ
+
+ld_nro = double(numero)
+ls_numero = string(ld_nro,'0.00')
+//Fin de la modificacion
+
+do 
+	li_len ++
+	ls_numdesc[li_len] = right( ls_numero, 3 )
+	ls_numero = left( ls_numero, len(ls_numero) -3 )
+loop while len(ls_numero) > 0
+
+For i = li_len To 2 Step -1
+	ls_PartNum = ''
+	ls_Aux01 = ls_numdesc[i]
+	If Len (ls_Aux01) = 3 Then
+		lb_millon = true
+		If Integer(ls_Aux01) = 100 Then
+			ls_PartNum += 'cien'
+		ElseIf Integer(Left(ls_Aux01,1)) > 0 Then 
+				ls_PartNum += ls_centenas[Integer(Left(ls_Aux01,1))]
+		End If
+		ls_Aux01 = Right( ls_Aux01, 2 )
+		If Integer(ls_Aux01) > 0 Then ls_PartNum += ' '
+	End If
+
+	If Len (ls_Aux01) = 2 Then
+		lb_millon = true
+		If Integer(ls_Aux01)>0 and Integer(ls_Aux01)< 30 Then 
+			ls_PartNum += ls_unidades[Integer(ls_Aux01)]
+			ls_Aux01 = ''
+		ElseIf Integer(Left(ls_Aux01,1)) > 0 Then 
+			ls_PartNum += ls_decenas[Integer(Left(ls_Aux01,1))]
+			ls_Aux01 = Right( ls_Aux01, 1 )
+			If Integer(ls_Aux01) > 0 Then ls_PartNum += ' y '
+		End If
+	End If
+
+	If Len (ls_Aux01) = 1 Then
+		If Integer(ls_Aux01) > 0 Then ls_PartNum += ls_unidades[Integer(ls_Aux01)]
+	End If
+
+	If Len(ls_PartNum) > 0  or (lb_millones=true)Then
+		Choose Case i
+			Case 5
+				lb_millones=true
+				If Integer(ls_Aux01) = 1 Then
+						ls_PartNum += ls_valor2[3]
+				Else
+					ls_PartNum += ls_valor1[3]
+				End if
+			Case 4
+				If Integer(ls_Aux01) = 1 Then
+					if lb_millon = true then
+						ls_PartNum += ls_valor1[2]
+					else
+						ls_PartNum += ls_valor2[2]
+					end if
+				Else
+					ls_PartNum += ls_valor1[2]
+				End If
+				lb_millones=false
+			Case 3
+				ls_PartNum += ls_valor1[1]
+		End Choose
+		ls_numero += ls_PartNum
+	End If 
+Next
+////PARA DECIMAL
+	li_dec = long(Right ( ls_numdesc[1] , 2 ) )
+	if li_dec > 0 then
+		ls_decimal = Right ( ls_numdesc[1] , 2 ) + '/100'
+		ls_numero += ' con ' + ls_decimal
+	end if
+return ls_numero 
+end function
+

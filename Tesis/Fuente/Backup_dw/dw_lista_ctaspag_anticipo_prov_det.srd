@@ -1,0 +1,142 @@
+$PBExportHeader$dw_lista_ctaspag_anticipo_prov_det.srd
+$PBExportComments$***
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=288 color="536870912" )
+summary(height=380 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=60 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=anticipo_cab_prov_nro_anticipo dbname="ANTICIPO_CAB_PROV.NRO_ANTICIPO" )
+ column=(type=datetime updatewhereclause=yes name=anticipo_cab_prov_fecha dbname="ANTICIPO_CAB_PROV.FECHA" )
+ column=(type=long updatewhereclause=yes name=anticipo_cab_prov_cod_proveedor dbname="ANTICIPO_CAB_PROV.COD_PROVEEDOR" )
+ column=(type=char(40) updatewhereclause=yes name=proveedores_nombre_proveedor dbname="PROVEEDORES.NOMBRE_PROVEEDOR" )
+ column=(type=long updatewhereclause=yes name=anticipo_cab_prov_cod_cajero dbname="ANTICIPO_CAB_PROV.cod_cajero" )
+ column=(type=char(35) updatewhereclause=yes name=cajeros_nombre_cajero dbname="CAJEROS.NOMBRE_CAJERO" )
+ column=(type=long updatewhereclause=yes name=anticipo_cab_prov_cod_moneda dbname="ANTICIPO_CAB_PROV.COD_MONEDA" )
+ column=(type=char(15) updatewhereclause=yes name=monedas_moneda dbname="MONEDAS.moneda" )
+ column=(type=number updatewhereclause=yes name=anticipo_cab_prov_nro_recibo dbname="ANTICIPO_CAB_PROV.NRO_RECIBO" )
+ column=(type=char(100) updatewhereclause=yes name=anticipo_cab_prov_observacion dbname="ANTICIPO_CAB_PROV.Observacion" )
+ column=(type=decimal(2) updatewhereclause=yes name=anticipo_cab_prov_valor dbname="ANTICIPO_CAB_PROV.VALOR" )
+ column=(type=long updatewhereclause=yes name=anticipo_det_prov_cod_condicion dbname="ANTICIPO_DET_PROV.COD_CONDICION" )
+ column=(type=number updatewhereclause=yes name=anticipo_det_prov_nro_cuenta dbname="ANTICIPO_DET_PROV.NRO_CUENTA" )
+ column=(type=number updatewhereclause=yes name=anticipo_det_prov_nro_cheque dbname="ANTICIPO_DET_PROV.NRO_CHEQUE" )
+ column=(type=number updatewhereclause=yes name=anticipo_det_prov_nro_nota dbname="ANTICIPO_DET_PROV.NRO_NOTA" )
+ column=(type=long updatewhereclause=yes name=anticipo_det_prov_cod_tarjeta dbname="ANTICIPO_DET_PROV.COD_TARJETA" )
+ column=(type=long updatewhereclause=yes name=anticipo_det_prov_cod_moneda dbname="ANTICIPO_DET_PROV.COD_MONEDA" )
+ column=(type=decimal(4) updatewhereclause=yes name=anticipo_det_prov_cotizacion dbname="ANTICIPO_DET_PROV.COTIZACION" )
+ column=(type=decimal(2) updatewhereclause=yes name=anticipo_det_prov_valor dbname="ANTICIPO_DET_PROV.VALOR" )
+ retrieve="  SELECT ANTICIPO_CAB_PROV.NRO_ANTICIPO,   
+         ANTICIPO_CAB_PROV.FECHA,   
+         ANTICIPO_CAB_PROV.COD_PROVEEDOR,   
+         Proveedores.NOMBRE_PROVEEDOR,   
+
+ANTICIPO_CAB_PROV.cod_cajero, 
+CAJEROS.NOMBRE_CAJERO,
+
+         ANTICIPO_CAB_PROV.COD_MONEDA, 
+		   monedas.moneda,
+			ANTICIPO_CAB_PROV.NRO_RECIBO,  
+         ANTICIPO_CAB_PROV.Observacion,
+			ANTICIPO_CAB_PROV.VALOR,
+
+
+         ANTICIPO_DET_PROV.COD_CONDICION,    
+         ANTICIPO_DET_PROV.NRO_CUENTA,   
+         ANTICIPO_DET_PROV.NRO_CHEQUE,   
+         ANTICIPO_DET_PROV.NRO_NOTA,    
+         ANTICIPO_DET_PROV.COD_TARJETA,   
+         ANTICIPO_DET_PROV.COD_MONEDA,    
+         ANTICIPO_DET_PROV.COTIZACION,   
+         ANTICIPO_DET_PROV.VALOR 
+
+
+ 
+    FROM ANTICIPO_CAB_PROV ,
+			ANTICIPO_DET_PROV,
+			Proveedores,
+CAJEROS,
+		   monedas
+  
+   WHERE (ANTICIPO_CAB_PROV.COD_PROVEEDOR = Proveedores.COD_PROVEEDOR) AND
+			(ANTICIPO_CAB_PROV.cod_cajero = CAJEROS.cod_cajero) AND
+			(ANTICIPO_CAB_PROV.COD_MONEDA = monedas.COD_MONEDA) AND
+
+			(ANTICIPO_CAB_PROV.NRO_ANTICIPO = ANTICIPO_DET_PROV.NRO_ANTICIPO) AND
+
+(			( ANTICIPO_CAB_PROV.Cod_sucursal = :V_suc OR :V_suc = 0 ) AND
+         ( ANTICIPO_CAB_PROV.Cod_proveedor = :V_CodCli OR :V_CodCli = 0 ) AND  
+         ( ANTICIPO_CAB_PROV.cod_cajero = :V_CodCob OR :V_CodCob = 0 ) AND  
+
+         ( ANTICIPO_CAB_PROV.FECHA >= :V_FecIni OR :V_FecIni IS NULL) AND  
+         ( ANTICIPO_CAB_PROV.FECHA <= :V_FecFin OR :V_FecFin IS NULL)     
+)
+
+
+
+
+
+
+
+
+
+
+
+
+" arguments=(("V_CodCli", number),("V_CodCob", number),("V_FecIni", date),("V_FecFin", date),("V_Suc", number))  sort="anticipo_cab_prov_cod_moneda A anticipo_cab_prov_fecha A anticipo_cab_prov_nro_anticipo A anticipo_det_prov_cod_condicion A " )
+group(level=1 header.height=160 trailer.height=96 by=("anticipo_cab_prov_cod_moneda" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=124 trailer.height=0 by=("anticipo_cab_prov_nro_anticipo" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="128" width="3237" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1413" y="32" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_rep_fec_prov_cob_chxs_1" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2482" y="52" height="72" width="197" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2706" y="52" height="64" width="571" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2706" y="140" height="64" width="571" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2482" y="140" height="72" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Anticipo de Proveedores - Detalle" border="0" color="0" x="1161" y="220" height="64" width="987" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="2" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="140" height="76" width="3237" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=8 alignment="0" tabsequence=32766 border="0" color="0" x="37" y="0" height="56" width="3287" format="[general]" html.valueishtml="0"  name=monedas_moneda visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15793151" )
+line(band=header.1 x1="37" y1="120" x2="3323" y2="120"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="0" text="Nro" border="0" color="8388608" x="37" y="60" height="56" width="206" html.valueishtml="0"  name=servicios_nro_servicio_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Fecha" border="0" color="8388608" x="256" y="60" height="56" width="288" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Cliente" border="0" color="8388608" x="558" y="60" height="56" width="1152" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="1" text="Importe" border="0" color="8388608" x="1723" y="60" height="56" width="393" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Nro Recibo" border="0" color="8388608" x="2149" y="60" height="56" width="329" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.2 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="37" y="0" height="56" width="206" format="[general]" html.valueishtml="0"  name=anticipo_cab_prov_nro_anticipo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.2 id=2 alignment="0" tabsequence=32766 border="0" color="0" x="256" y="0" height="56" width="288" format="dd/mm/yy" html.valueishtml="0"  name=anticipo_cab_prov_fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.2 id=4 alignment="0" tabsequence=32766 border="0" color="0" x="558" y="0" height="56" width="1152" format="[general]" html.valueishtml="0"  name=proveedores_nombre_proveedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.2 id=11 alignment="1" tabsequence=32766 border="0" color="0" x="1723" y="0" height="56" width="393" format="#,##0.00" html.valueishtml="0"  name=anticipo_cab_prov_valor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.2 id=9 alignment="0" tabsequence=32766 border="0" color="0" x="2149" y="0" height="56" width="329" format="[general]" html.valueishtml="0"  name=anticipo_cab_prov_nro_recibo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header.2 x1="1307" y1="120" x2="3333" y2="120"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=header.2 alignment="1" text="Importe" border="0" color="8388608" x="2926" y="60" height="56" width="393" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="0" text="Condición" border="0" color="8388608" x="1344" y="60" height="56" width="521" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="0" text="Cuenta" border="0" color="8388608" x="1888" y="60" height="56" width="302" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="0" text="Nro Cheque" border="0" color="8388608" x="2208" y="60" height="56" width="347" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="0" text="Tarjeta" border="0" color="8388608" x="2574" y="60" height="56" width="338" html.valueishtml="0"  name=t_12 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=19 alignment="1" tabsequence=32766 border="0" color="0" x="2926" y="0" height="56" width="393" format="#,##0.00" html.valueishtml="0"  name=anticipo_det_prov_valor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="0" x="1344" y="0" height="56" width="521" format="[general]" html.valueishtml="0"  name=anticipo_det_prov_cod_condicion visible="1" dddw.name=dw_combo_pagos_cond_pagos dddw.displaycolumn=condicion dddw.datacolumn=cod_condicion dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="0" x="1888" y="0" height="56" width="302" format="[general]" html.valueishtml="0"  name=anticipo_det_prov_nro_cuenta visible="1" dddw.name=dw_combo_pagos_cuentas_cajas dddw.displaycolumn=nombre_cuenta dddw.datacolumn=nro_cuenta dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="0" x="2208" y="0" height="56" width="347" format="[general]" html.valueishtml="0"  name=anticipo_det_prov_nro_cheque visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="0" color="0" x="2574" y="0" height="56" width="338" format="[general]" html.valueishtml="0"  name=anticipo_det_prov_cod_tarjeta visible="1" dddw.name=dw_combo_tarjetas dddw.displaycolumn=tarjeta dddw.datacolumn=cod_tarjeta dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=trailer.1 x1="37" y1="0" x2="3323" y2="0"  name=l_3 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+compute(band=trailer.1 alignment="1" expression="sum(  anticipo_cab_prov_valor for group 1)  "border="0" color="0" x="1723" y="8" height="56" width="393" format="#,##0.00" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="~"Sub Total ~" + monedas_moneda "border="0" color="8388608" x="869" y="8" height="56" width="841" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=trailer.1 alignment="0" text="Lineas :" border="0" color="0" x="37" y="8" height="56" width="178" html.valueishtml="0"  name=t_13 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="0" expression=" count(   anticipo_cab_prov_nro_anticipo for group 1)  "border="0" color="0" x="219" y="8" height="56" width="206" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=summary x1="37" y1="0" x2="3323" y2="0"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="50" y="16" height="52" width="590" html.valueishtml="0"  name=t_14 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Proveedor" border="0" color="0" x="50" y="88" height="48" width="261" html.valueishtml="0"  name=t_15 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="88" height="48" width="544" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Cajero" border="0" color="0" x="50" y="140" height="48" width="261" html.valueishtml="0"  name=t_16 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="140" height="48" width="544" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Inicial" border="0" color="0" x="50" y="192" height="48" width="261" html.valueishtml="0"  name=t_17 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="192" height="48" width="544" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="37" y1="4" x2="3323" y2="4"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+text(band=summary alignment="0" text="F. Final" border="0" color="0" x="50" y="244" height="48" width="261" html.valueishtml="0"  name=t_18 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="244" height="48" width="544" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Sucursal" border="0" color="0" x="50" y="296" height="56" width="261" html.valueishtml="0"  name=t_19 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="296" height="56" width="544" html.valueishtml="0"  name=filtro5 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

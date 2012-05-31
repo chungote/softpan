@@ -1,0 +1,25 @@
+$PBExportHeader$parsys_ventacodcliente.srf
+$PBExportComments$x
+global type parsys_ventacodcliente from function_object
+end type
+
+forward prototypes
+global function long parsys_ventacodcliente ()
+end prototypes
+
+global function long parsys_ventacodcliente ();long v_ventacodcliente
+
+if driver() = 2 then
+select Venta_cliente
+into :v_ventacodcliente
+from par_sys;
+else
+select Venta_cliente
+into :v_ventacodcliente
+from dbo.par_sys;
+end if
+
+
+return v_ventacodcliente
+end function
+

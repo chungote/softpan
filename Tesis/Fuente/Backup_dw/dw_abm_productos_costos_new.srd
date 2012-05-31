@@ -1,0 +1,65 @@
+$PBExportHeader$dw_abm_productos_costos_new.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no ole.client.class="DataWindow" ole.client.name="foto" )
+header(height=12 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=816 color="536870912" )
+table(column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=cod_receta dbname="RECETAS.cod_receta" initial="0" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=cod_producto dbname="RECETAS.cod_producto" )
+ column=(type=char(255) update=yes updatewhereclause=yes name=modo_preparacion dbname="RECETAS.modo_preparacion" )
+ column=(type=char(225) update=yes updatewhereclause=yes name=notas dbname="RECETAS.notas" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=costo_mano_obra dbname="RECETAS.costo_mano_obra" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=costo_total_insumos dbname="RECETAS.costo_total_insumos" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=costo_instalacion dbname="RECETAS.costo_instalacion" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=costo_total_producto dbname="RECETAS.costo_total_producto" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=precio_venta dbname="RECETAS.precio_venta" )
+ column=(type=real update=yes updatewhereclause=yes name=porc_beneficio dbname="RECETAS.porc_beneficio" initial="0" )
+ column=(type=blob name=foto dbname="foto" )
+ retrieve="  SELECT recetas.cod_receta,   
+         recetas.cod_producto,   
+         recetas.modo_preparacion,   
+         recetas.notas,   
+         recetas.costo_mano_obra,   
+         recetas.costo_total_insumos,   
+         recetas.costo_instalacion,   
+         recetas.costo_total_producto,   
+         recetas.precio_venta,   
+         recetas.porc_beneficio  
+    FROM recetas,
+			productos  
+   WHERE productos.cod_producto=recetas.cod_producto
+	and  recetas.cod_producto =:ll_cod_producto    
+" update="recetas" updatewhere=0 updatekeyinplace=no data.storage=disk arguments=(("ll_cod_producto", number)) )
+groupbox(band=detail text=""border="6" color="33554432" x="23" y="36" height="688" width="2784"  name=gb_1 visible="1"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="0" tabsequence=50 border="5" color="33554432" x="654" y="596" height="76" width="1993" format="[general]" html.valueishtml="0"  name=notas visible="1" edit.limit=0 edit.case=upper edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=detail alignment="0" text="Notas:" border="0" color="0" x="55" y="596" height="64" width="370" html.valueishtml="0"  name=t_2 visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Modo Preparacion:" border="0" color="0" x="55" y="476" height="64" width="567" html.valueishtml="0"  name=t_1 visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="2359" y="748" height="76" width="251" format="[general]" html.valueishtml="0"  name=cod_producto visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65280" )
+compute(band=detail alignment="0" expression="If(isnull( costo_total_insumos),costo_mano_obra + costo_instalacion, costo_mano_obra + costo_instalacion+ costo_total_insumos )"border="0" color="33554432" x="1637" y="848" height="76" width="663" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="0"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217752" )
+compute(band=detail alignment="0" expression="If(isnull( costo_total_insumos),costo_mano_obra + costo_instalacion, costo_mano_obra + costo_instalacion+ costo_total_insumos )"border="0" color="33554432" x="1646" y="768" height="76" width="663" format="[GENERAL]" html.valueishtml="0"  name=precio_costo_aux visible="0"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217752" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="2322" y="360" height="76" width="233" format="[general]" html.valueishtml="0"  name=cod_receta visible="1~t0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=9 alignment="1" tabsequence=70 border="5" color="33554432" x="2322" y="360" height="76" width="325" format="[general]" html.valueishtml="0"  name=precio_venta visible="1" editmask.mask="#,##0" editmask.imemode=0 editmask.focusrectangle=no  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+compute(band=detail alignment="1" expression="precio_costo_aux + porc_beneficio * precio_costo_aux  "border="5" color="33554432" x="2322" y="264" height="76" width="325" format="#,##0;[RED]($#,##0)" html.valueishtml="0"  name=precio_venta_aux visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+button(band=detail text="Recuperar" enabled=yes action="0" border="0" color="33554432" x="457" y="340" height="92" width="315" vtextalign="0" htextalign="0"  name=b_1 visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+column(band=detail id=3 alignment="0" tabsequence=40 border="5" color="33554432" x="654" y="480" height="80" width="1989" format="[general]" html.valueishtml="0"  name=modo_preparacion visible="1" edit.limit=0 edit.case=upper edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=detail alignment="0" text="Precio Venta:" border="0" color="0" x="1797" y="360" height="64" width="562" html.valueishtml="0"  name=precio_venta_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Precio Vta Estimado:" border="0" color="0" x="1797" y="264" height="64" width="562" html.valueishtml="0"  name=t_3 visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=30 border="5" color="33554432" x="1367" y="272" height="76" width="325" format="[general]" html.valueishtml="0"  name=costo_instalacion visible="1" editmask.mask="#,##0" editmask.imemode=0 editmask.focusrectangle=no  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=10 alignment="1" tabsequence=10 border="5" color="33554432" x="1367" y="64" height="76" width="247" format="0%" html.valueishtml="0"  name=porc_beneficio visible="1" editmask.useformat=yes editmask.mask="#,###.00" editmask.imemode=0 editmask.focusrectangle=no  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="5" color="33554432" x="1376" y="380" height="76" width="325" format="[general]" html.valueishtml="0"  name=costo_total_insumos visible="1" editmask.mask="#,##0" editmask.imemode=0 editmask.focusrectangle=no  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=detail alignment="0" text="Costo Instalacion:" border="0" color="0" x="832" y="272" height="64" width="457" html.valueishtml="0"  name=costo_instalacion_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Porc Beneficio:" border="0" color="0" x="832" y="64" height="64" width="443" html.valueishtml="0"  name=porcentaje_beneficio_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Costo Total Insumos:" border="0" color="0" x="832" y="376" height="64" width="567" html.valueishtml="0"  name=costo_total_insumos_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=60 border="5" color="33554432" x="2322" y="152" height="76" width="325" format="[general]" html.valueishtml="0"  name=costo_total_producto visible="1" editmask.mask="#,##0" editmask.imemode=0 editmask.focusrectangle=no  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=detail alignment="0" text="Costo Total:" border="0" color="0" x="1797" y="152" height="64" width="562" html.valueishtml="0"  name=precio_costo_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=20 border="5" color="33554432" x="1367" y="176" height="76" width="375" format="[general]" html.valueishtml="0"  name=costo_mano_obra visible="1" editmask.mask="#,##0" editmask.imemode=0 editmask.focusrectangle=no  font.face="Trebuchet MS" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" )
+text(band=detail alignment="0" text="Costo Mano Obra:" border="0" color="0" x="832" y="176" height="64" width="466" html.valueishtml="0"  name=costo_mano_obra_t visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+tableblob (band=detail table="RECETAS" keyclause="cod_producto=:ll_cod_producto" template="" id=11 x="46" y="172" height="248" width="347" border="3"  oleclass="Paint.Picture" clientname="'Paint'" name=foto visible="1" )
+text(band=detail alignment="0" text="Imagen Receta" border="0" color="33554432" x="46" y="56" height="64" width="361" html.valueishtml="0"  name=t_4 visible="1"  font.face="Trebuchet MS" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="1073741824" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

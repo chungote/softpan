@@ -1,0 +1,4 @@
+/*Colorear celdas de un datawindow tipo tabular o grid*/
+/*Celestito=RGB(205,225,240) y Blanco=RGB(255,255,255)*/
+
+if (getrow() = currentrow(), RGB(205,225,240),RGB(255,255,255)) 

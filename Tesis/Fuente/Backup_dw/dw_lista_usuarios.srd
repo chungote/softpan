@@ -1,0 +1,52 @@
+$PBExportHeader$dw_lista_usuarios.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 150 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=456 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=char(100) updatewhereclause=yes name=usuario dbname="SYS_USUARIOS.Usuario" )
+ column=(type=char(30) updatewhereclause=yes name=grupo dbname="SYS_USUARIOS.Grupo" )
+ column=(type=long update=yes updatewhereclause=yes name=confirmado dbname="SYS_USUARIOS.confirmado" values="	1/	1" )
+ column=(type=char(20) updatewhereclause=yes name=sys_usuarios_nombre_sucursal dbname="nombre_sucursal" )
+ column=(type=long updatewhereclause=yes name=sys_usuarios_dias_sin_coneccion dbname="SYS_USUARIOS.dias_sin_coneccion" )
+ retrieve="SELECT Sys_usuarios.Usuario ,
+      Sys_usuarios.Grupo,
+		Sys_usuarios.confirmado,
+		case Sys_usuarios.cod_sucursal
+			when 0 then
+				'Todas'
+			else
+				nombre_sucursal
+		end as nombre_sucursal,
+		dias_sin_coneccion
+      FROM Sys_usuarios,
+				sucursales
+where ((Sys_usuarios.Grupo = :V_GRUPO) or (:V_GRUPO = '')) and
+		(Sys_usuarios.cod_sucursal *= sucursales.cod_sucursal)
+order by Sys_usuarios.Usuario" arguments=(("V_GRUPO", string)) )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="128" width="3237" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1440" y="32" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_grupos" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="0" text="tarjetas_tarjeta A, cuentas_cajas_nombre_cuenta A" border="0" color="0" x="704" y="32" height="76" width="219" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2514" y="48" height="72" width="197" html.valueishtml="0"  name=t_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2514" y="140" height="72" width="197" html.valueishtml="0"  name=t_5 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="140" height="76" width="3237" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2738" y="140" height="64" width="526" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2738" y="52" height="64" width="526" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Usuarios del Sistema" border="0" color="0" x="37" y="232" height="80" width="3237" html.valueishtml="0"  name=t_6 visible="1"  font.face="Times New Roman" font.height="-12" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="2" tabsequence=10 border="0" color="0" x="3104" y="8" height="64" width="151" format="[general]" html.valueishtml="0" protect="0~t1"  name=confirmado visible="1" checkbox.text="" checkbox.on="1" checkbox.off="1" checkbox.scale=yes checkbox.threed=yes  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Conf." border="0" color="0" x="3104" y="384" height="64" width="151" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Usuarios" border="0" color="0" x="37" y="384" height="64" width="686" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="37" y="8" height="64" width="686" format="[general]" html.valueishtml="0" protect="0~t1"  name=usuario visible="1" edit.limit=100 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Grupos" border="0" color="0" x="741" y="384" height="64" width="1248" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="745" y="8" height="64" width="1248" format="[general]" html.valueishtml="0"  name=grupo visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Días Desc." border="0" color="0" x="2789" y="384" height="64" width="297" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="2" tabsequence=30 border="0" color="0" x="2789" y="8" height="64" width="297" html.valueishtml="0"  name=sys_usuarios_dias_sin_coneccion visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Sucursal" border="0" color="0" x="2007" y="384" height="64" width="745" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=20 border="0" color="0" x="2007" y="8" height="64" width="745" html.valueishtml="0"  name=sys_usuarios_nombre_sucursal visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

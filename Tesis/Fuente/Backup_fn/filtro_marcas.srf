@@ -1,0 +1,27 @@
+$PBExportHeader$filtro_marcas.srf
+$PBExportComments$x
+global type filtro_marcas from function_object
+end type
+
+forward prototypes
+global function string filtro_marcas (long mi_marcas)
+end prototypes
+
+global function string filtro_marcas (long mi_marcas);string v_marcas
+
+if driver() = 2 then
+select Marca
+into :v_marcas
+from marcas
+where marcas.Cod_marca = :Mi_marcas ;
+else
+select Marca
+into :v_marcas
+from dbo.marcas
+where marcas.Cod_marca = :Mi_marcas ;
+end if
+
+
+return v_marcas
+end function
+

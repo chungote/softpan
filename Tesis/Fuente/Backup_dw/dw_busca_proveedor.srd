@@ -1,0 +1,32 @@
+$PBExportHeader$dw_busca_proveedor.srd
+$PBExportComments$FUERA DE SERVICIO
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=72 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=long updatewhereclause=yes key=yes name=cod_proveedor dbname="PROVEEDORES.COD_PROVEEDOR" )
+ column=(type=char(60) updatewhereclause=yes name=nombre_proveedor dbname="PROVEEDORES.NOMBRE_PROVEEDOR" )
+ column=(type=char(15) updatewhereclause=yes name=telefono_proveedor dbname="PROVEEDORES.TELEFONO_PROVEEDOR" )
+ retrieve="  SELECT PROVEEDORES.COD_PROVEEDOR,   
+         PROVEEDORES.NOMBRE_PROVEEDOR,   
+         PROVEEDORES.TELEFONO_PROVEEDOR  
+    FROM PROVEEDORES  
+   WHERE ( PROVEEDORES.NOMBRE_PROVEEDOR like :v_prov ) OR  
+         ( PROVEEDORES.COD_PROVEEDOR = :v_cod ) AND 
+			(PROVEEDORES.COD_PROVEEDOR <>1)  
+ORDER BY PROVEEDORES.NOMBRE_PROVEEDOR ASC    
+" update="PROVEEDORES" updatewhere=0 updatekeyinplace=no arguments=(("v_prov", string),("v_cod", number)) )
+text(band=header alignment="2" text="Cod Proveedor" border="6" color="0" x="5" y="4" height="64" width="384" html.valueishtml="0"  name=cod_proveedor_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Nombre Proveedor" border="6" color="0" x="393" y="4" height="64" width="1125" html.valueishtml="0"  name=nombre_proveedor_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Telefono Proveedor" border="6" color="0" x="1531" y="4" height="64" width="498" html.valueishtml="0"  name=telefono_proveedor_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="1" tabsequence=10 border="2" color="0" x="5" y="4" height="76" width="375" format="[general]" html.valueishtml="0"  name=cod_proveedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="2" color="0" x="393" y="4" height="76" width="1125" format="[general]" html.valueishtml="0"  name=nombre_proveedor visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="2" color="0" x="1531" y="4" height="76" width="503" format="[general]" html.valueishtml="0"  name=telefono_proveedor visible="1" edit.limit=15 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

@@ -1,0 +1,26 @@
+[FORMATOS]
+FORMATO_IMPORTE="#,##0"
+FORMATO_CANTIDAD="#,##0.0"
+FORMATO_PORCENTAJE="#,##0.00 '%'" 
+FORMATO_COMISION="#,##0"
+USUARIO=root
+
+
+[Empresa_01]
+EMPRESA="PANADERIAS"
+SUCURSAL="1"
+
+BLOQUEO="0"
+DRIVER="0"
+
+
+[DataBase]
+DBMS=ODBC
+SERVIDOR="localhost"
+database=Softpan
+dbparm= Connectstring='DSN=;UID=;PWD=;'
+
+
+UserId=root
+
+

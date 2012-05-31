@@ -1,0 +1,59 @@
+$PBExportHeader$dw_lista_compras_cruce_recepcion_deuda.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=64 color="536870912" )
+summary(height=64 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912"  height.autosize=yes)
+table(column=(type=long updatewhereclause=yes name=tipo_documen dbname="CTAS_PAGAR.TIPO_DOCUMEN" )
+ column=(type=char(25) updatewhereclause=yes name=num_doc dbname="CTAS_PAGAR.NUM_DOC" )
+ column=(type=datetime updatewhereclause=yes name=vencimiento_original dbname="vencimiento_original" )
+ column=(type=long updatewhereclause=yes name=nro_cuota dbname="CTAS_PAGAR.NRO_CUOTA" )
+ column=(type=long updatewhereclause=yes name=cuotas dbname="CTAS_PAGAR.CUOTAS" )
+ column=(type=datetime updatewhereclause=yes name=vencimiento dbname="CTAS_PAGAR.VENCIMIENTO" )
+ column=(type=decimal(0) updatewhereclause=yes name=recep dbname="recep" )
+ column=(type=long updatewhereclause=yes name=nro_recep dbname="CTAS_PAGAR.Nro_recep" )
+ column=(type=decimal(2) updatewhereclause=yes name=valor dbname="CTAS_PAGAR.VALOR" )
+ retrieve="  SELECT CTAS_PAGAR.TIPO_DOCUMEN,   
+         CTAS_PAGAR.NUM_DOC,
+			case 
+			 when (select tipo_nc from tipo_documentos where tipo_documen=CTAS_PAGAR.tipo_documen)=1 then
+				(select top  1 cp.Vencimiento_original from ctas_pagar cp 
+				 where cp.nro_pedido=CTAS_PAGAR.NRO_PEDIDO and 
+				 cp.nro_ctas_pagar<(select max(nro_ctas_pagar) 
+									from CTAS_PAGAR	where nro_pedido=CTAS_PAGAR.NRO_PEDIDO)
+				 order by cp.nro_ctas_pagar asc)
+		 	else
+			 CTAS_PAGAR.Vencimiento_original
+			end as vencimiento_original,   
+         CTAS_PAGAR.NRO_CUOTA,   
+         CTAS_PAGAR.CUOTAS,   
+         CTAS_PAGAR.VENCIMIENTO, 
+			isnull((select nro_recepcion from compras with (nolock)
+			where nro_recepcion = :v_recep and 
+					nro_pedido = :v_pedido and
+					compras.cod_proveedor = CTAS_PAGAR.cod_proveedor and 
+					compras.tipo_documen = CTAS_PAGAR.TIPO_DOCUMEN and 
+					compras.nro_factura = CTAS_PAGAR.NUM_DOC), 0) as recep,
+			:v_recep as Nro_recep, 
+         CTAS_PAGAR.VALOR  
+    FROM CTAS_PAGAR  with (nolock)
+   WHERE CTAS_PAGAR.NRO_PEDIDO = :v_pedido" filter="if ( nro_recep > 0 , recep  , nro_recep ) = nro_recep "arguments=(("v_pedido", number),("v_recep", number)) )
+text(band=header alignment="2" text="Tipo Documen" border="2" color="0" x="23" y="4" height="56" width="425" html.valueishtml="0"  name=tipo_documen_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Valor" border="2" color="0" x="1435" y="4" height="56" width="361" html.valueishtml="0"  name=valor_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Nro Cuota" border="2" color="0" x="891" y="4" height="56" width="233" html.valueishtml="0"  name=nro_cuota_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Num Doc" border="2" color="0" x="443" y="4" height="56" width="443" html.valueishtml="0"  name=num_doc_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Vencimiento" border="2" color="0" x="1129" y="4" height="56" width="306" html.valueishtml="0"  name=vencimiento_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="3803" y="0" height="56" width="69" format="[general]" html.valueishtml="0"  name=nro_recep visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="2" color="0" x="23" y="4" height="56" width="425" format="[general]" html.valueishtml="0"  name=tipo_documen visible="1" dddw.name=dw_combo_tipo_doc dddw.displaycolumn=tipo_descripcion dddw.datacolumn=tipo_documen dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="2" color="0" x="1440" y="4" height="56" width="361" format="#,##0.0" html.valueishtml="0"  name=valor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="2" expression="string( nro_cuota ) + '/' + string( cuotas )"border="2" color="0" x="891" y="4" height="56" width="233" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="2" tabsequence=32766 border="2" color="0" x="443" y="4" height="56" width="443" format="[general]" html.valueishtml="0"  name=num_doc visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="0" x="1129" y="4" height="56" width="293" format="[shortdate] [time]" html.valueishtml="0"  name=vencimiento_original visible="1" editmask.mask="dd/mm/yyyy" editmask.imemode=0 editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(valor for all)"border="2" color="0" x="1440" y="4" height="56" width="361" format="#,##0.0" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

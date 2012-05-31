@@ -1,0 +1,41 @@
+$PBExportHeader$dw_busca_producto.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=72 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(14) updatewhereclause=yes name=codigo dbname="CODIGO" )
+ column=(type=char(50) updatewhereclause=yes name=descripcion_producto dbname="DESCRIPCION_PRODUCTO" )
+ column=(type=decimal(5) updatewhereclause=yes name=precios_det_precio dbname="PRECIO" )
+ column=(type=char(4) updatewhereclause=yes name=unidad dbname="unidad" )
+ column=(type=decimal(2) updatewhereclause=yes name=cant_paq dbname="cant_paq" )
+ column=(type=long updatewhereclause=yes name=cod_seccion dbname="cod_seccion" )
+ retrieve="  SELECT  PRODUCTOS.CODIGO ,
+          PRODUCTOS.DESCRIPCION_PRODUCTO,
+			 PRECIOS_DET.PRECIO,
+			 productos.unidad,
+			 productos.cant_paq,
+			 productos.cod_seccion
+     FROM PRODUCTOS,
+			 PRECIOS_DET
+    WHERE ((PRODUCTOS.DESCRIPCION_PRODUCTO like :v_produc ) or
+           ( PRODUCTOS.CODIGO = :v_cod ) OR ( PRODUCTOS.CODIGO_BARRAS = :v_cod ) /*or
+					( PRODUCTOS.CODIGO in (select codigo from productos_codigos
+									where codigo_alternativo = :v_cod) ) */   ) and
+           ( PRODUCTOS.DESACTIVADO = 0 ) AND
+			  ( PRODUCTOS.CODIGO *= PRECIOS_DET.CODIGO AND PRECIOS_DET.NRO_LISTA = 1) 
+   ORDER BY PRODUCTOS.DESCRIPCION_PRODUCTO          ASC  " arguments=(("v_produc", string),("v_cod", string)) )
+text(band=header alignment="2" text="Codigo" border="6" color="0" x="14" y="4" height="64" width="434" html.valueishtml="0"  name=codigo_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Descripcion Producto" border="6" color="0" x="466" y="4" height="64" width="1271" html.valueishtml="0"  name=descripcion_producto_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Precio" border="6" color="0" x="1755" y="4" height="64" width="379" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="2" color="0" x="14" y="4" height="68" width="434" format="[general]" html.valueishtml="0"  name=codigo visible="1" edit.limit=14 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="2" color="0" x="466" y="4" height="68" width="1271" format="[general]" html.valueishtml="0"  name=descripcion_producto visible="1" edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="2" color="0" x="1755" y="4" height="68" width="379" format="#,##0.00" html.valueishtml="0"  name=precios_det_precio visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=30 border="0" color="0" x="1993" y="132" height="60" width="69" html.valueishtml="0"  name=cod_seccion visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

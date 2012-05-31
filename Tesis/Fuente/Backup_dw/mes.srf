@@ -1,0 +1,42 @@
+$PBExportHeader$mes.srf
+$PBExportComments$x
+global type mes from function_object
+end type
+
+forward prototypes
+global function string mes (integer mes)
+end prototypes
+
+global function string mes (integer mes);if mes <> 1 and mes <> 2 and mes <> 3 and mes <> 4 and mes <> 5 and mes <> 6 and mes <> 7 and mes <> 8 and mes <> 9 and mes <> 10 and mes <> 11 and mes <> 12 then
+   messagebox("Aviso de error.", "Mes invalido")
+	return ""
+end if	
+if mes = 1 then
+	return "Enero"
+elseif mes = 2 then
+	return "Febrero"
+elseif mes = 3 then
+	return "Marzo"
+elseif mes = 4 then
+	return "Abril"
+elseif mes = 5 then
+	return "Mayo"
+elseif mes = 6 then
+	return "Junio"
+elseif mes = 7 then
+	return "Julio"
+elseif mes = 8 then
+	return "Agosto"
+elseif mes = 9 then
+	return "Septiembre"
+elseif mes = 10 then
+	return "Octubre"
+elseif mes = 11 then
+	return "Noviembre"
+elseif mes = 12 then
+	return "Diciembre"
+else
+	return "Sin_mes"
+end if
+end function
+
