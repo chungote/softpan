@@ -1,0 +1,262 @@
+$PBExportHeader$dw_print_factura_nuevo.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=1072 color="536870912" )
+summary(height=764 color="553648127" )
+footer(height=4 color="536870912" )
+detail(height=60 color="536870912"  height.autosize=yes)
+table(column=(type=datetime updatewhereclause=yes name=ventas_fecha dbname="VENTAS.Fecha" )
+ column=(type=number updatewhereclause=yes name=ventas_nro_reg dbname="VENTAS.nro_reg" )
+ column=(type=long updatewhereclause=yes name=ventas_tipo_documen dbname="VENTAS.Tipo_documen" )
+ column=(type=long updatewhereclause=yes name=ventas_nro_factura dbname="nro_factura" )
+ column=(type=char(100) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=char(11) updatewhereclause=yes name=clientes_ruc dbname="CLIENTES.Ruc" )
+ column=(type=char(50) updatewhereclause=yes name=clientes_direccion dbname="CLIENTES.Direccion" )
+ column=(type=char(15) updatewhereclause=yes name=clientes_telefono dbname="CLIENTES.Telefono" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_moneda dbname="VENTAS.Cod_moneda" )
+ column=(type=char(50) updatewhereclause=yes name=ventas_remisiones dbname="VENTAS.Remisiones" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_condicion dbname="VENTAS.Cod_condicion" )
+ column=(type=decimal(2) updatewhereclause=yes name=ventas_det_unidades dbname="VENTAS_DET.Unidades" )
+ column=(type=char(14) updatewhereclause=yes name=ventas_det_codigo dbname="VENTAS_DET.Codigo" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_vendedor dbname="VENTAS.cod_vendedor" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_cliente dbname="VENTAS.Cod_cliente" )
+ column=(type=char(50) updatewhereclause=yes name=ventas_nombre_cliente dbname="VENTAS.nombre_cliente" )
+ column=(type=char(11) updatewhereclause=yes name=ventas_ruc dbname="VENTAS.ruc" )
+ column=(type=char(50) updatewhereclause=yes name=ventas_direccion dbname="VENTAS.direccion" )
+ column=(type=char(15) updatewhereclause=yes name=ventas_telefono dbname="VENTAS.telefono" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_aso dbname="VENTAS.COD_ASO" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_aso_nombre_asociado dbname="CLIENTES_ASO.NOMBRE_ASOCIADO" )
+ column=(type=char(15) updatewhereclause=yes name=clientes_aso_telefono dbname="CLIENTES_ASO.TELEFONO" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_aso_direccion dbname="CLIENTES_ASO.DIRECCION" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto dbname="Productos_Descripcion_producto" )
+ column=(type=decimal(9) updatewhereclause=yes name=ventas_det_precio dbname="Precio" )
+ column=(type=decimal(2) updatewhereclause=yes name=ventas_det_desc_ven dbname="VENTAS_DET.Desc_ven" )
+ column=(type=long updatewhereclause=yes name=productos_tipo_fiscal dbname="PRODUCTOS.Tipo_fiscal" )
+ column=(type=decimal(3) updatewhereclause=yes name=productos_imp_imp dbname="PRODUCTOS.Imp_imp" )
+ column=(type=char(20) updatewhereclause=yes name=tipo_documentos_tipo_descripcion dbname="TIPO_DOCUMENTOS.Tipo_descripcion" )
+ column=(type=long updatewhereclause=yes name=tipo_documentos_tipo_opcion dbname="TIPO_DOCUMENTOS.Tipo_opcion" )
+ column=(type=char(14) updatewhereclause=yes name=c_codigo dbname="PRODUCTOS.Codigo_barras" )
+ column=(type=number updatewhereclause=yes name=ventas_iva_incluido dbname="VENTAS.Iva_incluido" )
+ column=(type=decimal(9) updatewhereclause=yes name=tot_precio dbname="tot_precio" )
+ column=(type=decimal(9) updatewhereclause=yes name=ventas_det_tot_imp dbname="tot_imp" )
+ column=(type=decimal(5) updatewhereclause=yes name=ventas_det_precio_bruto dbname="VENTAS_DET.precio_bruto" )
+ column=(type=long updatewhereclause=yes name=ventas_det_tipo_fiscal dbname="VENTAS_DET.Tipo_fiscal" )
+ column=(type=decimal(3) updatewhereclause=yes name=ventas_det_imp_imp dbname="VENTAS_DET.Imp_imp" )
+ column=(type=long updatewhereclause=yes name=clientes_lista_precio dbname="CLIENTES.Lista_precio" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=ventas_det_primario dbname="VENTAS_DET.Primario" )
+ column=(type=long update=yes updatewhereclause=yes name=clientes_cod_descuento dbname="CLIENTES.Cod_descuento" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_contacto dbname="CLIENTES.Contacto" )
+ column=(type=char(25) updatewhereclause=yes name=ventas_condiciones_condicion dbname="VENTAS_CONDICIONES.CONDICION" )
+ column=(type=char(100) updatewhereclause=yes name=ventas_observacion dbname="VENTAS.Observacion" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_porc_gravado dbname="PRODUCTOS.porc_gravado" )
+ column=(type=long updatewhereclause=yes name=descuento_cheques dbname="VENTAS.descuento_cheques" )
+ column=(type=char(200) updatewhereclause=yes name=choferes_nombre_apellido dbname="choferes.nombre_apellido" )
+ column=(type=char(20) updatewhereclause=yes name=choferes_ci_ruc dbname="choferes.ci_ruc" )
+ column=(type=char(200) updatewhereclause=yes name=camiones_descripcion dbname="camiones.descripcion" )
+ column=(type=char(15) updatewhereclause=yes name=camiones_nro_chapa dbname="camiones.nro_chapa" )
+ column=(type=char(50) updatewhereclause=yes name=par_sys_direccion dbname="par_sys_direccion" )
+ column=(type=long updatewhereclause=yes name=pedidos_clientes_plazo_traslado dbname="PEDIDOS_CLIENTES.plazo_traslado" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_porc_gravado dbname="PRODUCTOS.porc_gravado" )
+ column=(type=long updatewhereclause=yes name=tipo_documentos_calc_imp dbname="TIPO_DOCUMENTOS.calc_imp" )
+ retrieve="  SELECT Ventas.Fecha,   
+			Ventas.nro_reg,   
+			Ventas.Tipo_documen,
+			case :v_porc_vta
+				when 0 then   
+         			Ventas.nro_factura    
+				else
+						Ventas.nro_factura_otras
+			end as nro_factura,
+         Clientes.Nombre_cliente,   
+         Clientes.Ruc,   
+         Clientes.Direccion,   
+         Clientes.Telefono,   
+			Ventas.Cod_moneda,
+         Ventas.Remisiones,
+			Ventas.Cod_condicion,   
+  			Ventas_det.Unidades,		
+         Ventas_det.Codigo,   
+			Ventas.cod_vendedor,
+			Ventas.Cod_cliente,
+			ventas.nombre_cliente,
+			ventas.ruc,
+			ventas.direccion,
+			ventas.telefono,
+			
+			Ventas.COD_ASO,
+
+			CLIENTES_ASO.NOMBRE_ASOCIADO,
+			CLIENTES_ASO.TELEFONO,
+			CLIENTES_ASO.DIRECCION,
+
+         case :v_porc_vta
+				when 0 then   
+         			 Productos.Descripcion_producto    
+				else
+						  Productos.Descripcion_corta
+				end as  Productos_Descripcion_producto, 
+  
+        	case :v_porc_vta
+						when 0 then   
+         					 Ventas_det.Precio   
+						else
+								round(( Ventas_det.Precio * :v_porc_vta/100),0)
+						end as Precio,    
+
+         Ventas_det.Desc_ven,   
+         Productos.Tipo_fiscal,   
+         Productos.Imp_imp,   
+         Tipo_documentos.Tipo_descripcion,   
+			Tipo_documentos.Tipo_opcion,   
+         Productos.Codigo_barras,   
+         Ventas.Iva_incluido,
+			case :v_porc_vta
+			when 0 then 
+					VENTAS_DET.tot_precio
+			else
+					round((Ventas_det.Tot_precio * :v_porc_vta/100),0)	
+			end as tot_precio,
+			
+			case :v_porc_vta
+			when 0 then 
+					Ventas_det.Tot_imp
+			else
+					round((Ventas_det.Tot_imp * :v_porc_vta/100),0)	
+			end  as tot_imp,   
+          
+         Ventas_det.precio_bruto,   
+         Ventas_det.Tipo_fiscal,   
+         Ventas_det.Imp_imp,   
+         Clientes.Lista_precio, 
+         Ventas_det.Primario,   
+         Clientes.Cod_descuento,   
+         Clientes.Contacto,
+			VENTAS_CONDICIONES.CONDICION,
+         Ventas.Observacion,
+			Productos.porc_gravado,
+			Ventas.descuento_cheques,
+			choferes.nombre_apellido,
+			choferes.ci_ruc,
+			camiones.descripcion,
+			camiones.nro_chapa,
+			case depositos.cod_sucursal
+			when 5 then
+				(select direccion  from sucursales where cod_sucursal=5 )
+			else
+				Par_sys.direccion
+			end as par_sys_direccion,
+			Pedidos_clientes.plazo_traslado,
+			Productos.porc_gravado,
+			tipo_documentos.calc_imp
+
+    FROM Ventas,   
+         Ventas_det,   
+         Clientes,   
+         Productos,   
+         Tipo_documentos,
+			VENTAS_CONDICIONES,
+			CLIENTES_ASO,
+			Pedidos_clientes,
+			choferes,
+			camiones,
+			Par_sys,
+			depositos
+
+   WHERE ( Ventas.Nro_reg = Ventas_det.Nro_reg ) and  
+         ( Ventas.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( Ventas_det.Codigo = Productos.Codigo ) and  
+         ( Ventas.Tipo_documen = Tipo_documentos.Tipo_documen ) and  
+         ( Ventas.Cod_condicion *= VENTAS_CONDICIONES.Cod_condicion ) and  
+			( Ventas.Cod_deposito = depositos.Cod_deposito ) and  
+			(Ventas.COD_CLIENTE *= CLIENTES_ASO.COD_CLIENTE) and
+			(Ventas.COD_ASO *= CLIENTES_ASO.COD_ASOCIADO) and
+			
+			(Pedidos_clientes.nro_camion *= camiones.nro_camion) and
+			(Pedidos_clientes.cod_chofer *= choferes.cod_chofer) and
+         (Pedidos_clientes.Nro_pedido = ventas.nro_pedido) and
+
+         ( ( Ventas.Nro_reg = :v_NroReg ) )  
+
+" arguments=(("v_NroReg", number),("v_porc_vta", number))  sort="ventas_det_primario A " )
+compute(band=header alignment="1" expression="/* if( ventas_iva_incluido <> 0, ( (ventas_det_tot_precio + ventas_det_tot_imp )    / ventas_det_unidades ) ,( ventas_det_tot_precio  / ventas_det_unidades ) ) */"border="0" color="65280" x="1998" y="1576" height="60" width="370" format="#,##0" html.valueishtml="0"  name=par_a visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="/* if( ventas_iva_incluido <> 0, ( (ventas_det_tot_precio + ventas_det_tot_precio )    / ventas_det_unidades ) ,( ventas_det_tot_precio  / ventas_det_unidades ) ) */"border="0" color="255" x="2386" y="1580" height="60" width="370" format="#,##0" html.valueishtml="0"  name=compute_1 visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="if( ventas_cod_aso  > 0 ,  clientes_aso_direccion ,  clientes_direccion )"border="0" color="0" x="576" y="756" height="60" width="1824" format="[general]" html.valueishtml="0"  name=c_direccion visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=10 alignment="0" tabsequence=32766 border="0" color="0" x="786" y="820" height="60" width="622" format="[general]" html.valueishtml="0"  name=ventas_remisiones visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=2 alignment="0" tabsequence=32766 border="0" color="0" x="786" y="884" height="60" width="425" format="#,##0" html.valueishtml="0"  name=ventas_nro_reg visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=header alignment="1" expression="if( tipo_documentos_tipo_opcion  = 0,  'X','')"border="0" color="0" x="2725" y="212" height="60" width="91" format="[general]" html.valueishtml="0"  name=credito visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=4 alignment="1" tabsequence=32766 border="0" color="0" x="2912" y="336" height="56" width="375" format="[general]" html.valueishtml="0"  name=ventas_nro_factura visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=header id=1 alignment="1" tabsequence=32766 border="0" color="0" x="672" y="612" height="60" width="91" format="dd" html.valueishtml="0"  name=ventas_fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression="mes(month(  ventas_fecha  ))"border="0" color="0" x="1024" y="612" height="60" width="695" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=1 alignment="0" tabsequence=32766 border="0" color="0" x="1806" y="612" height="60" width="325" format="yyyy" html.valueishtml="0"  name=ventas_fecha_1 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=14 alignment="1" tabsequence=32766 border="0" color="0" x="2464" y="612" height="60" width="119" format="[general]" html.valueishtml="0"  name=ventas_cod_vendedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="ventas_ruc"border="0" color="0" x="2464" y="692" height="60" width="750" format="@@@@ @@@@@@ @" html.valueishtml="0"  name=c_ruc visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string(if( ventas_cod_aso  > 0 ,   clientes_aso_telefono ,   clientes_telefono ) )"border="0" color="0" x="2464" y="756" height="60" width="750" format="[general]" html.valueishtml="0"  name=c_telefono visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="ventas_condiciones_condicion "border="0" color="0" x="2578" y="820" height="60" width="613" format="[general]" html.valueishtml="0"  name=c_condicion visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="if( tipo_documentos_tipo_opcion  = 0,  '','X')"border="0" color="0" x="2907" y="212" height="60" width="91" format="[general]" html.valueishtml="0"  name=contado visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string( ventas_nro_factura  , '#,##0')"border="0" color="0" x="2629" y="352" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_nro_factura visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string(day(  ventas_fecha  ))"border="0" color="0" x="663" y="524" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_dia visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string(mes( month( ventas_fecha ) ))"border="0" color="0" x="1015" y="524" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_mes visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string(year(  ventas_fecha  ))"border="0" color="0" x="1307" y="524" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_anio visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression=" if( ventas_cod_aso  > 0 ,  clientes_aso_nombre_asociado  ,  clientes_nombre_cliente  )  + '(' +   string(ventas_cod_cliente) + ')'"border="0" color="0" x="576" y="692" height="60" width="1824" format="[general]" html.valueishtml="0"  name=c_cliente visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string(ventas_nro_reg , '#,##0')"border="0" color="0" x="786" y="964" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_nro_reg visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=38 alignment="0" tabsequence=32766 border="0" color="16777215" x="69" y="204" height="72" width="471" format="[general]" html.valueishtml="0"  name=clientes_lista_precio visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=header alignment="0" expression=" if (long(left(right(string((  total_fac + 0.001  ) ),3),2))  > 0 , num_letras(string(round(total_fac, 0) )) + ~" - ~"  ,num_letras(string(total_fac ))  + ~" - ~") "border="0" color="16777215" x="1166" y="204" height="64" width="471" format="[general]" html.valueishtml="0"  name=cantidad_gs visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=header alignment="0" expression=" if (long(right(string((  total_fac + 0.001   ) ),2)) > 0 , if (long(left(right(string((  total_fac + 0.001  ) ),3),2)) > 0 , num_letras(string(truncate((  total_fac + 0.001  ), 0) )) + ~" CON ~" + left(right(string((  total_fac + 0.001  ) ),3),2) + ~"/100 -~", num_letras(string(truncate((  total_fac + 0.001  ), 0) )) )  ,num_letras(string(truncate((  total_fac + 0.001   ), 0) )) + ~" - ~")  "border="0" color="16777215" x="599" y="208" height="64" width="471" format="[general]" html.valueishtml="0"  name=cantidad_ds visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+text(band=header alignment="0" text="   " border="0" color="0" x="1957" y="204" height="64" width="55" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=45 alignment="0" tabsequence=32766 border="0" color="0" x="3433" y="516" height="48" width="55" format="[general]" html.valueishtml="0"  name=descuento_cheques visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="string(  descuento_cheques   , '#,##0')"border="0" color="0" x="2629" y="468" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_descuento_cheques visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="'Cedula : '+choferes_ci_ruc"border="0" color="0" x="2235" y="364" height="64" width="709" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="precio" border="2" color="0" x="1746" y="1004" height="64" width="160" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="c_precio" border="2" color="0" x="1938" y="1004" height="64" width="224" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text=" exento " border="2" color="0" x="2185" y="1004" height="64" width="201" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="gr5" border="2" color="0" x="2473" y="1004" height="64" width="201" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="gr10" border="2" color="0" x="2843" y="1004" height="64" width="201" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=31 alignment="0" tabsequence=32766 border="2" color="0" x="87" y="8" height="48" width="325" format="[general]" html.valueishtml="0"  name=c_codigo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=detail alignment="0" expression="if(round(  ventas_det_unidades  , 0) =   ventas_det_unidades  , string(  ventas_det_unidades  , '#,##0'), string(  ventas_det_unidades  , '#,##0.00') )"border="2" color="0" x="430" y="8" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_cantidad visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+column(band=detail id=24 alignment="0" tabsequence=32766 border="2" color="0" x="594" y="8" height="48" width="1093" format="[general]" html.valueishtml="0"  name=productos_descripcion_producto visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=detail alignment="1" expression=" if( ventas_det_tipo_fiscal =0  , string( round(  tot_precio  - ( tot_precio  *  productos_porc_gravado /100) ,0) , '#,##0'), string( tot_precio  , '#,##0') ) "border="2" color="0" x="2162" y="8" height="48" width="283" format="[GENERAL]" html.valueishtml="0"  name=c_exento visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=detail alignment="1" expression="if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp <>5, string(  round((tot_precio *   productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0)  , '#,##0'), string( 0 , '#,##0') )"border="2" color="0" x="2775" y="8" height="48" width="283" format="[GENERAL]" html.valueishtml="0"  name=c_gravado10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=detail alignment="1" expression="if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp =5, string(  round((tot_precio *   productos_porc_gravado /100),0) + if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0) , '#,##0'), string( 0 , '#,##0') )"border="2" color="0" x="2469" y="8" height="48" width="283" format="[GENERAL]" html.valueishtml="0"  name=c_gravado5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=detail alignment="1" expression="if(  productos_imp_imp = 2, '2%', productos_imp_imp  + '%'  )"border="0" color="0" x="9" y="4" height="52" width="64" format="[GENERAL]" html.valueishtml="0"  name=compute_13 visible="1~tif(  productos_tipo_fiscal = 1, 0, 1 )"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="if(round( precio , 0) =   precio  , string( precio  , '#,##0'), string(  precio  , '#,##0') )"border="2" color="0" x="1925" y="8" height="48" width="219" format="[GENERAL]" html.valueishtml="0"  name=c_precio visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=detail alignment="1" expression="if(  ventas_iva_incluido  =0 and   tipo_documentos_calc_imp  =1,  round(( ventas_det_precio *  ventas_det_imp_imp /100),0) + ventas_det_precio ,  ventas_det_precio  )"border="2" color="0" x="1696" y="8" height="48" width="219" format="#,##0~tif(  ventas_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=precio visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=summary alignment="0" expression="string( total_fac  , '#,##0') "border="0" color="0" x="3054" y="324" height="48" width="293" format="[GENERAL]" html.valueishtml="0"  name=c_total_fac visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="/*string(sum(if( ventas_det_tipo_fiscal =0 and   tipo_documentos_calc_imp  =1 ,  round(   ventas_det_tot_imp  , 0 ),0) for all)   ,'#,##0')*/  string(SUM(if( ventas_det_tipo_fiscal = 0 , (round((tot_precio *  productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0)) * ventas_det_imp_imp / (ventas_det_imp_imp + 100),0) FOR ALL),'#,##0')"border="0" color="0" x="1742" y="152" height="48" width="398" format="[GENERAL]" html.valueishtml="0"  name=s_imp visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=summary alignment="0" expression="' I.V.A. 5 %' "border="0" color="0" x="101" y="136" height="60" width="256" format="[GENERAL]" html.valueishtml="0"  name=compute_14 visible="1~tif( cumulativeSum( if(  productos_imp_imp = 5, 1, 0 ) for all ) > 0, 1, 0 )"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="/*string(sum(if( ventas_det_tipo_fiscal =0 and   ventas_det_imp_imp  =5 and   tipo_documentos_calc_imp =1 ,  round( ventas_det_tot_imp  , 0 ),0) for all)   ,'#,##0')*/  string(SUM(if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp = 5, (round((tot_precio *  productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0)) * ventas_det_imp_imp / (ventas_det_imp_imp + 100),0) FOR ALL),'#,##0')"border="0" color="0" x="393" y="136" height="60" width="343" format="[GENERAL]" html.valueishtml="0"  name=s_imp_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=summary alignment="0" expression="' I.V.A. %' "border="0" color="0" x="1467" y="144" height="60" width="256" format="[GENERAL]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="/*string(sum(if( ventas_det_tipo_fiscal =0 and   ventas_det_imp_imp <>5 and   tipo_documentos_calc_imp =1 ,  round(   ventas_det_tot_imp  , 0 ),0) for all)   ,'#,##0')*/   string(SUM(if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp <>5, (round((tot_precio *  productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0)) * ventas_det_imp_imp / (ventas_det_imp_imp + 100),0) FOR ALL),'#,##0')"border="0" color="0" x="1074" y="140" height="60" width="343" format="[GENERAL]" html.valueishtml="0"  name=s_imp_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=summary alignment="0" expression="' I.V.A. 10 %' "border="0" color="0" x="800" y="140" height="60" width="256" format="[GENERAL]" html.valueishtml="0"  name=compute_17 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="if( ventas_det_tipo_fiscal =0, sum(round( tot_precio - (tot_precio *   productos_porc_gravado /100) ,0) for all) , sum (tot_precio for all) )"border="2" color="0" x="2213" y="136" height="48" width="297" format="[General]" html.valueishtml="0"  name=t_exen visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217747" )
+compute(band=summary alignment="1" expression="if( ventas_det_tipo_fiscal =0  , string( sum(round( tot_precio - (tot_precio *   productos_porc_gravado /100) ,0) for all) , '#,##0'), string( sum (tot_precio for all), '#,##0') )"border="2" color="0" x="2217" y="64" height="48" width="297" format="[GENERAL]" html.valueishtml="0"  name=t_exe visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+compute(band=summary alignment="1" expression="SUM(if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp = 5, (round((tot_precio *   productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0))  ,0) FOR ALL)"border="2" color="0" x="2537" y="132" height="48" width="283" format="[General]" html.valueishtml="0"  name=t_gravado5n visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217747" )
+compute(band=summary alignment="1" expression="STRING(SUM(if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp = 5, (round((tot_precio *   productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0))  ,0) FOR ALL), '#,##0')"border="2" color="0" x="2537" y="64" height="48" width="283" format="[GENERAL]" html.valueishtml="0"  name=t_gravado5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+text(band=summary alignment="0" text="Desc. Otorgados :" border="0" color="0" x="718" y="0" height="48" width="366" html.valueishtml="0"  name=tex1 visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="100 - (tot_neto  * 100 / tot_bruto)"border="0" color="0" x="1088" y="0" height="48" width="430" format="#,##0.00" html.valueishtml="0"  name=tex2 visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(ventas_det_unidades *  ventas_det_precio_bruto for all)"border="0" color="16777215" x="1838" y="12" height="36" width="480" format="#,##0~tif(  ventas_cod_moneda  = 1 , ~"#,##0~" , ~"#,##0.00~")" html.valueishtml="0"  name=tot_bruto visible="1~t0"  font.face="Draft 17cpi" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="128" )
+compute(band=summary alignment="1" expression="sum(ventas_det_unidades *   ventas_det_precio for all)"border="0" color="16777215" x="3003" y="0" height="60" width="480" format="#,##0~tif(  ventas_cod_moneda  = 1 , ~"#,##0~" , ~"#,##0.00~")" html.valueishtml="0"  name=tot_neto visible="1~t0"  font.face="Roman 17cpi" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="128" )
+compute(band=summary alignment="1" expression="tot_bruto - tot_neto"border="0" color="16777215" x="2350" y="12" height="36" width="480" format="#,##0~tif(  ventas_cod_moneda  = 1 , ~"#,##0~" , ~"#,##0.00~")" html.valueishtml="0"  name=compute_10 visible="1~t0"  font.face="Draft 17cpi" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="128" )
+column(band=summary id=46 alignment="0" tabsequence=32766 border="0" color="0" x="46" y="508" height="48" width="361" format="[general]" html.valueishtml="0"  name=choferes_nombre_apellido visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=summary id=49 alignment="0" tabsequence=32766 border="0" color="0" x="2866" y="640" height="48" width="270" format="[general]" html.valueishtml="0"  name=camiones_nro_chapa visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=summary id=48 alignment="0" tabsequence=32766 border="0" color="0" x="407" y="636" height="48" width="270" format="[general]" html.valueishtml="0"  name=camiones_descripcion visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=summary id=47 alignment="0" tabsequence=32766 border="0" color="0" x="46" y="636" height="48" width="361" format="[general]" html.valueishtml="0"  name=choferes_ci_ruc visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="if(isnull(camiones_descripcion),'  ','Conductor : '+ string(  choferes_nombre_apellido , '') +'   Cedula : '+choferes_ci_ruc)"border="0" color="0" x="46" y="424" height="64" width="1239" format="[GENERAL]" html.valueishtml="0"  name=c_ci_ruc visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="if(isnull(camiones_descripcion),'','Punto de Partida: '+  par_sys_direccion )"border="0" color="0" x="1449" y="496" height="48" width="1239" format="[GENERAL]" html.valueishtml="0"  name=c_partida visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="if(isnull(camiones_descripcion),'','Plazo de Traslado : '+  string(pedidos_clientes_plazo_traslado , '#,##0') +' dias  ' +'Fecha Factura : '+string( ventas_fecha  , 'dd-mm-yyyy') )"border="0" color="0" x="1449" y="568" height="64" width="1239" format="[GENERAL]" html.valueishtml="0"  name=c_plazo visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="if(isnull(camiones_descripcion),'',' Punto de Llegada: '+ clientes_direccion )"border="0" color="0" x="1449" y="632" height="48" width="1239" format="[GENERAL]" html.valueishtml="0"  name=c_llegada visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="if(isnull(camiones_descripcion),'','Marca Vehiculo : '+ camiones_descripcion+' '+'Vehiculo: '+  camiones_nro_chapa)"border="0" color="0" x="1449" y="420" height="64" width="1239" format="[GENERAL]" html.valueishtml="0"  name=c_chapa visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=summary id=51 alignment="0" tabsequence=32766 border="0" color="0" x="1989" y="700" height="48" width="517" format="[general]" html.valueishtml="0"  name=pedidos_clientes_plazo_traslado visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="SUM(if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp <>5, (round((tot_precio *   productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0))  ,0) FOR ALL)"border="2" color="0" x="2834" y="132" height="48" width="297" format="#,##0" html.valueishtml="0"  name=t_gravado10n visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217747" )
+compute(band=summary alignment="1" expression="t_gravado10n  +  t_exen  + t_gravado5n"border="2" color="0" x="2834" y="204" height="64" width="297" format="#,##0" html.valueishtml="0"  name=total_fac visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+compute(band=summary alignment="3" expression="if(len(if(ventas_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds))> 70, right(if(ventas_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds), len(if(ventas_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds)) -70), '') + '-'"border="0" color="0" x="1993" y="340" height="64" width="146" format="[general]" html.valueishtml="0"  name=letras2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="3" expression="left(if(ventas_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds), 70)"border="0" color="0" x="1979" y="264" height="64" width="146" format="[general]" html.valueishtml="0"  name=letras1 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="string(letras1)"border="0" color="255" x="82" y="256" height="48" width="1696" format="[GENERAL]" html.valueishtml="0"  name=t_letras1 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="0" expression="string(letras2)"border="0" color="255" x="87" y="348" height="48" width="1696" format="[GENERAL]" html.valueishtml="0"  name=t_letras2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="STRING(SUM(if( ventas_det_tipo_fiscal = 0  and  ventas_det_imp_imp <>5, (round((tot_precio *   productos_porc_gravado /100) + ( if( tipo_documentos_calc_imp =1,  ventas_det_tot_imp ,0)),0))  ,0) FOR ALL), '#,##0')"border="2" color="0" x="2834" y="64" height="48" width="297" format="[General]" html.valueishtml="0"  name=t_gravado10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65535" )
+column(band=detail id=50 alignment="0" tabsequence=0 border="0" color="0" x="3488" y="0" height="64" width="1353" html.valueishtml="0"  name=par_sys_direccion visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

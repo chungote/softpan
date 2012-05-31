@@ -1,0 +1,231 @@
+$PBExportHeader$dw_lista_ctascob_ctas_cob_res_new.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=304 color="536870912" )
+summary(height=608 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=0 color="553648127" )
+table(column=(type=char(100) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_tipo_documen dbname="CTAS_COBRAR.Tipo_documen" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_num_doc dbname="CTAS_COBRAR.Num_doc" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_nro_cuota dbname="CTAS_COBRAR.Nro_cuota" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_cuotas dbname="CTAS_COBRAR.Cuotas" )
+ column=(type=decimal(2) updatewhereclause=yes name=ctas_cobrar_valor dbname="CTAS_COBRAR.Valor" )
+ column=(type=decimal(2) updatewhereclause=yes name=ctas_cobrar_valor_cobrado dbname="CTAS_COBRAR.Valor_cobrado" )
+ column=(type=datetime updatewhereclause=yes name=ctas_cobrar_vencimiento dbname="CTAS_COBRAR.Vencimiento" )
+ column=(type=char(200) updatewhereclause=yes name=ctas_cobrar_nro_recibo dbname="CTAS_COBRAR.Nro_recibo" )
+ column=(type=char(200) updatewhereclause=yes name=ctas_cobrar_fechas_cobro dbname="CTAS_COBRAR.Fechas_cobro" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_cod_moneda dbname="CTAS_COBRAR.Cod_moneda" )
+ column=(type=char(15) updatewhereclause=yes name=monedas_moneda dbname="MONEDAS.Moneda" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_cod_cliente dbname="CTAS_COBRAR.Cod_cliente" )
+ column=(type=char(15) updatewhereclause=yes name=clientes_telefono dbname="CLIENTES.Telefono" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_cobrado dbname="CTAS_COBRAR.Cobrado" )
+ column=(type=char(1) updatewhereclause=yes name=ctas_cobrar_estado dbname="CTAS_COBRAR.ESTADO" )
+ column=(type=long updatewhereclause=yes name=cod_vendedor dbname="COD_VENDEDOR" )
+ column=(type=char(4) updatewhereclause=yes name=monedas_sigla dbname="MONEDAS.Sigla" )
+ column=(type=datetime updatewhereclause=yes name=menor_vencimiento dbname="menor_vencimiento" )
+ column=(type=long updatewhereclause=yes name=ctas_cobrar_nro_pagare_cdc dbname="CTAS_COBRAR.nro_pagare_Cdc" )
+ retrieve="  SELECT Clientes.Nombre_cliente,
+			Ctas_cobrar.Tipo_documen,
+         Ctas_cobrar.Num_doc,   
+         Ctas_cobrar.Nro_cuota,   
+         Ctas_cobrar.Cuotas,   
+         Ctas_cobrar.Valor,   
+         Ctas_cobrar.Valor_cobrado,   
+         Ctas_cobrar.Vencimiento,   
+         Ctas_cobrar.Nro_recibo,   
+         Ctas_cobrar.Fechas_cobro,   
+         Ctas_cobrar.Cod_moneda,   
+         Monedas.Moneda,   
+         Ctas_cobrar.Cod_cliente, 
+			Clientes.Telefono,	
+         Ctas_cobrar.Cobrado,
+         Ctas_cobrar.ESTADO,
+			ISNULL((SELECT COD_VENDEDOR
+			 FROM VENTAS
+			 WHERE ( ventas.Tipo_documen = Ctas_cobrar.Tipo_documen ) and
+  			       ( Ventas.Nro_factura = Ctas_cobrar.Num_doc ) AND
+  			       ( Ventas.Cod_cliente = Ctas_cobrar.Cod_cliente ) ),0) AS COD_VENDEDOR,
+
+         Monedas.Sigla,
+			(select min(vencimiento)from Ctas_cobrar c where c.cod_cliente = Ctas_cobrar.Cod_cliente
+			 	and c.cobrado=:V_Cob)  as menor_vencimiento,
+			Ctas_cobrar.nro_pagare_Cdc
+
+    FROM Ctas_cobrar,   
+         Clientes,   
+         Monedas,
+			depositos, ventas  
+
+   WHERE ( Ctas_cobrar.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( Ctas_cobrar.Cod_moneda = Monedas.Cod_moneda ) and 
+
+			(Ctas_cobrar.num_doc= ventas.nro_factura) and 
+			(Ctas_cobrar.cod_cliente = ventas.cod_cliente) and
+			(Ctas_cobrar.tipo_documen = ventas.tipo_documen) and 
+			(depositos.cod_deposito = ventas.cod_deposito) and 
+			(depositos.cod_sucursal= :v_suc or :v_suc= 0) and
+
+       ( ( Ctas_cobrar.Cod_cliente = :V_CodCli OR :V_CodCli = 0 ) AND  
+         ( Clientes.Cod_categoria = :V_CateCli OR :V_CateCli = 0 ) AND           
+
+
+		   ( Ctas_cobrar.Vencimiento >= :V_FecIni or :V_FecIni Is NULL ) AND  
+		   ( Ctas_cobrar.Vencimiento <= :V_FecFin or :V_FecFin Is NULL ) AND  
+  
+         ( Ctas_cobrar.Cobrado = :V_Cob OR :V_Cob = 2) and
+		   ( Ctas_cobrar.COD_ASO = :v_socio or :v_socio = 0) and
+
+		   ( Ctas_cobrar.Fecha_emision >= :V_FecIni_v or :V_FecIni_v Is NULL ) AND  
+		   ( Ctas_cobrar.Fecha_emision <= :V_FecFin_v or :V_FecFin_v Is NULL )  )   
+
+
+
+union
+
+
+   SELECT Clientes.Nombre_cliente,
+			Ctas_cobrar.Tipo_documen,
+         Ctas_cobrar.Num_doc,   
+         Ctas_cobrar.Nro_cuota,   
+         Ctas_cobrar.Cuotas,   
+         Ctas_cobrar.Valor,   
+         Ctas_cobrar.Valor_cobrado,   
+         Ctas_cobrar.Vencimiento,   
+         Ctas_cobrar.Nro_recibo,   
+         Ctas_cobrar.Fechas_cobro,   
+         Ctas_cobrar.Cod_moneda,   
+         Monedas.Moneda,   
+         Ctas_cobrar.Cod_cliente, 
+			Clientes.Telefono,	
+         Ctas_cobrar.Cobrado,
+         Ctas_cobrar.ESTADO,
+			ISNULL((SELECT COD_VENDEDOR
+			 FROM VENTAS
+			 WHERE ( ventas.Tipo_documen = Ctas_cobrar.Tipo_documen ) and
+  			       ( Ventas.Nro_factura = Ctas_cobrar.Num_doc ) AND
+  			       ( Ventas.Cod_cliente = Ctas_cobrar.Cod_cliente ) ),0) AS COD_VENDEDOR,
+
+         Monedas.Sigla,
+
+			(select min(vencimiento)from Ctas_cobrar c where c.cod_cliente = Ctas_cobrar.Cod_cliente
+			 	and c.cobrado=:V_Cob)  as menor_vencimiento,
+		Ctas_cobrar.nro_pagare_Cdc 
+   
+
+    FROM Ctas_cobrar,   
+         Clientes,   
+         Monedas,
+			depositos,
+			Tipo_documentos, 
+			ANTICIPO_CAB 
+   WHERE ( Ctas_cobrar.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( Ctas_cobrar.Cod_moneda = Monedas.Cod_moneda ) and 
+
+			(ANTICIPO_CAB.tipo_documen = Ctas_cobrar.tipo_documen) and 
+			(ANTICIPO_CAB.Cod_cliente = Ctas_cobrar.Cod_cliente) and 
+			(ANTICIPO_CAB.nro_anticipo = Ctas_cobrar.Num_doc) and
+
+			(Ctas_cobrar.tipo_documen = Tipo_documentos.tipo_documen) and 
+			(Tipo_documentos.anticipo = 1) and 
+			(ANTICIPO_CAB.cod_sucursal= :v_suc or :v_suc= 0) and
+
+       ( ( Ctas_cobrar.Cod_cliente = :V_CodCli OR :V_CodCli = 0 ) AND  
+         ( Clientes.Cod_categoria = :V_CateCli OR :V_CateCli = 0 ) AND           
+
+
+		   ( Ctas_cobrar.Vencimiento >= :V_FecIni or :V_FecIni Is NULL ) AND  
+		   ( Ctas_cobrar.Vencimiento <= :V_FecFin or :V_FecFin Is NULL ) AND  
+  
+         ( Ctas_cobrar.Cobrado = :V_Cob OR :V_Cob = 2) and
+		   ( Ctas_cobrar.COD_ASO = :v_socio or :v_socio = 0) and
+
+		   ( Ctas_cobrar.Fecha_emision >= :V_FecIni_v or :V_FecIni_v Is NULL ) AND  
+		   ( Ctas_cobrar.Fecha_emision <= :V_FecFin_v or :V_FecFin_v Is NULL )  )   
+
+
+
+" arguments=(("V_CodCli", number),("V_CateCli", number),("V_FecIni", date),("V_FecFin", date),("V_Cob", number),("v_socio", number),("V_FecIni_v", date),("V_FecFin_v", date),("v_suc", number))  sort="ctas_cobrar_cod_moneda A ctas_cobrar_cod_cliente A ctas_cobrar_vencimiento A " )
+group(level=1 header.height=132 trailer.height=80 by=("ctas_cobrar_cod_moneda" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=68 trailer.height=52 by=("ctas_cobrar_cod_cliente" ) header.color="553648127" trailer.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="32" y="24" height="128" width="3237" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="ctas_cobrar_cod_cliente A, ctas_cobrar_cod_moneda A" border="0" color="0" x="800" y="44" height="76" width="169" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1440" y="40" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_venc_emis_cli_cat_soc" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2514" y="48" height="72" width="174" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2514" y="136" height="72" width="174" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2738" y="136" height="64" width="581" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2738" y="48" height="64" width="581" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="32" y="156" height="76" width="3237" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Extracto de Cuentas a Cobrar - Resumen" border="0" color="0" x="32" y="236" height="64" width="3237" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header.1 x1="14" y1="64" x2="1399" y2="64"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+text(band=header.1 alignment="0" text="Moneda :" border="0" color="8388608" x="18" y="0" height="56" width="210" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=12 alignment="0" tabsequence=32766 border="0" color="8388608" x="238" y="0" height="56" width="1157" format="[general]" html.valueishtml="0"  name=monedas_moneda visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text="Codigo" border="0" color="8388608" x="27" y="80" height="44" width="238" html.valueishtml="0"  name=servicios_nro_servicio_t visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header.1 alignment="0" text="Cliente" border="0" color="8388608" x="279" y="80" height="44" width="1106" html.valueishtml="0"  name=servicios_fecha_t visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header.1 alignment="0" text="Teléfono" border="0" color="8388608" x="1399" y="80" height="44" width="366" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header.1 alignment="1" text="Saldo" border="0" color="8388608" x="1778" y="80" height="44" width="425" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header.1 alignment="1" text="Vto.Menor" border="0" color="8388608" x="2231" y="80" height="44" width="265" html.valueishtml="0"  name=t_19 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=header.2 x1="14" y1="64" x2="1399" y2="64"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+text(band=header.2 alignment="0" text="Cliente :" border="0" color="0" x="18" y="0" height="56" width="306" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.2 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="329" y="0" height="56" width="1065" format="[general]" html.valueishtml="0"  name=clientes_nombre_cliente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="0" color="0" x="503" y="0" height="52" width="357" format="[general]" html.valueishtml="0"  name=ctas_cobrar_num_doc visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="2" expression=" ctas_cobrar_cuotas  + ~" de ~" +  ctas_cobrar_nro_cuota"border="0" color="0" x="864" y="0" height="52" width="274" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="1143" y="0" height="52" width="402" format="#,##0.00" html.valueishtml="0"  name=ctas_cobrar_valor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=18 alignment="2" tabsequence=32766 border="0" color="0" x="1550" y="0" height="52" width="192" format="[general]" html.valueishtml="0"  name=monedas_sigla visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=9 alignment="2" tabsequence=32766 border="0" color="0" x="2519" y="0" height="52" width="320" format="[general]" html.valueishtml="0"  name=ctas_cobrar_nro_recibo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="2843" y="0" height="52" width="357" format="" html.valueishtml="0"  name=ctas_cobrar_fechas_cobro visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.hscrollbar=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="2" expression="if( ctas_cobrar_cobrado =0,~"No~",~"Sí~")"border="0" color="0" x="3205" y="0" height="52" width="133" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="1723" y="92" height="52" width="402" format="#,##0.00" html.valueishtml="0"  name=ctas_cobrar_valor_cobrado visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=8 alignment="2" tabsequence=32766 border="0" color="0" x="2153" y="0" height="52" width="361" format="dd/mm/yy" html.valueishtml="0"  name=ctas_cobrar_vencimiento visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="8388608" x="3031" y="68" height="56" width="23" format="[general]" html.valueishtml="0"  name=ctas_cobrar_tipo_documen visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="8388608" x="3054" y="68" height="56" width="23" format="[general]" html.valueishtml="0"  name=cod_vendedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="if (ctas_cobrar_valor_cobrado < 0 , 0 , ctas_cobrar_valor_cobrado)"border="0" color="0" x="1755" y="0" height="48" width="384" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="0" expression="ctas_cobrar_valor - ctas_cobrar_valor_cobrado"border="0" color="0" x="2277" y="104" height="48" width="142" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.2 alignment="1" expression="sum(ctas_cobrar_valor for group 2)"border="0" color="0" x="1765" y="84" height="48" width="402" format="#,##0.00" html.valueishtml="0"  name=vgtot1 visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.2 alignment="1" expression="sum( if (ctas_cobrar_valor_cobrado < 0 , 0 , ctas_cobrar_valor_cobrado)  for group 2)"border="0" color="0" x="2171" y="84" height="48" width="402" format="#,##0.00" html.valueishtml="0"  name=vgtot2 visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=trailer.2 id=13 alignment="0" tabsequence=32766 border="0" color="0" x="27" y="0" height="48" width="238" format="[general]" html.valueishtml="0"  name=ctas_cobrar_cod_cliente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=trailer.2 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="279" y="0" height="48" width="1106" format="[general]" html.valueishtml="0"  name=clientes_nombre_cliente_1 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.2 alignment="1" expression="Vgtot1 - Vgtot2"border="0" color="0" x="2606" y="92" height="48" width="366" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=trailer.2 id=14 alignment="0" tabsequence=32766 border="0" color="0" x="1399" y="0" height="48" width="366" format="[general]" html.valueishtml="0"  name=clientes_telefono visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.2 alignment="1" expression="sum(ctas_cobrar_valor - ctas_cobrar_valor_cobrado for group 2)"border="0" color="0" x="1778" y="0" height="48" width="425" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=trailer.2 id=19 alignment="2" tabsequence=32766 border="0" color="0" x="2231" y="0" height="48" width="265" format="[shortdate] [time]" html.valueishtml="0"  name=menor_vencimiento visible="1" edit.name="DD/MM/YY HH:MM:SS" editmask.mask="DD/MM/YY" editmask.imemode=0 editmask.focusrectangle=no  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="14" y1="0" x2="3337" y2="0"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+text(band=trailer.1 alignment="0" text="Total :" border="0" color="8388608" x="1024" y="20" height="48" width="119" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=trailer.1 id=12 alignment="0" tabsequence=32766 border="0" color="8388608" x="1147" y="20" height="48" width="599" format="[general]" html.valueishtml="0"  name=monedas_moneda_1 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum(ctas_cobrar_valor for group 1)"border="0" color="8388608" x="1769" y="100" height="48" width="402" format="#,##0.00" html.valueishtml="0"  name=aaa visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=trailer.1 id=18 alignment="2" tabsequence=32766 border="0" color="8388608" x="2176" y="100" height="48" width="192" format="[general]" html.valueishtml="0"  name=monedas_sigla_1 visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.1 alignment="1" expression="sum( if (ctas_cobrar_valor_cobrado < 0 , 0 , ctas_cobrar_valor_cobrado)  for group 1)"border="0" color="8388608" x="2373" y="100" height="48" width="402" format="#,##0.00" html.valueishtml="0"  name=bbb visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.1 alignment="1" expression="aaa - bbb"border="0" color="8388608" x="2267" y="96" height="48" width="366" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.1 alignment="1" expression="sum(ctas_cobrar_valor - ctas_cobrar_valor_cobrado for group 1)"border="0" color="8388608" x="1778" y="20" height="48" width="425" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="16" height="52" width="590" html.valueishtml="0"  name=t_9 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Cliente" border="0" color="0" x="50" y="84" height="48" width="261" html.valueishtml="0"  name=t_10 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="84" height="48" width="713" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="188" height="48" width="713" html.valueishtml="0"  name=filtro5 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Socio" border="0" color="0" x="50" y="136" height="48" width="261" html.valueishtml="0"  name=t_11 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="136" height="48" width="713" html.valueishtml="0"  name=filtro6 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Cate Cli" border="0" color="0" x="50" y="188" height="48" width="261" html.valueishtml="0"  name=t_12 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="F. Ini. Venc." border="0" color="0" x="50" y="292" height="48" width="261" html.valueishtml="0"  name=t_13 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="292" height="48" width="713" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Fin Venc." border="0" color="0" x="50" y="344" height="48" width="261" html.valueishtml="0"  name=t_14 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="344" height="48" width="713" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Ini. Emis." border="0" color="0" x="50" y="396" height="48" width="261" html.valueishtml="0"  name=t_15 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="396" height="48" width="713" html.valueishtml="0"  name=filtro9 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Fin Emis." border="0" color="0" x="50" y="448" height="48" width="261" html.valueishtml="0"  name=t_16 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="448" height="48" width="713" html.valueishtml="0"  name=filtro10 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Tipo" border="0" color="0" x="50" y="500" height="48" width="261" html.valueishtml="0"  name=t_17 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="500" height="48" width="713" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Sucursal" border="0" color="0" x="50" y="240" height="48" width="261" html.valueishtml="0"  name=t_18 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="240" height="48" width="713" html.valueishtml="0"  name=filtrosuc visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_4 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_5 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_6 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_7 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_8 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_9 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="37" y1="4" x2="3360" y2="4"  name=l_10 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="1090519039" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

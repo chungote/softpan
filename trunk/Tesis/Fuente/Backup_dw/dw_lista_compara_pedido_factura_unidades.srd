@@ -1,0 +1,163 @@
+$PBExportHeader$dw_lista_compara_pedido_factura_unidades.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 9 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=328 color="536870912" )
+summary(height=152 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=pedidos_clientes_nro_pedido dbname="PEDIDOS_CLIENTES.nro_pedido" )
+ column=(type=decimal(2) updatewhereclause=yes name=monto dbname="Monto" )
+ column=(type=datetime updatewhereclause=yes name=pedidos_clientes_fecha_entrega dbname="PEDIDOS_CLIENTES.fecha_entrega" )
+ column=(type=char(30) updatewhereclause=yes name=vendedores_nombre_apellido dbname="VENDEDORES.nombre_apellido" )
+ column=(type=char(100) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.nombre_cliente" )
+ column=(type=datetime updatewhereclause=yes name=fecha_factura dbname="fecha_factura" )
+ column=(type=char(14) updatewhereclause=yes name=codigo dbname="PEDIDOS_CLIENTES_DET.codigo" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto dbname="PRODUCTOS.descripcion_producto" )
+ column=(type=decimal(2) updatewhereclause=yes name=cant_pedida dbname="cant_pedida" )
+ column=(type=decimal(2) updatewhereclause=yes name=cant_facturada dbname="cant_facturada" )
+ column=(type=decimal(5) updatewhereclause=yes name=precio dbname="PEDIDOS_CLIENTES_DET.precio" )
+ column=(type=decimal(4) updatewhereclause=yes name=stock_salon_cdc dbname="stock_salon_cdc" )
+ column=(type=decimal(4) updatewhereclause=yes name=cant_stock dbname="cant_stock" )
+ column=(type=decimal(4) updatewhereclause=yes name=cant_stock_mra dbname="cant_stock_mra" )
+ column=(type=decimal(4) updatewhereclause=yes name=cant_stock_sl dbname="cant_stock_sl" )
+ column=(type=decimal(4) updatewhereclause=yes name=sto_salon dbname="sto_salon" )
+ column=(type=decimal(4) updatewhereclause=yes name=sto_salon_mra dbname="sto_salon_mra" )
+ column=(type=decimal(4) updatewhereclause=yes name=cant_stock_enc dbname="cant_stock_ENC" )
+ column=(type=decimal(4) updatewhereclause=yes name=cant_stock_cdc dbname="cant_stock_CDC" )
+ column=(type=number updatewhereclause=yes name=nro_reg dbname="nro_reg" )
+ retrieve="
+select  	pedidos_clientes.nro_pedido,
+			sum(pedidos_clientes.importe_gravado+pedidos_clientes.importe_exento+pedidos_clientes.importe_impuesto)as Monto,
+			fecha_entrega,
+			vendedores.nombre_apellido, 
+			Clientes.nombre_cliente,
+			/*(select sum(v.)  
+				from ventas v, ventas_pedidos vp where (v.nro_reg = vp.nro_reg)and 
+			(vp.nro_pedido = pedidos_clientes.nro_pedido)) as total_facturado,*/
+
+			(select v.fecha from ventas v, ventas_pedidos vp where (v.nro_reg = vp.nro_reg)and 
+			(vp.nro_pedido = pedidos_clientes.nro_pedido)) as fecha_factura, 
+			pedidos_clientes_det.codigo,
+			productos.descripcion_producto,
+
+			sum(pedidos_clientes_det.cantidad) cant_pedida,
+
+			isnull((select sum(vd.unidades) 
+				from ventas v, ventas_pedidos vp, ventas_det vd 
+				where (v.nro_reg = vd.nro_reg)and 
+				      (v.nro_reg = vp.nro_reg)and 
+				      (vp.nro_pedido = pedidos_clientes.nro_pedido)and
+				       (vd.codigo =pedidos_clientes_det.codigo)),0) as cant_facturada,
+
+			pedidos_clientes_det.precio,
+			/*dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 1, 0) AS stock_salon,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 11, 0) AS stock_importacion,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 12, 0) AS stock_textil,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 38, 0) AS stock_textil_mra,*/
+      	dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 49, 0) AS stock_salon_cdc,
+
+ 			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 0, 0) AS cant_stock,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 0, 3) AS cant_stock_mra,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 0, 1) AS cant_stock_sl,
+         dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 1, 1) AS sto_salon,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 35,3) AS sto_salon_mra,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 0, 5) AS cant_stock_ENC,
+			dbo.f_stock_actual(pedidos_clientes_det.CODIGO, 0, 6) AS cant_stock_CDC,
+
+		(select v.nro_reg from ventas v, ventas_pedidos vp where (v.nro_reg = vp.nro_reg)and 
+		(vp.nro_pedido = pedidos_clientes.nro_pedido)) as nro_reg 			
+
+
+from  pedidos_clientes,  
+		vendedores, 
+		Clientes,
+		productos,
+		pedidos_clientes_det,
+		ventas
+
+
+where pedidos_clientes.cod_vendedor = vendedores.cod_vendedor and 
+		pedidos_clientes.cod_cliente = Clientes.cod_cliente and 
+		pedidos_clientes.entregado = 1 and  
+		pedidos_clientes_det.nro_pedido=pedidos_clientes.nro_pedido and
+		pedidos_clientes_det.codigo =productos.codigo and
+		ventas.nro_pedido = pedidos_clientes.nro_pedido and
+		(ventas.fecha>=:v_ini and ventas.fecha <=:v_fin) and
+		/*(pedidos_clientes.nro_pedido = :v_pedido or  :v_pedido=0) */
+		((select v.nro_factura from ventas v, ventas_pedidos vp 
+			where (v.nro_reg = vp.nro_reg)and 
+			(vp.nro_pedido = pedidos_clientes.nro_pedido)) =:v_pedido or  :v_pedido=0) 
+
+group by	pedidos_clientes.nro_pedido,
+			fecha_entrega,
+			vendedores.nombre_apellido, 
+			Clientes.nombre_cliente,	
+			pedidos_clientes_det.codigo,
+			productos.descripcion_producto,
+			pedidos_clientes_det.precio
+" filter="diferencia <> 0"arguments=(("v_ini", date),("v_fin", date),("v_pedido", number))  sort="fecha_factura A pedidos_clientes_nro_pedido A " )
+group(level=1 header.height=72 trailer.height=0 by=("clientes_nombre_cliente" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=96 trailer.height=0 by=("fecha_factura" ) header.color="536870912" trailer.color="536870912" )
+group(level=3 header.height=192 trailer.height=68 by=("pedidos_clientes_nro_pedido" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="32" y="0" height="76" width="2382" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Diferencia Pedido/Factura" border="0" color="0" x="9" y="236" height="96" width="4832" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="32" y="88" height="76" width="2382" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="2665" y="16" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_fec_fact" visible="1~t0"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2944" y="0" height="56" width="197" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="3168" y="0" height="64" width="603" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2944" y="88" height="56" width="197" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount() + ' - ' + f_user()"border="0" color="0" x="3168" y="88" height="64" width="603" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header.1 alignment="0" expression="'Vendedor: ' + wordcap(  vendedores_nombre_apellido  )"border="0" color="0" x="1463" y="12" height="56" width="1417" format="[GENERAL]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+compute(band=header.1 alignment="0" expression="'Cliente : '+ wordcap( clientes_nombre_cliente )"border="0" color="0" x="9" y="8" height="56" width="1417" format="[GENERAL]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="2" text="Fecha Factura :" border="0" color="33554432" x="9" y="12" height="56" width="352" html.valueishtml="0"  name=monto_t visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+column(band=header.2 id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="379" y="12" height="56" width="439" format="dd-mm-yyyy" html.valueishtml="0"  name=fecha_factura visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="536870912" )
+text(band=header.3 alignment="2" text="Nro.Pedido:" border="0" color="33554432" x="9" y="4" height="56" width="251" html.valueishtml="0"  name=pedidos_clientes_nro_pedido_t visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="1073741824" )
+column(band=header.3 id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="279" y="4" height="56" width="329" format="[general]" html.valueishtml="0"  name=pedidos_clientes_nro_pedido visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="1073741824" )
+column(band=header.3 id=20 alignment="0" tabsequence=32766 border="0" color="33554432" x="1477" y="8" height="56" width="425" format="[general]" html.valueishtml="0"  name=nro_reg visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="536870912" )
+text(band=header.3 alignment="2" text="Nro.Reg.Facturacion:" border="0" color="33554432" x="987" y="8" height="56" width="466" html.valueishtml="0"  name=t_12 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="1073741824" )
+text(band=header.3 alignment="2" text="S T O C K" border="2" color="33554432" x="3186" y="12" height="56" width="1669" html.valueishtml="0"  name=t_11 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Codigo" border="2" color="33554432" x="18" y="132" height="56" width="425" html.valueishtml="0"  name=t_3 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Descripción" border="2" color="33554432" x="448" y="132" height="56" width="1280" html.valueishtml="0"  name=t_1 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Cant.Pedida" border="2" color="33554432" x="1733" y="132" height="56" width="306" html.valueishtml="0"  name=t_6 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Cant.Factura" border="2" color="33554432" x="2043" y="132" height="56" width="293" html.valueishtml="0"  name=t_7 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Diferencia" border="2" color="33554432" x="2341" y="132" height="56" width="242" html.valueishtml="0"  name=t_8 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Precio" border="2" color="33554432" x="2587" y="132" height="56" width="247" html.valueishtml="0"  name=t_9 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Otros" border="2" color="33554432" x="3378" y="132" height="56" width="187" html.valueishtml="0"  name=t_17 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="1" text="ST Total" border="2" color="33554432" x="3570" y="132" height="56" width="187" html.valueishtml="0"  name=s visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Salon" border="2" color="33554432" x="3186" y="132" height="56" width="187" html.valueishtml="0"  name=t_16 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Salon" border="2" color="33554432" x="3762" y="132" height="56" width="187" html.valueishtml="0"  name=t_21 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Otros" border="2" color="33554432" x="3954" y="132" height="56" width="187" html.valueishtml="0"  name=t_22 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="1" text="ST Total" border="2" color="33554432" x="4146" y="132" height="56" width="187" html.valueishtml="0"  name=t_20 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="1" text="Encarn." border="2" color="33554432" x="4338" y="72" height="116" width="174" html.valueishtml="0"  name=t_24 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="CDC" border="2" color="33554432" x="4517" y="72" height="116" width="146" html.valueishtml="0"  name=t_27 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="Total" border="2" color="33554432" x="4667" y="72" height="116" width="187" html.valueishtml="0"  name=t_28 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="San Lorenzo" border="2" color="33554432" x="3186" y="72" height="56" width="571" html.valueishtml="0"  name=t_18 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.3 alignment="2" text="MRA" border="2" color="33554432" x="3762" y="72" height="56" width="571" html.valueishtml="0"  name=t_23 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="2" color="33554432" x="18" y="4" height="56" width="425" format="[general]" html.valueishtml="0"  name=codigo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="2" color="33554432" x="448" y="4" height="56" width="1280" format="[general]" html.valueishtml="0"  name=productos_descripcion_producto visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="2" color="33554432" x="1733" y="4" height="56" width="306" format="[general]" html.valueishtml="0"  name=cant_pedida visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="1" tabsequence=32766 border="2" color="33554432" x="2043" y="4" height="56" width="293" format="[general]" html.valueishtml="0"  name=cant_facturada visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression="(cant_pedida  -  cant_facturada ) "border="2" color="33554432" x="2341" y="4" height="56" width="242" format="#,##0" html.valueishtml="0"  name=diferencia visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217752" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="2" color="33554432" x="2587" y="4" height="56" width="247" format="#,##0" html.valueishtml="0"  name=precio visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="1" tabsequence=32766 border="2" color="33554432" x="3186" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=sto_salon visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression=" cant_stock_sl  -  sto_salon "border="2" color="33554432" x="3378" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="1" tabsequence=32766 border="2" color="33554432" x="3570" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=cant_stock_sl visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="1" tabsequence=32766 border="2" color="33554432" x="3762" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=sto_salon_mra visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression=" cant_stock_mra -  sto_salon_mra "border="2" color="33554432" x="3954" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="1" tabsequence=32766 border="2" color="33554432" x="4146" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=cant_stock_mra visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=18 alignment="1" tabsequence=32766 border="2" color="33554432" x="4338" y="4" height="56" width="174" format="#,##0" html.valueishtml="0"  name=cant_stock_enc visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="1" tabsequence=32766 border="2" color="33554432" x="4517" y="4" height="56" width="146" format="[general]" html.valueishtml="0"  name=cant_stock_cdc visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="1" tabsequence=32766 border="2" color="33554432" x="4667" y="4" height="56" width="187" format="#,##0" html.valueishtml="0"  name=cant_stock visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=summary alignment="0" text="F. Inicial" border="0" color="0" x="37" y="28" height="56" width="261" html.valueishtml="0"  name=t_25 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127"  height.autosize=yes)
+text(band=summary alignment="0" text="" border="0" color="0" x="302" y="28" height="48" width="713" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215"  height.autosize=yes)
+text(band=summary alignment="0" text="F. Final" border="0" color="0" x="37" y="80" height="56" width="261" html.valueishtml="0"  name=t_26 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127"  height.autosize=yes)
+text(band=summary alignment="0" text="" border="0" color="0" x="302" y="88" height="48" width="713" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215"  height.autosize=yes)
+text(band=header.3 alignment="2" text="Total" border="2" color="33554432" x="2839" y="132" height="56" width="343" html.valueishtml="0"  name=t_10 visible="1"  resizeable=1  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+compute(band=detail alignment="1" expression="(cant_pedida  -  cant_facturada )  *  precio "border="2" color="33554432" x="2839" y="4" height="56" width="343" format="#,##0" html.valueishtml="0"  name=c_total visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+compute(band=trailer.3 alignment="1" expression="sum( (cant_pedida  -  cant_facturada )    *  precio  for group 3)"border="4" color="33554432" x="2839" y="4" height="56" width="343" format="#,##0" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

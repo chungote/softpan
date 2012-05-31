@@ -1,0 +1,19 @@
+$PBExportHeader$error_db.srf
+global type error_db from function_object
+end type
+
+forward prototypes
+global function boolean error_db (transaction t_db, string v_mensage)
+end prototypes
+
+global function boolean error_db (transaction t_db, string v_mensage);if t_db.sqlcode = -1 then
+	messagebox('Aviso del sistema', v_mensage + '~r~r' + t_db.sqlerrtext)
+	rollback using t_db;
+	return true
+else
+	commit using t_db;
+	return false
+end if
+
+end function
+

@@ -1,0 +1,1 @@
+If(isnull( costo_total_insumos),costo_mano_obra + costo_instalacion, costo_mano_obra + costo_instalacion+ costo_total_insumos )

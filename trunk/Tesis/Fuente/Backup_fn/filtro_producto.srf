@@ -1,0 +1,19 @@
+$PBExportHeader$filtro_producto.srf
+$PBExportComments$x
+global type filtro_producto from function_object
+end type
+
+forward prototypes
+global function string filtro_producto (string mi_producto)
+end prototypes
+
+global function string filtro_producto (string mi_producto);string v_Productos
+
+select Descripcion_producto
+into :v_Productos
+from Productos
+where Productos.Codigo = :Mi_producto ;
+
+return v_Productos
+end function
+

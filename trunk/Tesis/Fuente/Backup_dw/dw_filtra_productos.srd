@@ -1,0 +1,120 @@
+$PBExportHeader$dw_filtra_productos.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=1152 color="536870912" )
+table(column=(type=char(14) update=yes updatewhereclause=yes key=yes name=productos_codigo dbname="PRODUCTOS.codigo" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto dbname="PRODUCTOS.descripcion_producto" )
+ column=(type=char(14) updatewhereclause=yes name=productos_codigo_hasta dbname="PRODUCTOS.codigo_hasta" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto_hasta dbname="PRODUCTOS.descripcion_producto_hasta" )
+ column=(type=long updatewhereclause=yes name=seccion_cod_seccion dbname="Seccion.Cod_seccion" )
+ column=(type=char(30) updatewhereclause=yes name=seccion_secciones dbname="Seccion.Secciones" )
+ column=(type=long updatewhereclause=yes name=seccion_cod_seccion_hasta dbname="Seccion.Cod_seccion_hasta" )
+ column=(type=char(30) updatewhereclause=yes name=seccion_secciones_hasta dbname="Seccion.Secciones_hasta" )
+ column=(type=long updatewhereclause=yes name=sub_seccion_cod_sub_seccion dbname="Sub_seccion.Cod_sub_seccion" )
+ column=(type=char(30) updatewhereclause=yes name=sub_seccion_sub_secciones dbname="Sub_seccion.Sub_secciones" )
+ column=(type=long updatewhereclause=yes name=sub_seccion_cod_sub_seccion_hasta dbname="Sub_seccion.Cod_sub_seccion_hasta" )
+ column=(type=char(30) updatewhereclause=yes name=sub_seccion_sub_secciones_hasta dbname="Sub_seccion.Sub_secciones_hasta" )
+ column=(type=long updatewhereclause=yes name=grupo_cod_grupo dbname="GRUPO.COD_GRUPO" )
+ column=(type=char(30) updatewhereclause=yes name=grupo_descripcion_grupo dbname="GRUPO.DESCRIPCION_GRUPO" )
+ column=(type=long updatewhereclause=yes name=grupo_cod_grupo_hasta dbname="GRUPO.COD_GRUPO_hasta" )
+ column=(type=char(30) updatewhereclause=yes name=grupo_descripcion_grupo_hasta dbname="GRUPO.DESCRIPCION_GRUPO_hasta" )
+ column=(type=long updatewhereclause=yes name=categorias_cod_categoria dbname="CATEGORIAS.COD_CATEGORIA" )
+ column=(type=char(30) updatewhereclause=yes name=categorias_descripcion_cate dbname="CATEGORIAS.DESCRIPCION_CATE" )
+ column=(type=long updatewhereclause=yes name=categorias_cod_categoria_hasta dbname="CATEGORIAS.COD_CATEGORIA_hasta" )
+ column=(type=char(30) updatewhereclause=yes name=categorias_descripcion_cate_hasta dbname="CATEGORIAS.DESCRIPCION_CATE_hasta" )
+ column=(type=long updatewhereclause=yes name=sub_categorias_cod_sub_categoria dbname="SUB_CATEGORIAS.COD_SUB_CATEGORIA" )
+ column=(type=char(30) updatewhereclause=yes name=sub_categorias_descripcion_sub_cate dbname="SUB_CATEGORIAS.DESCRIPCION_SUB_CATE" )
+ column=(type=long updatewhereclause=yes name=sub_categorias_cod_sub_categoria_hasta dbname="SUB_CATEGORIAS.COD_SUB_CATEGORIA_hasta" )
+ column=(type=char(30) updatewhereclause=yes name=sub_categorias_descripcion_sub_cate_hast dbname="SUB_CATEGORIAS.DESCRIPCION_SUB_CATE_hasta" )
+ column=(type=long updatewhereclause=yes name=marcas_cod_marca dbname="MARCAS.COD_MARCA" )
+ column=(type=char(30) updatewhereclause=yes name=marcas_marca dbname="MARCAS.MARCA" )
+ column=(type=long updatewhereclause=yes name=marcas_cod_marca_hasta dbname="MARCAS.COD_MARCA_hasta" )
+ column=(type=char(30) updatewhereclause=yes name=marcas_marca_hasta dbname="MARCAS.MARCA_hasta" )
+ retrieve="  SELECT Productos.codigo,
+			Productos.descripcion_producto,
+			Productos.codigo as codigo_hasta,
+			Productos.descripcion_producto as descripcion_producto_hasta,
+
+			Seccion.Cod_seccion,   
+         Seccion.Secciones,   
+         Seccion.Cod_seccion as Cod_seccion_hasta,   
+         Seccion.Secciones as Secciones_hasta,   
+
+         Sub_seccion.Cod_sub_seccion,   
+         Sub_seccion.Sub_secciones,   
+         Sub_seccion.Cod_sub_seccion as Cod_sub_seccion_hasta,   
+         Sub_seccion.Sub_secciones as Sub_secciones_hasta,   
+
+         GRUPO.COD_GRUPO,   
+         GRUPO.DESCRIPCION_GRUPO,   
+         GRUPO.COD_GRUPO as COD_GRUPO_hasta,   
+         GRUPO.DESCRIPCION_GRUPO as DESCRIPCION_GRUPO_hasta,   
+
+         CATEGORIAS.COD_CATEGORIA,   
+         CATEGORIAS.DESCRIPCION_CATE,   
+         CATEGORIAS.COD_CATEGORIA as COD_CATEGORIA_hasta,   
+         CATEGORIAS.DESCRIPCION_CATE as DESCRIPCION_CATE_hasta,   
+
+         SUB_CATEGORIAS.COD_SUB_CATEGORIA,   
+         SUB_CATEGORIAS.DESCRIPCION_SUB_CATE,   
+         SUB_CATEGORIAS.COD_SUB_CATEGORIA as COD_SUB_CATEGORIA_hasta,   
+         SUB_CATEGORIAS.DESCRIPCION_SUB_CATE as DESCRIPCION_SUB_CATE_hasta,   
+
+         MARCAS.COD_MARCA,   
+         MARCAS.MARCA,  
+         MARCAS.COD_MARCA as COD_MARCA_hasta,   
+         MARCAS.MARCA as MARCA_hasta
+  
+    FROM Productos,
+			CATEGORIAS,   
+         GRUPO,   
+         MARCAS,   
+         Seccion,   
+         SUB_CATEGORIAS,   
+         Sub_seccion   
+" update="Productos" updatewhere=0 updatekeyinplace=yes )
+compute(band=detail alignment="0" expression="'Desde producto:'"border="0" color="0" x="14" y="28" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="0" x="453" y="28" height="60" width="553" format="[general]"  name=productos_codigo  tag="dddw:dw_busca_producto;1>1;2=2" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="28" height="60" width="1353" format="[general]"  name=productos_descripcion_producto edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta producto:'"border="0" color="0" x="14" y="108" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=20 border="5" color="0" x="453" y="108" height="60" width="553" format="[general]"  name=productos_codigo_hasta  tag="dddw:dw_busca_producto;1=3;2=4" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="108" height="60" width="1353" format="[general]"  name=productos_descripcion_producto_hasta edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Desde ' + f_etiqueta(1,1,~"00001Sección:~")"border="0" color="0" x="14" y="188" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=30 border="5" color="0" x="453" y="188" height="60" width="553" format="[general]"  name=seccion_cod_seccion  tag="dddw:dw_busca_seccion;1>5;2=6:@" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="188" height="60" width="905" format="[general]"  name=seccion_secciones edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta ' + f_etiqueta(1,1,~"00001Sección:~")"border="0" color="0" x="14" y="268" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=40 border="5" color="0" x="453" y="268" height="60" width="553" format="[general]"  name=seccion_cod_seccion_hasta  tag="dddw:dw_busca_seccion;1=7;2=8:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="268" height="60" width="905" format="[general]"  name=seccion_secciones_hasta edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Desde ' + f_etiqueta(1,1,~"00010Sub Sección:~")"border="0" color="0" x="14" y="348" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=50 border="5" color="0" x="453" y="348" height="60" width="553" format="[general]" protect="0~tif( seccion_cod_seccion =0 or seccion_cod_seccion_hasta = 0 or isnull(seccion_cod_seccion_hasta) or isnull(seccion_cod_seccion), 1 , 0)"  name=sub_seccion_cod_sub_seccion  tag="dddw:dw_busca_sub_seccion;1>9;2=10:@" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( seccion_cod_seccion =0 or seccion_cod_seccion_hasta = 0 or isnull(seccion_cod_seccion_hasta) or isnull(seccion_cod_seccion), 12632256 , 16777215)" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="348" height="60" width="905" format="[general]"  name=sub_seccion_sub_secciones edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta ' + f_etiqueta(1,1,~"00010Sub Sección:~")"border="0" color="0" x="14" y="428" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="1" tabsequence=60 border="5" color="0" x="453" y="428" height="60" width="553" format="[general]" protect="0~tif( seccion_cod_seccion =0 or seccion_cod_seccion_hasta = 0 or isnull(seccion_cod_seccion_hasta) or isnull(seccion_cod_seccion), 1 , 0)"  name=sub_seccion_cod_sub_seccion_hasta  tag="dddw:dw_busca_sub_seccion;1=11;2=12:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( seccion_cod_seccion =0 or seccion_cod_seccion_hasta = 0 or isnull(seccion_cod_seccion_hasta) or isnull(seccion_cod_seccion), 12632256 , 16777215)" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="428" height="60" width="905" format="[general]"  name=sub_seccion_sub_secciones_hasta edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Desde ' + f_etiqueta(1,1,~"00020Grupo:~")"border="0" color="0" x="14" y="508" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="1" tabsequence=70 border="5" color="0" x="453" y="508" height="60" width="553" format="[general]" protect="0~tif(  sub_seccion_cod_sub_seccion =0 or  sub_seccion_cod_sub_seccion_hasta = 0 or isnull( sub_seccion_cod_sub_seccion_hasta ) or isnull( sub_seccion_cod_sub_seccion ), 1 , 0)"  name=grupo_cod_grupo  tag="dddw:dw_busca_grupos;1>13;2=14:@" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(  sub_seccion_cod_sub_seccion =0 or  sub_seccion_cod_sub_seccion_hasta = 0 or isnull( sub_seccion_cod_sub_seccion_hasta ) or isnull( sub_seccion_cod_sub_seccion ),  12632256 , 16777215)" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="508" height="60" width="905" format="[general]"  name=grupo_descripcion_grupo edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta ' + f_etiqueta(1,1,~"00020Grupo:~")"border="0" color="0" x="14" y="588" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="1" tabsequence=80 border="5" color="0" x="453" y="588" height="60" width="553" format="[general]" protect="0~tif(  sub_seccion_cod_sub_seccion =0 or  sub_seccion_cod_sub_seccion_hasta = 0 or isnull( sub_seccion_cod_sub_seccion_hasta ) or isnull( sub_seccion_cod_sub_seccion ), 1 , 0)"  name=grupo_cod_grupo_hasta  tag="dddw:dw_busca_grupos;1=15;2=16:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(  sub_seccion_cod_sub_seccion =0 or  sub_seccion_cod_sub_seccion_hasta = 0 or isnull( sub_seccion_cod_sub_seccion_hasta ) or isnull( sub_seccion_cod_sub_seccion ),  12632256 , 16777215)" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="588" height="60" width="905" format="[general]"  name=grupo_descripcion_grupo_hasta edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Desde ' + f_etiqueta(1,1,~"00030Categoría:~")"border="0" color="0" x="14" y="668" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="1" tabsequence=90 border="5" color="0" x="453" y="668" height="60" width="553" format="[general]" protect="0~tif(   grupo_cod_grupo =0 or   grupo_cod_grupo_hasta = 0 or isnull(  grupo_cod_grupo_hasta ) or isnull(  grupo_cod_grupo ), 1 , 0)"  name=categorias_cod_categoria  tag="dddw:dw_busca_categorias;1>17;2=18:@" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(   grupo_cod_grupo =0 or   grupo_cod_grupo_hasta = 0 or isnull(  grupo_cod_grupo_hasta ) or isnull(  grupo_cod_grupo ),  12632256 , 16777215)" )
+column(band=detail id=18 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="668" height="60" width="905" format="[general]"  name=categorias_descripcion_cate edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta ' + f_etiqueta(1,1,~"00030Categoría:~")"border="0" color="0" x="14" y="748" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="1" tabsequence=100 border="5" color="0" x="453" y="748" height="60" width="553" format="[general]" protect="0~tif(   grupo_cod_grupo =0 or   grupo_cod_grupo_hasta = 0 or isnull(  grupo_cod_grupo_hasta ) or isnull(  grupo_cod_grupo ), 1 , 0)"  name=categorias_cod_categoria_hasta  tag="dddw:dw_busca_categorias;1=19;2=20:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(   grupo_cod_grupo =0 or   grupo_cod_grupo_hasta = 0 or isnull(  grupo_cod_grupo_hasta ) or isnull(  grupo_cod_grupo ),  12632256 , 16777215)" )
+column(band=detail id=20 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="748" height="60" width="905" format="[general]"  name=categorias_descripcion_cate_hasta edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Desde ' + f_etiqueta(1,1,~"00040Sub Categoría:~")"border="0" color="0" x="14" y="828" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=21 alignment="1" tabsequence=110 border="5" color="0" x="453" y="828" height="60" width="553" format="[general]" protect="0~tif(    categorias_cod_categoria =0 or    categorias_cod_categoria_hasta = 0 or isnull(   categorias_cod_categoria_hasta ) or isnull(   categorias_cod_categoria ), 1 , 0)"  name=sub_categorias_cod_sub_categoria  tag="dddw:dw_busca_sub_categorias;1>21;2=22:@" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(    categorias_cod_categoria =0 or    categorias_cod_categoria_hasta = 0 or isnull(   categorias_cod_categoria_hasta ) or isnull(   categorias_cod_categoria ),  12632256 , 16777215)" )
+column(band=detail id=22 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="828" height="60" width="905" format="[general]"  name=sub_categorias_descripcion_sub_cate edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta ' + f_etiqueta(1,1,~"00040Sub Categoría:~")"border="0" color="0" x="14" y="908" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=23 alignment="1" tabsequence=120 border="5" color="0" x="453" y="908" height="60" width="553" format="[general]" protect="0~tif(    categorias_cod_categoria =0 or    categorias_cod_categoria_hasta = 0 or isnull(   categorias_cod_categoria_hasta ) or isnull(   categorias_cod_categoria ), 1 , 0)"  name=sub_categorias_cod_sub_categoria_hasta  tag="dddw:dw_busca_sub_categorias;1=23;2=24:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(    categorias_cod_categoria =0 or    categorias_cod_categoria_hasta = 0 or isnull(   categorias_cod_categoria_hasta ) or isnull(   categorias_cod_categoria ),  12632256 , 16777215)" )
+column(band=detail id=24 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="908" height="60" width="905" format="[general]"  name=sub_categorias_descripcion_sub_cate_hast edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Desde ' + f_etiqueta(1,1,~"00050Marca:~")"border="0" color="0" x="14" y="988" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=25 alignment="1" tabsequence=130 border="5" color="0" x="453" y="988" height="60" width="553" format="[general]"  name=marcas_cod_marca  tag="dddw:dw_busca_marcas;1>25;2=26" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=26 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="988" height="60" width="905" format="[general]"  name=marcas_marca edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+compute(band=detail alignment="0" expression="'Hasta ' + f_etiqueta(1,1,~"00050Marca:~")"border="0" color="0" x="14" y="1068" height="60" width="425" format="[general]"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=27 alignment="1" tabsequence=140 border="5" color="0" x="453" y="1068" height="60" width="553" format="[general]"  name=marcas_cod_marca_hasta  tag="dddw:dw_busca_marcas;1=27;2=28" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=28 alignment="0" tabsequence=32766 border="2" color="0" x="1047" y="1068" height="60" width="905" format="[general]"  name=marcas_marca_hasta edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

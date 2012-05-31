@@ -1,0 +1,25 @@
+$PBExportHeader$parsys_ventacodlugar.srf
+$PBExportComments$x
+global type parsys_ventacodlugar from function_object
+end type
+
+forward prototypes
+global function long parsys_ventacodlugar ()
+end prototypes
+
+global function long parsys_ventacodlugar ();long v_ventacodlugar
+
+if driver() = 2 then
+select cod_lugar
+into :v_ventacodlugar
+from par_sys;
+else
+select cod_lugar
+into :v_ventacodlugar
+from dbo.par_sys;
+end if
+
+
+return v_ventacodlugar
+end function
+

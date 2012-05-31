@@ -1,0 +1,19 @@
+$PBExportHeader$filtro_categoria.srf
+$PBExportComments$x
+global type filtro_categoria from function_object
+end type
+
+forward prototypes
+global function string filtro_categoria (long mi_categorias)
+end prototypes
+
+global function string filtro_categoria (long mi_categorias);string v_Categorias
+
+	select descripcion_categoria
+	into :v_Categorias
+	from Categorias
+	where Categorias.Cod_categoria = :Mi_Categorias ;
+
+return v_Categorias
+end function
+

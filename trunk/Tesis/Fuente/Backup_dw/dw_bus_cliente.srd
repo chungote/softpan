@@ -1,0 +1,41 @@
+$PBExportHeader$dw_bus_cliente.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=1 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no grid.lines=0 )
+header(height=80 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=long updatewhereclause=yes key=yes name=cod_cliente dbname="CLIENTES.COD_CLIENTE" )
+ column=(type=char(50) updatewhereclause=yes name=nombre_cliente dbname="CLIENTES.NOMBRE_CLIENTE" )
+ column=(type=char(11) updatewhereclause=yes name=ruc dbname="CLIENTES.RUC" )
+ column=(type=char(50) updatewhereclause=yes name=direccion dbname="CLIENTES.DIRECCION" )
+ column=(type=char(30) updatewhereclause=yes name=contacto dbname="CLIENTES.CONTACTO" )
+ column=(type=char(15) updatewhereclause=yes name=telefono dbname="CLIENTES.TELEFONO" )
+ column=(type=long updatewhereclause=yes name=cod_proveedor dbname="CLIENTES.cod_proveedor" )
+ retrieve="  SELECT CLIENTES.COD_CLIENTE,   
+         CLIENTES.NOMBRE_CLIENTE,
+			CLIENTES.RUC,
+			CLIENTES.DIRECCION,
+			CLIENTES.CONTACTO,
+			CLIENTES.TELEFONO,
+			clientes.cod_proveedor
+    FROM CLIENTES  
+   WHERE (CLIENTES.NOMBRE_CLIENTE like :v_cliente) or
+			(CLIENTES.RUC like :v_cliente) or
+			(CLIENTES.COD_CLIENTE = :v_cod) 
+ORDER BY CLIENTES.NOMBRE_CLIENTE ASC   
+
+" update="CLIENTES" updatewhere=0 updatekeyinplace=no arguments=(("v_cliente", string),("v_cod", number)) )
+text(band=header alignment="2" text="Cod Cliente"border="6" color="0" x="9" y="8" height="64" width="329"  name=cod_cliente_t  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Nombre Cliente"border="6" color="0" x="347" y="8" height="64" width="1207"  name=nombre_cliente_t  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="0" text="Ruc"border="6" color="0" x="1563" y="8" height="64" width="361"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="0" text="Direccion"border="6" color="0" x="1934" y="8" height="64" width="1143"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="0" text="Contacto"border="6" color="0" x="3086" y="8" height="64" width="681"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="0" text="Telefono"border="6" color="0" x="3776" y="8" height="64" width="334"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="1" tabsequence=10 border="5" color="0" x="9" y="8" height="56" width="329" format="[general]"  name=cod_cliente edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="5" color="0" x="347" y="8" height="56" width="1207" format="[general]"  name=nombre_cliente edit.limit=50 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="5" color="0" x="1563" y="8" height="56" width="361" format="[general]"  name=ruc edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="5" color="0" x="1934" y="8" height="56" width="1143" format="[general]"  name=direccion edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="5" color="0" x="3086" y="8" height="56" width="681" format="[general]"  name=contacto edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="5" color="0" x="3776" y="8" height="56" width="334" format="[general]"  name=telefono edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

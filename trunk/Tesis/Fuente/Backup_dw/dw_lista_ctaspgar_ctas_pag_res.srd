@@ -1,0 +1,110 @@
+$PBExportHeader$dw_lista_ctaspgar_ctas_pag_res.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 0 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=320 color="536870912" )
+summary(height=404 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=64 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=ctas_pagar_cod_proveedor dbname="CTAS_PAGAR.Cod_proveedor" )
+ column=(type=char(40) updatewhereclause=yes name=proveedores_nombre_proveedor dbname="PROVEEDORES.Nombre_proveedor" )
+ column=(type=char(15) updatewhereclause=yes name=proveedores_telefono_proveedor dbname="PROVEEDORES.TELEFONO_PROVEEDOR" )
+ column=(type=char(11) updatewhereclause=yes name=proveedores_ruc dbname="PROVEEDORES.ruc" )
+ column=(type=decimal(4) updatewhereclause=yes name=ctas_pagar_valor_pagado dbname="valor_pagado" )
+ column=(type=decimal(4) updatewhereclause=yes name=valor dbname="valor" )
+ retrieve="  SELECT Ctas_pagar.Cod_proveedor,  
+         Proveedores.Nombre_proveedor,   
+         Proveedores.TELEFONO_PROVEEDOR, 
+  			Proveedores.ruc,
+			case :v_incl 
+				when 0 then
+					sum(dbo.Cambiar_moneda2 ( Ctas_pagar.Cod_moneda, par_sys.cod_moneda, dbo.f_fecha(getdate()), valor_pagado ) )
+				when 1 then
+					sum(dbo.Cambiar_moneda2 ( Ctas_pagar.Cod_moneda, par_sys.cod_moneda, dbo.f_fecha(getdate()), valor_pagado ) )
+					+
+					isnull((select sum(  dbo.Cambiar_moneda2 (  p.Cod_moneda, ps.cod_moneda, dbo.f_fecha(getdate()), valor_pagado ) ) 
+					from pagos as p,
+							pagos_doc as pd,
+							par_sys as ps 
+							where p.nro_pago = pd.nro_pago and 
+									p.cod_proveedor = Ctas_pagar.Cod_proveedor
+					 and p.finiquito = 0 and p.impreso = 1), 0) 
+				end as valor_pagado,
+			sum(dbo.Cambiar_moneda2 ( Ctas_pagar.Cod_moneda, par_sys.cod_moneda, dbo.f_fecha(getdate()), valor ) ) as valor
+    FROM Ctas_pagar,   
+         Proveedores,   
+			par_sys
+   WHERE ( Ctas_pagar.Cod_proveedor = Proveedores.Cod_proveedor ) and  
+
+(
+			(Ctas_pagar.TIPO_COMPRA = :v_tipo or :v_tipo = 4) AND
+         ( :ar_excl not like '%' + ltrim(cast(Ctas_pagar.Tipo_documen as varchar(5))) + ',%'    ) and  
+
+         (( Ctas_pagar.Cod_proveedor = :V_CodProv ) OR ( :V_CodProv = 0 )) AND  
+         (( Ctas_pagar.Pagado = :V_Pag ) OR  ( :V_Pag = 2 )) AND  
+
+		   (( Ctas_pagar.Vencimiento >= :V_FecIni or :V_FecIni Is NULL ) AND  
+		   ( Ctas_pagar.Vencimiento <= :V_FecFin or :V_FecFin Is NULL )) AND
+
+		   (( Ctas_pagar.Fecha_emision >= :V_FecIni_v or :V_FecIni_v Is NULL ) AND  
+		   ( Ctas_pagar.Fecha_emision <= :V_FecFin_v or :V_FecFin_v Is NULL )) and
+			(((select cod_sucursal 
+					from depositos 
+					where cod_deposito = (select top 1 cod_deposito 
+														from compras 
+														where cod_proveedor = Ctas_pagar.cod_proveedor and 
+																Tipo_documen = Ctas_pagar.Tipo_documen and 
+																nro_factura = Ctas_pagar.num_doc)) = :v_sucursal) or (:v_sucursal = 0))
+
+)   
+
+group by Ctas_pagar.Cod_proveedor,  
+         Proveedores.Nombre_proveedor,
+			TELEFONO_PROVEEDOR,
+				Proveedores.ruc 
+
+  " arguments=(("V_CodProv", number),("V_Pag", number),("V_FecIni", date),("V_FecFin", date),("V_FecIni_v", date),("V_FecFin_v", date),("v_tipo", number),("v_incl", number),("ar_excl", string),("v_sucursal", number))  sort="proveedores_nombre_proveedor A " )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="32" y="4" height="88" width="1376" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-12" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="32" y="100" height="76" width="2002" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="ctas_pagar_cod_proveedor A, ctas_pagar_cod_moneda A" border="0" color="0" x="937" y="24" height="76" width="247" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1458" y="20" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_venc_emis_prov" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="2" text="Cuentas a Pagar por Proveedor" border="0" color="0" x="1225" y="184" height="64" width="928" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2519" y="8" height="72" width="183" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2743" y="8" height="64" width="590" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2519" y="96" height="72" width="183" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2743" y="96" height="64" width="590" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="0" text="Proveedor" border="0" color="0" x="50" y="88" height="48" width="261" html.valueishtml="0"  name=t_10 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="88" height="48" width="713" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Inicial" border="0" color="0" x="50" y="140" height="48" width="261" html.valueishtml="0"  name=t_11 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="140" height="48" width="713" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Final" border="0" color="0" x="50" y="192" height="48" width="261" html.valueishtml="0"  name=t_12 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="192" height="48" width="713" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Tipo" border="0" color="0" x="50" y="244" height="48" width="261" html.valueishtml="0"  name=t_13 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Sucursal" border="0" color="0" x="50" y="296" height="48" width="261" html.valueishtml="0"  name=t_15 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="296" height="48" width="713" html.valueishtml="0"  name=filtro5 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="244" height="48" width="713" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="20" height="52" width="590" html.valueishtml="0"  name=t_9 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Valor" border="0" color="8388608" x="2235" y="256" height="56" width="151" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header alignment="1" text="Valor Pagado" border="0" color="8388608" x="2414" y="256" height="56" width="393" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header alignment="1" text="Saldo" border="0" color="8388608" x="3058" y="256" height="56" width="169" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=header x1="87" y1="316" x2="3232" y2="316"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="1979" y="4" height="56" width="407" format="#,##0.0" html.valueishtml="0"  name=valor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="2400" y="4" height="56" width="407" format="#,##0.0" html.valueishtml="0"  name=ctas_pagar_valor_pagado visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="1" expression=" valor - ctas_pagar_valor_pagado "border="0" color="0" x="2821" y="4" height="56" width="407" format="#,##0.0" html.valueishtml="0"  name=saldo visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=summary x1="1970" y1="4" x2="3227" y2="4"  name=l_2 visible="1" pen.style="0" pen.width="9" pen.color="0"  background.mode="2" background.color="1090519039" )
+text(band=summary alignment="1" text="Totales Generales :" border="0" color="8388608" x="919" y="12" height="56" width="581" html.valueishtml="0"  name=t_14 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="parsys_codmonedanombre(parsys_codmoneda())"border="0" color="0" x="1513" y="12" height="56" width="453" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum(valor for all)"border="0" color="0" x="1979" y="12" height="56" width="407" format="#,##0.0" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum(ctas_pagar_valor_pagado for all)"border="0" color="0" x="2400" y="12" height="56" width="407" format="#,##0.0" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum( valor - ctas_pagar_valor_pagado  for all)"border="0" color="0" x="2821" y="12" height="56" width="407" format="#,##0.0" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="1550" y="4" height="56" width="389" format="[general]" html.valueishtml="0"  name=proveedores_telefono_proveedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="1161" y="0" height="56" width="370" html.valueishtml="0"  name=proveedores_ruc visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="0" expression=" proveedores_nombre_proveedor + ' (' + string( ctas_pagar_cod_proveedor ) + ')'"border="0" color="0" x="91" y="4" height="56" width="1056" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="Proveedor" border="0" color="8388608" x="91" y="256" height="56" width="1056" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header alignment="0" text="RUC" border="0" color="8388608" x="1161" y="256" height="56" width="370" html.valueishtml="0"  name=t_16 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=header alignment="0" text="Teléfono" border="0" color="8388608" x="1550" y="256" height="56" width="389" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

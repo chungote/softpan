@@ -1,0 +1,41 @@
+$PBExportHeader$dw_combo_facuras.srd
+$PBExportComments$x
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=60 color="536870912" )
+summary(height=0 color="553648127" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=ventas_nro_factura dbname="Ventas.Nro_factura" )
+ column=(type=char(20) updatewhereclause=yes name=tipo_documentos_tipo_descripcion dbname="Tipo_documentos.Tipo_descripcion" )
+ column=(type=datetime updatewhereclause=yes name=ventas_fecha dbname="Ventas.Fecha" )
+ column=(type=number updatewhereclause=yes name=ventas_nro_reg dbname="Ventas.Nro_reg" )
+ column=(type=long updatewhereclause=yes name=ventas_cod_cliente dbname="Ventas.Cod_cliente" )
+ column=(type=char(50) updatewhereclause=yes name=clientes_nombre_cliente dbname="Clientes.Nombre_cliente" )
+ retrieve="  SELECT Ventas.Nro_factura,   
+         Tipo_documentos.Tipo_descripcion,   
+         Ventas.Fecha,   
+         Ventas.Nro_reg,   
+         Ventas.Cod_cliente,   
+         Clientes.Nombre_cliente  
+    FROM Ventas,   
+         Tipo_documentos,   
+         Clientes  
+   WHERE ( Ventas.Tipo_documen = Tipo_documentos.Tipo_documen ) and  
+         ( Ventas.Cod_cliente = Clientes.Cod_cliente ) and  
+         ( ( Ventas.Cod_cliente = :v_CodCli ) OR  
+         ( :v_CodCli = 0 ) )   
+ORDER BY Ventas.Fecha ASC,   
+         Tipo_documentos.Tipo_descripcion ASC,   
+         Ventas.Nro_factura ASC   
+" arguments=(("v_CodCli", number))  sort="ventas_nro_factura A " )
+text(band=header alignment="2" text="Factura"border="2" color="16777215" x="0" y="0" height="56" width="293"  name=cod_vendedor_t  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Tipo Doc"border="2" color="16777215" x="297" y="0" height="56" width="471"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Fecha"border="2" color="16777215" x="773" y="0" height="56" width="338"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Fecha"border="2" color="16777215" x="773" y="0" height="56" width="338"  name=nombre_apellido_t  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+text(band=header alignment="2" text="Cliente"border="2" color="16777215" x="1115" y="0" height="56" width="1152"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="8421376" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="2" color="0" x="0" y="0" height="56" width="293" format="[general]"  name=ventas_nro_factura edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="2" color="0" x="297" y="0" height="56" width="471" format="[general]"  name=tipo_documentos_tipo_descripcion edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="2" color="0" x="773" y="0" height="56" width="338" format="dd/mm/yy"  name=ventas_fecha edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="2" color="0" x="1115" y="0" height="64" width="1152" format="[general]"  name=clientes_nombre_cliente edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

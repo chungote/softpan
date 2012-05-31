@@ -1,0 +1,94 @@
+$PBExportHeader$dw_lista_compras_pedido_prov_estado.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=260 color="536870912" )
+summary(height=392 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=56 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=nro_pedido dbname="PEDIDOS.Nro_pedido" )
+ column=(type=datetime updatewhereclause=yes name=fecha dbname="PEDIDOS.Fecha" )
+ column=(type=char(40) updatewhereclause=yes name=proveedores_nombre_proveedor dbname="PROVEEDORES.Nombre_proveedor" )
+ column=(type=char(25) updatewhereclause=yes name=compradores_nombre_comprador dbname="COMPRADORES.NOMBRE_COMPRADOR" )
+ column=(type=char(100) updatewhereclause=yes name=observacion dbname="PEDIDOS.Observacion" )
+ column=(type=decimal(2) updatewhereclause=yes name=importe dbname="PEDIDOS.IMPORTE" )
+ column=(type=number updatewhereclause=yes name=entregado_prov dbname="PEDIDOS.ENTREGADO_PROV" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=recibido dbname="PEDIDOS.Recibido" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=pedidos_aprobacion dbname="PEDIDOS.aprobacion" values="	1/	0" )
+ retrieve="  SELECT Pedidos.Nro_pedido,   
+			Pedidos.Fecha,   
+			Proveedores.Nombre_proveedor,
+			COMPRADORES.NOMBRE_COMPRADOR ,
+			Pedidos.Observacion,
+			Pedidos.IMPORTE,
+			Pedidos.ENTREGADO_PROV,
+			Pedidos.Recibido,
+			Pedidos.aprobacion
+   FROM Pedidos,
+		  Proveedores,
+		  COMPRADORES
+WHERE	(Pedidos.Cod_proveedor = Proveedores.Cod_proveedor) AND
+		(Pedidos.COD_COMPRADOR *= COMPRADORES.COD_COMPRADOR) AND
+  
+		(Pedidos.Cod_proveedor = :v_codpro or :v_codpro = 0 ) AND
+		(Pedidos.COD_COMPRADOR = :v_codcom or :v_codcom = 0 ) AND
+
+		(Pedidos.ENTREGADO_PROV = :v_ent or :v_ent = 0 ) AND
+		(Pedidos.Recibido = :v_rec or :v_rec = 0 ) and
+		(Pedidos.Aprobacion = :v_apro or :v_apro = 0 ) AND
+
+      (Pedidos.Fecha >= :V_fecini ) and
+      (Pedidos.Fecha <= :V_fecfin ) 
+
+
+
+			" arguments=(("v_codpro", number),("v_codcom", number),("v_ent", number),("v_rec", number),("V_fecini", date),("V_fecfin", date),("v_apro", number))  sort="proveedores_nombre_proveedor A nro_pedido A " )
+group(level=1 header.height=120 trailer.height=0 by=("proveedores_nombre_proveedor" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="32" y="112" height="76" width="3278" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="32" y="24" height="84" width="3237" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-12" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1349" y="36" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_fec_prov_comp_estado" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2437" y="24" height="72" width="197" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2437" y="112" height="72" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount() + ' - ' + f_user()
+"border="0" color="0" x="2661" y="112" height="64" width="603" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2661" y="24" height="64" width="603" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Estado de Pedidos" border="0" color="0" x="32" y="192" height="64" width="3278" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=3 alignment="0" tabsequence=32766 border="0" color="0" x="27" y="0" height="60" width="3287" format="[general]" html.valueishtml="0"  name=proveedores_nombre_proveedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="15793151" )
+text(band=header.1 alignment="2" text="Rec." border="0" color="8388608" x="3168" y="64" height="48" width="142" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Nro Pedido" border="0" color="8388608" x="27" y="64" height="48" width="261" html.valueishtml="0"  name=servicios_nro_servicio_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Fecha" border="0" color="8388608" x="302" y="64" height="48" width="325" html.valueishtml="0"  name=servicios_tiempo_estimado_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Compradores" border="0" color="8388608" x="640" y="64" height="48" width="914" html.valueishtml="0"  name=clientes_nombre_cliente_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Observaciones" border="0" color="8388608" x="1568" y="64" height="48" width="864" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="1" text="Importe" border="0" color="8388608" x="2450" y="64" height="48" width="421" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header.1 x1="27" y1="116" x2="3333" y2="116"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="2" text="Aprov." border="0" color="8388608" x="2880" y="64" height="48" width="133" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Ent." border="0" color="8388608" x="3017" y="64" height="48" width="146" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="2" tabsequence=32766 border="0" color="0" x="3173" y="0" height="52" width="142" format="" html.valueishtml="0"  name=recibido visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="32" y="0" height="52" width="261" format="#,##0" html.valueishtml="0"  name=nro_pedido visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="306" y="0" height="52" width="325" format="dd/mm/yy" html.valueishtml="0"  name=fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="645" y="0" height="52" width="914" format="[general]" html.valueishtml="0"  name=compradores_nombre_comprador visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="1573" y="0" height="52" width="864" format="[general]" html.valueishtml="0"  name=observacion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="2450" y="0" height="52" width="421" format="#,##0.0~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=importe visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="2" tabsequence=32766 border="0" color="0" x="2885" y="0" height="52" width="133" format="[general]" html.valueishtml="0"  name=pedidos_aprobacion visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="2" tabsequence=32766 border="0" color="0" x="3022" y="0" height="52" width="146" format="[general]" html.valueishtml="0"  name=entregado_prov visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Lineas :" border="0" color="0" x="2871" y="264" height="56" width="178" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="2" expression="count(nro_pedido for all)"border="0" color="0" x="3054" y="264" height="56" width="261" format="#,##0" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="80" height="52" width="590" html.valueishtml="0"  name=t_10 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="2" text="Desde" border="0" color="0" x="338" y="140" height="48" width="466" html.valueishtml="0"  name=t_11 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="2" text="Hasta" border="0" color="0" x="809" y="140" height="48" width="466" html.valueishtml="0"  name=t_12 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Proveedores" border="0" color="0" x="37" y="192" height="48" width="297" html.valueishtml="0"  name=t_13 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="338" y="192" height="48" width="937" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Compradores" border="0" color="0" x="37" y="244" height="48" width="297" html.valueishtml="0"  name=t_14 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="338" y="244" height="48" width="937" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Fecha" border="0" color="0" x="37" y="296" height="52" width="297" html.valueishtml="0"  name=t_15 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="338" y="296" height="52" width="466" html.valueishtml="0"  name=filtro3a visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="" border="0" color="0" x="809" y="296" height="52" width="466" html.valueishtml="0"  name=filtro3b visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=summary x1="27" y1="0" x2="3333" y2="0"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+text(band=summary alignment="1" text="Total general:" border="0" color="8388608" x="2021" y="12" height="56" width="407" html.valueishtml="0"  name=t_16 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(importe for all)"border="0" color="0" x="2450" y="12" height="52" width="421" format="#,##0~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="27" y1="4" x2="3333" y2="4"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

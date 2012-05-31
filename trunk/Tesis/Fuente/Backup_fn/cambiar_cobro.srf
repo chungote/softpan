@@ -1,0 +1,64 @@
+$PBExportHeader$cambiar_cobro.srf
+$PBExportComments$x
+global type cambiar_cobro from function_object
+end type
+
+forward prototypes
+global function double cambiar_cobro (double valor, datetime fecha, integer monedaorigen, integer monedadestino, double cotiz)
+end prototypes
+
+global function double cambiar_cobro (double valor, datetime fecha, integer monedaorigen, integer monedadestino, double cotiz);double Cotizacion, Mul_div
+string v_o, v_d
+fecha = datetime(date(fecha))
+long v_decimales
+if isnull(v_decimales) then
+	v_decimales = 5
+end if
+If monedaorigen = monedadestino Then 
+   return valor
+End If
+If monedaorigen = 0 Then 
+   return valor
+End If
+If 0 = monedadestino Then 
+   return valor
+End If
+
+If isnull(monedaorigen)  Then 
+   return valor
+End If
+If isnull(monedadestino) Then 
+   return valor
+End If
+if driver() = 2 then
+	SELECT cotizacion, mul_div into :Cotizacion, :Mul_div FROM Cotizaciones
+	where fecha = :fecha and Cod_moneda = :monedaorigen and Cod_moneda_destino = :monedadestino;
+else
+	SELECT cotizacion, mul_div into :Cotizacion, :Mul_div FROM dbo.Cotizaciones
+	where fecha = :fecha and Cod_moneda = :monedaorigen and Cod_moneda_destino = :monedadestino;
+end if							
+
+If Cotizacion <> 0 Then
+   If Mul_div = 0 Then
+      If cotiz = 0 Then
+         return (Valor * Cotizacion)
+      Else
+         return (Valor * Cotiz)
+      End If
+   Else
+      If Cotiz = 0 Then
+         return (Valor / Cotizacion)
+      Else
+         return (Valor / Cotiz)
+      End If
+   End If
+Else
+	select Moneda into :v_o from monedas where cod_moneda = :monedaorigen;
+	select Moneda into :v_d from monedas where cod_moneda = :monedadestino;
+   Messagebox ("Aviso", "Cotización no registrada para cambiar de "  + v_o + " a " + v_d + " en la fecha " + string(fecha) + "...")
+   return Valor
+End If
+
+
+end function
+

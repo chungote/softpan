@@ -1,0 +1,44 @@
+$PBExportHeader$dw_lista_ctascob_cobradores.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=352 color="536870912" )
+summary(height=72 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=60 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes key=yes name=cod_cobrador dbname="Cobradores.Cod_cobrador" )
+ column=(type=char(35) update=yes updatewhereclause=yes name=nombre_cobrador dbname="Cobradores.Nombre_cobrador" )
+ column=(type=char(15) update=yes updatewhereclause=yes name=telefono dbname="Cobradores.Telefono" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=direccion dbname="Cobradores.Direccion" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=comision dbname="Cobradores.Comision" )
+ retrieve="  SELECT Cobradores.Cod_cobrador,   
+         Cobradores.Nombre_cobrador,   
+         Cobradores.Telefono,   
+         Cobradores.Direccion,   
+         Cobradores.Comision  
+    FROM dbo.Cobradores  
+ORDER BY Cobradores.Cod_cobrador ASC   
+" update="Cobradores" updatewhere=1 updatekeyinplace=no  sort="cod_cobrador A " )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="128" width="3237" format="[general]"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1239" y="24" height="88" width="178" format="[general]"  name=cf_paginas visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:"border="0" color="0" x="2501" y="52" height="72" width="197"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2725" y="52" height="64" width="603" format="dd/mm/yyyy hh:mm"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:"border="0" color="0" x="2501" y="140" height="72" width="197"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2725" y="140" height="64" width="603" format="[general]"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="140" height="76" width="3237" format="[general]"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Listado de Cobradores"border="0" color="0" x="37" y="220" height="64" width="3237"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header x1="37" y1="348" x2="3323" y2="348" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="37" y="0" height="56" width="233" format="[general]"  name=cod_cobrador edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="283" y="0" height="56" width="1006" format="[general]"  name=nombre_cobrador edit.limit=35 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=50 border="0" color="0" x="3067" y="0" height="56" width="251" format="#,##0.000~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~", ~"FORMATO_PORCENTAJE~", ~"#,##0.000~")"  name=comision edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="0" text="Lineas"border="0" color="0" x="2939" y="12" height="56" width="155"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="count(cod_cobrador for all)"border="0" color="0" x="3099" y="12" height="56" width="155" format="#,##0"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=summary x1="37" y1="0" x2="3323" y2="0" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+line(band=footer x1="37" y1="4" x2="3323" y2="4" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+text(band=header alignment="0" text="Código"border="0" color="8388608" x="37" y="288" height="56" width="233"  name=servicios_nro_servicio_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Nombre Cobrador"border="0" color="8388608" x="283" y="288" height="56" width="1006"  name=servicios_fecha_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="1" text="Comisión"border="0" color="8388608" x="3063" y="288" height="56" width="251"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="0" color="0" x="1303" y="0" height="56" width="594" format="[general]"  name=telefono edit.limit=15 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Teléfono"border="0" color="8388608" x="1303" y="288" height="56" width="594"  name=clientes_nombre_cliente_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=40 border="0" color="0" x="1911" y="0" height="56" width="1138" format="[general]"  name=direccion edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Dirección"border="0" color="8388608" x="1911" y="288" height="56" width="1138"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

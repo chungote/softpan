@@ -1,0 +1,9 @@
+----------------------
+IMPORTANTE
+----------------------
+
+Se debe registrar el componente, para ello abrir una consola de comandos y
+ digitar:
+
+
+regsvr32 "C:\Tesis\Fuente\actskin4.ocx"

@@ -1,0 +1,183 @@
+$PBExportHeader$dw_lista_ctascob_ctas_cobradas_det.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=300 color="536870912" )
+summary(height=516 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=52 color="536870912" )
+table(column=(type=char(50) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=char(25) updatewhereclause=yes name=cond_pagos_condicion dbname="COND_PAGOS.Condicion" )
+ column=(type=datetime updatewhereclause=yes name=cobros_fac_fecha_cobro dbname="COBROS_FAC.Fecha_cobro" )
+ column=(type=char(50) updatewhereclause=yes name=cobros_fac_nro_reci dbname="COBROS_FAC.NRO_RECI" )
+ column=(type=number updatewhereclause=yes name=cobros_fac_det_nro_cobro dbname="COBROS_FAC_DET.Nro_cobro" )
+ column=(type=number updatewhereclause=yes name=cobros_fac_det_nro_cheque dbname="COBROS_FAC_DET.Nro_cheque" )
+ column=(type=datetime updatewhereclause=yes name=cobros_fac_det_fecha_cheque dbname="COBROS_FAC_DET.Fecha_cheque" )
+ column=(type=number updatewhereclause=yes name=cobros_fac_det_nro_nota dbname="COBROS_FAC_DET.Nro_nota" )
+ column=(type=long updatewhereclause=yes name=cobros_fac_det_cod_moneda dbname="COBROS_FAC_DET.cod_moneda" )
+ column=(type=char(15) updatewhereclause=yes name=monedas_moneda dbname="MONEDAS.Moneda" )
+ column=(type=char(4) updatewhereclause=yes name=monedas_sigla dbname="MONEDAS.Sigla" )
+ column=(type=decimal(4) updatewhereclause=yes name=cobros_fac_det_cotizacion dbname="COBROS_FAC_DET.Cotizacion" )
+ column=(type=long updatewhereclause=yes name=cobros_fac_det_cod_banco dbname="COBROS_FAC_DET.COD_BANCO" )
+ column=(type=decimal(2) updatewhereclause=yes name=cobros_fac_det_importe dbname="COBROS_FAC_DET.Importe" )
+ column=(type=long updatewhereclause=yes name=cobros_fac_det_endoso dbname="COBROS_FAC_DET.endoso" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=cobros_fac_cod_cajero dbname="COBROS_FAC.Cod_cajero" )
+ column=(type=number updatewhereclause=yes name=cobros_fac_det_nro_cuenta dbname="COBROS_FAC_DET.NRO_CUENTA" )
+ column=(type=long updatewhereclause=yes name=tipo_condicion dbname="COND_PAGOS.tipo_condicion" )
+ retrieve="  SELECT Clientes.Nombre_cliente,   
+         Cond_pagos.Condicion,   
+         Cobros_fac.Fecha_cobro, 
+         Cobros_fac.NRO_RECI, 
+			Cobros_fac_det.Nro_cobro,  
+         Cobros_fac_det.Nro_cheque,   
+         Cobros_fac_det.Fecha_cheque,   
+         Cobros_fac_det.Nro_nota,   
+         Cobros_fac_det.cod_moneda,   
+         Monedas.Moneda,   
+         Monedas.Sigla,   
+         Cobros_fac_det.Cotizacion,   
+			Cobros_fac_det.COD_BANCO,  
+         Cobros_fac_det.Importe,
+			Cobros_fac_det.endoso,
+
+         Cobros_fac.Cod_cajero,
+         Cobros_fac_det.NRO_CUENTA,
+			Cond_pagos.tipo_condicion
+    FROM dbo.Cobros_fac_det,   
+         dbo.Cond_pagos,   
+         dbo.Cobros_fac,   
+         dbo.Clientes,   
+         dbo.Monedas
+
+   WHERE ( Cobros_fac_det.Cod_condicion = Cond_pagos.Cod_condicion ) and  
+         ( Cobros_fac.Nro_cobro = Cobros_fac_det.Nro_cobro ) and  
+         ( Clientes.Cod_cliente = Cobros_fac.Cod_cliente ) and  
+         ( Cobros_fac_det.Cod_moneda = Monedas.Cod_moneda ) and    
+
+       ( ( Cobros_fac.Cod_cliente = :V_CodCli OR :V_CodCli = 0 ) AND  
+         ( Clientes.Cod_categoria = :V_CatCli OR :V_CatCli = 0 ) AND  
+         ( Cobros_fac.Cod_cobrador = :V_CodCob OR :V_CodCob = 0 ) AND  
+         ( Cobros_fac.Fecha_cobro >= :V_FecIni OR :V_FecIni IS NULL) AND  
+         ( Cobros_fac.Fecha_cobro <= :V_FecFin OR :V_FecFin IS NULL) )
+
+union
+  SELECT Clientes.Nombre_cliente,   
+         Cond_pagos.Condicion,   
+         Cheques_Canje.Fecha, 
+         cast(Cheques_Canje.NRO_RECI as varchar(50)) as NRO_RECI, 
+			Cheques_Canje.Nro_Canje,  
+         Cheques_Canje_Entrada.Nro_cheque,   
+         Cheques_Canje_Entrada.Fecha_cheque,   
+         0 as Nro_nota,   
+         Cheques_Canje_Entrada.cod_moneda,   
+         Monedas.Moneda,   
+         Monedas.Sigla,   
+
+			isnull( (select COTIZACION 
+			 from dbo.COTIZACIONES
+			 where ( COTIZACIONES.COD_MONEDA = 2 ) and  
+					 ( COTIZACIONES.COD_MONEDA_DESTINO = 1 ) and  
+        			 ( COTIZACIONES.FECHA = Cheques_Canje.FECHA ) ) ,0)  as Cotizacion,	
+ 
+			Cheques_Canje_Entrada.COD_BANCO,  
+         Cheques_Canje_Entrada.Importe,
+			0 as endoso,
+         Cheques_Canje.Cod_cajero,
+         Cheques_Canje_Entrada.NRO_CTA_DEST,
+			Cond_pagos.tipo_condicion
+
+    FROM dbo.Cheques_Canje_Entrada,   
+         dbo.Cond_pagos,   
+         dbo.Cheques_Canje,   
+         dbo.Clientes,   
+         dbo.Monedas
+
+   WHERE ( Cheques_Canje_Entrada.Cod_condicion = Cond_pagos.Cod_condicion ) and  
+         ( Cheques_Canje.Nro_Canje = Cheques_Canje_Entrada.Nro_Canje ) and  
+         ( Clientes.Cod_cliente = Cheques_Canje.Cod_cliente ) and  
+         ( Cheques_Canje_Entrada.Cod_moneda = Monedas.Cod_moneda ) and    
+
+       ( ( Cheques_Canje.Cod_cliente = :V_CodCli OR :V_CodCli = 0 ) AND  
+         ( Clientes.Cod_categoria = :V_CatCli OR :V_CatCli = 0 ) AND  
+         ( Cheques_Canje.Cod_cobrador = :V_CodCob OR :V_CodCob = 0 ) AND  
+         ( Cheques_Canje.Fecha >= :V_FecIni OR :V_FecIni IS NULL) AND  
+         ( Cheques_Canje.Fecha <= :V_FecFin OR :V_FecFin IS NULL) )
+" arguments=(("V_CodCli", number),("V_CatCli", number),("V_CodCob", number),("V_FecIni", date),("V_FecFin", date))  sort="monedas_moneda A clientes_nombre_cliente A cond_pagos_condicion A cobros_fac_fecha_cobro A " )
+group(level=1 header.height=68 trailer.height=76 by=("monedas_moneda" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=64 trailer.height=76 by=("clientes_nombre_cliente" ) header.color="536870912" trailer.color="536870912" )
+group(level=3 header.height=116 trailer.height=72 by=("cond_pagos_condicion" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="18" y="8" height="128" width="3237" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1454" y="32" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_fec_cli_cat_caj" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2496" y="24" height="72" width="174" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2720" y="24" height="64" width="581" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2496" y="112" height="72" width="174" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2720" y="112" height="64" width="581" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="clientes_nombre_cliente A" border="0" color="0" x="859" y="16" height="76" width="160" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="18" y="140" height="76" width="3237" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Cobros Realizados - Detalle" border="0" color="0" x="18" y="220" height="64" width="3237" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="0" text="Moneda" border="0" color="8388608" x="23" y="4" height="44" width="366" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=10 alignment="0" tabsequence=32766 border="0" color="0" x="393" y="4" height="56" width="645" format="[general]" html.valueishtml="0"  name=monedas_moneda visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.2 alignment="0" text="Cliente" border="0" color="8388608" x="23" y="4" height="44" width="366" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.2 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="393" y="4" height="56" width="1687" format="[general]" html.valueishtml="0"  name=clientes_nombre_cliente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header.3 x1="18" y1="112" x2="2990" y2="112"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+text(band=header.3 alignment="0" text="Cond. de Pagos" border="0" color="8388608" x="23" y="4" height="44" width="366" html.valueishtml="0"  name=servicios_nro_servicio_t visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.3 id=2 alignment="0" tabsequence=32766 border="0" color="0" x="393" y="4" height="48" width="827" format="[general]" html.valueishtml="0"  name=cond_pagos_condicion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.3 alignment="0" text="Nro cobro" border="0" color="8388608" x="23" y="64" height="44" width="288" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="0" text="Nro Recibo" border="0" color="8388608" x="338" y="64" height="44" width="283" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="2" text="Fecha Cobro" border="0" color="8388608" x="649" y="64" height="44" width="302" html.valueishtml="0"  name=servicios_fecha_t visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="2" text="Nro Cheque" border="0" color="8388608" x="978" y="64" height="44" width="311" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="2" text="Venc. Ch." border="0" color="8388608" x="1312" y="64" height="44" width="302" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="2" text="Importe" border="0" color="8388608" x="1637" y="64" height="44" width="434" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="2" text="Bco. Cheque" border="0" color="8388608" x="2094" y="64" height="44" width="443" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+text(band=header.3 alignment="2" text="Endosado?" border="0" color="8388608" x="2729" y="64" height="44" width="256" html.valueishtml="0"  name=t_23 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="23" y="0" height="48" width="283" format="[general]" html.valueishtml="0"  name=cobros_fac_det_nro_cobro visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="338" y="0" height="48" width="283" format="[general]" html.valueishtml="0"  name=cobros_fac_nro_reci visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="0" color="0" x="649" y="0" height="48" width="302" format="dd/mm/yy" html.valueishtml="0"  name=cobros_fac_fecha_cobro visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=6 alignment="2" tabsequence=32766 border="0" color="0" x="978" y="0" height="48" width="311" format="#,##0" html.valueishtml="0"  name=cobros_fac_det_nro_cheque visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=7 alignment="2" tabsequence=32766 border="0" color="0" x="1312" y="0" height="48" width="302" format="dd/mm/yy" html.valueishtml="0"  name=cobros_fac_det_fecha_cheque visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 ) "border="0" color="0" x="1637" y="0" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="0" x="2094" y="0" height="48" width="443" format="" html.valueishtml="0"  name=cobros_fac_det_cod_banco visible="1" dddw.name=dw_combo_cajas_bancos dddw.displaycolumn=nombre_banco dddw.datacolumn=cod_banco dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+compute(band=detail alignment="0" expression="if(  cobros_fac_det_endoso =1,'Si' ,'No' )"border="0" color="0" x="2729" y="0" height="48" width="256" format="[GENERAL]" html.valueishtml="0"  name=compute_16 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="33554431" )
+line(band=trailer.3 x1="18" y1="0" x2="2990" y2="0"  name=l_2 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+compute(band=trailer.3 alignment="1" expression="~"Sub Total ~" + cond_pagos_condicion"border="0" color="8388608" x="1111" y="16" height="48" width="485" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.3 alignment="1" expression="sum(cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 )  for group 3)"border="0" color="0" x="1637" y="16" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.2 x1="18" y1="0" x2="2990" y2="0"  name=l_3 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+compute(band=trailer.2 alignment="1" expression="~"Sub Total ~" +  clientes_nombre_cliente "border="0" color="8388608" x="1111" y="12" height="48" width="485" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.2 alignment="1" expression="sum(cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 )  for group 3)"border="0" color="0" x="1637" y="12" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="18" y1="0" x2="2990" y2="0"  name=l_4 visible="1" pen.style="2" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+compute(band=trailer.1 alignment="1" expression="~"Sub Total ~" + monedas_moneda "border="0" color="8388608" x="1111" y="12" height="48" width="485" format="[general]" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=trailer.1 alignment="1" expression="sum( cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 )  for group 1)"border="0" color="0" x="1637" y="12" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=summary x1="32" y1="0" x2="3003" y2="0"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum(if(tipo_condicion = 0 ,cambiar( cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 ) , cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda  ,moneda(),0 ), 0) for all)      "border="0" color="0" x="1632" y="12" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=summary x1="965" y1="188" x2="2066" y2="188"  name=l_6 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum(cambiar( cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 ) , cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda  ,moneda(),0 ) for all)      "border="0" color="0" x="1632" y="200" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum(if(tipo_condicion = 1 ,cambiar( cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 ) , cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda  ,moneda(),0 ), 0) for all)      "border="0" color="0" x="1632" y="72" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_14 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=summary alignment="1" expression="sum(if(tipo_condicion <> 1 and tipo_condicion <> 0,cambiar( cambiar_redondeo(  cobros_fac_det_importe   ,    cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda   ,   cobros_fac_det_cod_moneda  ,0 ) , cobros_fac_fecha_cobro   ,   cobros_fac_det_cod_moneda  ,moneda(),0 ), 0) for all)      "border="0" color="0" x="1632" y="132" height="48" width="434" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_15 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="50" y="24" height="52" width="590" html.valueishtml="0"  name=t_12 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Cliente" border="0" color="0" x="50" y="96" height="48" width="261" html.valueishtml="0"  name=t_13 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="96" height="48" width="544" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Cate Cliente" border="0" color="0" x="50" y="148" height="48" width="261" html.valueishtml="0"  name=t_14 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="148" height="48" width="544" html.valueishtml="0"  name=filtro2 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Cobrador" border="0" color="0" x="50" y="200" height="48" width="261" html.valueishtml="0"  name=t_15 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="200" height="48" width="544" html.valueishtml="0"  name=filtro3 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Cajero" border="0" color="0" x="50" y="252" height="48" width="261" html.valueishtml="0"  name=t_16 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="252" height="48" width="544" html.valueishtml="0"  name=filtro6 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Inicial" border="0" color="0" x="50" y="304" height="48" width="261" html.valueishtml="0"  name=t_17 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="304" height="48" width="544" html.valueishtml="0"  name=filtro4 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="F. Final" border="0" color="0" x="50" y="356" height="48" width="261" html.valueishtml="0"  name=t_18 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="356" height="48" width="544" html.valueishtml="0"  name=filtro5 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="1" text="Total Otros Mon Local:" border="0" color="8388608" x="937" y="132" height="48" width="667" html.valueishtml="0"  name=t_19 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=summary alignment="1" text="Total General Moneda Local:" border="0" color="8388608" x="937" y="200" height="48" width="667" html.valueishtml="0"  name=t_20 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=summary alignment="1" text="Total Cheque Mon Local:" border="0" color="8388608" x="937" y="72" height="48" width="667" html.valueishtml="0"  name=t_21 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+text(band=summary alignment="1" text="Total Efectivo Mon Local:" border="0" color="8388608" x="937" y="12" height="48" width="667" html.valueishtml="0"  name=t_22 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_7 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_8 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_9 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_10 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_11 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+line(band=footer x1="114" y1="384" x2="3351" y2="384"  name=l_12 visible="1" pen.style="0" pen.width="14" pen.color="12632256"  background.mode="2" background.color="12632256" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

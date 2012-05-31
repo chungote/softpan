@@ -1,0 +1,65 @@
+$PBExportHeader$dw_lista_menus_permisos.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 200 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=520 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(30) updatewhereclause=yes key=yes name=grupo dbname="SYS_PERMISOS.Grupo" )
+ column=(type=char(50) updatewhereclause=yes key=yes name=id dbname="SYS_PERMISOS.ID" )
+ column=(type=char(200) updatewhereclause=yes name=menu dbname="SYS_PERMISOS.Menu" )
+ column=(type=long updatewhereclause=yes name=ver dbname="SYS_PERMISOS.Ver" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=grabar dbname="SYS_PERMISOS.Grabar" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=borrar dbname="SYS_PERMISOS.Borrar" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=incluir dbname="SYS_PERMISOS.Incluir" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=mod_cant dbname="SYS_PERMISOS.Mod_cant" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=mod_desc dbname="SYS_PERMISOS.Mod_desc" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=mod_precio dbname="SYS_PERMISOS.Mod_precio" values="	1/	0" )
+ column=(type=long updatewhereclause=yes name=print_report dbname="SYS_PERMISOS.print_report" values="	1/	0" )
+ retrieve="  SELECT Sys_permisos.Grupo,
+			Sys_permisos.ID,
+         Sys_permisos.Menu, 
+			Sys_permisos.Ver,  
+         Sys_permisos.Grabar,   
+         Sys_permisos.Borrar,   
+         Sys_permisos.Incluir,
+         Sys_permisos.Mod_cant,   
+         Sys_permisos.Mod_desc,   
+         Sys_permisos.Mod_precio,
+			print_report  
+    FROM Sys_permisos  
+   WHERE (Sys_permisos.Grupo = :v_grupo or :v_grupo = '')  and
+			(Sys_permisos.Sistema = 0) and
+			(Sys_permisos.Ver = 1)
+order by Sys_permisos.orden
+" update="Sys_permisos" updatewhere=0 updatekeyinplace=yes arguments=(("v_grupo", string))  sort="grupo A " )
+group(level=1 header.height=88 trailer.height=0 by=("grupo" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Incluir" border="4" color="0" x="2359" y="424" height="64" width="183" html.valueishtml="0"  name=incluir_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Borrar" border="4" color="0" x="2126" y="424" height="64" width="183" html.valueishtml="0"  name=borrar_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Alter." border="4" color="0" x="1893" y="424" height="64" width="183" html.valueishtml="0"  name=grabar_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Print" border="4" color="0" x="1659" y="424" height="64" width="183" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Ver" border="4" color="0" x="1426" y="424" height="64" width="183" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Menú" border="4" color="0" x="14" y="424" height="64" width="1367" html.valueishtml="0"  name=menu_t visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="128" width="3237" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1440" y="32" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_grupos" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="0" text="tarjetas_tarjeta A, cuentas_cajas_nombre_cuenta A" border="0" color="0" x="704" y="32" height="76" width="219" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="2514" y="48" height="72" width="197" html.valueishtml="0"  name=t_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="2514" y="140" height="72" width="197" html.valueishtml="0"  name=t_5 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="140" height="76" width="3237" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="0" text="Listado de Permisos de Grupo" border="0" color="0" x="37" y="220" height="64" width="3237" html.valueishtml="0"  name=t_6 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount()"border="0" color="0" x="2738" y="140" height="64" width="526" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="2738" y="52" height="64" width="526" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="247" y="8" height="64" width="2299" format="[general]" html.valueishtml="0"  name=grupo visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217752" )
+text(band=header.1 alignment="0" text="Grupo: " border="4" color="0" x="18" y="8" height="64" width="210" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="0" x="14" y="4" height="64" width="1367" format="[general]" html.valueishtml="0"  name=menu visible="1" edit.limit=200 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif(menu = 'Fichas' or menu = 'Informes' or menu = 'A R C H I V O' or menu = 'E D I T A R' or menu = 'S T O C K' or menu = 'COMPRAS' or menu = 'VENTAS' or menu = 'T E S O R E R I A' or menu = 'C T A S   PAGAR' or menu = 'C T A S   C O B R A R' or menu = 'PRODUCCION'  or menu = 'RR.HH.' or menu = 'C O N T A B I L I D A D', 12639424 , 16777215)" )
+column(band=detail id=7 alignment="2" tabsequence=32766 border="0" color="0" x="2359" y="4" height="64" width="183" format="[general]" html.valueishtml="0"  name=incluir visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=no  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="2" tabsequence=32766 border="0" color="0" x="2126" y="4" height="64" width="183" format="[general]" html.valueishtml="0"  name=borrar visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=no  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="2" tabsequence=32766 border="0" color="0" x="1893" y="4" height="64" width="183" format="[general]" html.valueishtml="0"  name=grabar visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=no  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="2" tabsequence=32766 border="0" color="0" x="1659" y="4" height="64" width="183" format="[general]" html.valueishtml="0"  name=print_report visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=no  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="0" color="0" x="1426" y="4" height="64" width="183" format="[general]" html.valueishtml="0"  name=ver visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=no  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

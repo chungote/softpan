@@ -1,0 +1,197 @@
+$PBExportHeader$dw_lista_maes_clientes.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 110 print.margin.right = 150 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=380 color="536870912" )
+summary(height=180 color="536870912" )
+footer(height=72 color="553648127" )
+detail(height=60 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes name=cod_cliente dbname="CLIENTES.Cod_cliente" )
+ column=(type=char(100) update=yes updatewhereclause=yes name=nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=direccion dbname="CLIENTES.Direccion" )
+ column=(type=char(15) update=yes updatewhereclause=yes name=telefono dbname="CLIENTES.Telefono" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=contacto dbname="CLIENTES.Contacto" )
+ column=(type=number update=yes updatewhereclause=yes name=limite_credito dbname="CLIENTES.Limite_credito" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_cate_categoria_cliente dbname="CLIENTES_CATE.Categoria_cliente" )
+ column=(type=char(11) updatewhereclause=yes name=clientes_ruc dbname="CLIENTES.ruc" )
+ column=(type=long updatewhereclause=yes name=clientes_cod_proveedor dbname="CLIENTES.cod_proveedor" )
+ column=(type=long updatewhereclause=yes name=clientes_cod_zona dbname="CLIENTES.cod_zona" )
+ column=(type=char(30) updatewhereclause=yes name=zonas_descripcion_zona dbname="ZONAS.descripcion_zona" )
+ column=(type=char(30) updatewhereclause=yes name=vendedores_nombre_apellido dbname="VENDEDORES.nombre_apellido" )
+ column=(type=decimal(4) updatewhereclause=yes name=vencido dbname="vencido" )
+ column=(type=decimal(4) updatewhereclause=yes name=a_vencer dbname="a_vencer" )
+ column=(type=decimal(4) updatewhereclause=yes name=ch_vencidos dbname="ch_vencidos" )
+ retrieve="SELECT Clientes.Cod_cliente,
+
+            Clientes.Nombre_cliente,
+
+          Clientes.Direccion,
+
+           Clientes.Telefono,
+
+           Clientes.Contacto,
+
+           Clientes.Limite_credito,
+
+           Clientes_cate.Categoria_cliente,
+
+  			Clientes.ruc,
+
+			Clientes.cod_proveedor,
+
+			Clientes.cod_zona,
+		 Zonas.descripcion_zona,
+
+
+			vendedores.nombre_apellido,
+
+      sum(case 
+				when CTAS_COBRAR.VENCIMIENTO <= dbo.f_fecha(getdate()) then
+					dbo.Cambiar1(  CTAS_COBRAR.Cod_moneda,
+
+ Par_sys.cod_moneda,
+
+ dbo.f_fecha(getdate()),
+
+ CTAS_COBRAR.VALOR - CTAS_COBRAR.VALOR_COBRADO,
+
+ 0 )
+				else
+					0
+			end) as vencido,
+
+     sum(case 
+				when CTAS_COBRAR.VENCIMIENTO > dbo.f_fecha(getdate()) then
+					dbo.Cambiar2(  CTAS_COBRAR.Cod_moneda,
+
+ Par_sys.cod_moneda,
+
+ dbo.f_fecha(getdate()),
+
+ CTAS_COBRAR.VALOR - CTAS_COBRAR.VALOR_COBRADO,
+
+
+ 0 )
+				else
+					0
+			end) as a_vencer,
+
+	isnull((select sum(
+					dbo.Cambiar3(  cheques_terceros.Cod_moneda,
+
+ Par_sys.cod_moneda,
+
+ dbo.f_fecha(getdate()),
+
+ importe,
+
+ 0 )
+				) 
+			      
+        
+        from cheques_terceros,
+
+ cheques_terceros_estado,
+
+ par_sys
+   
+       
+
+        where cheques_terceros.estado = cheques_terceros_estado.estado and
+					 cheques_terceros.cod_cliente = CTAS_COBRAR.COD_CLIENTE and
+					 (tipo_estado = 0 or tipo_estado = 2) ),
+
+
+ 0) as ch_vencidos
+    FROM CTAS_COBRAR,
+
+			clientes,
+
+			Par_sys,
+
+			depositos,
+
+  			ventas,
+
+ dbo.Clientes_cate,
+zonas,
+
+vendedores
+   WHERE CTAS_COBRAR.COBRADO = 0 and 
+			CTAS_COBRAR.COD_CLIENTE = clientes.COD_CLIENTE  and
+ 			CTAS_COBRAR.num_doc = ventas.nro_factura and
+	 		CTAS_COBRAR.tipo_documen = ventas.tipo_documen and
+	 		depositos.cod_deposito = ventas.cod_deposito and
+			clientes.cod_zona = Zonas.cod_zona and
+	 		(depositos.cod_sucursal= :v_suc or :v_suc=0) AND
+			 ( Clientes.Cod_categoria = Clientes_cate.Cod_categoria ) AND
+			(Clientes.cod_vendedor = vendedores.cod_vendedor) and
+			( Clientes.Cod_categoria = :V_CateCli or :V_CateCli = 0  )
+        
+        group by CTAS_COBRAR.COD_CLIENTE,
+
+	clientes.nombre_cliente,
+
+	Clientes.Cod_cliente,
+
+	Clientes.Direccion,
+
+ Clientes.Telefono,
+
+   	Clientes.Contacto,
+
+   	Clientes.Limite_credito,
+
+     	Clientes_cate.Categoria_cliente,
+
+  	Clientes.ruc,
+
+	Clientes.cod_proveedor,
+
+	Clientes.cod_zona,
+ Zonas.descripcion_zona,
+
+vendedores.nombre_apellido" arguments=(("V_CateCli", number),("v_suc", number))  sort="clientes_cate_categoria_cliente A cod_cliente A " )
+compute(band=header alignment="0" expression="empresa()"border="0" color="0" x="37" y="8" height="128" width="3301" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Times New Roman" font.height="-20" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="direccion() + ~" - ~"  + telefono()"border="0" color="0" x="37" y="140" height="76" width="3301" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Times New Roman" font.height="-11" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="pageCount()"border="0" color="0" x="1504" y="28" height="88" width="178" format="[general]" html.valueishtml="0"  name=cf_paginas  tag="w_filtra_reportes_clicate" visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header alignment="0" text="clientes_cate_categoria_cliente A" border="0" color="0" x="1106" y="36" height="76" width="174" html.valueishtml="0"  name=ordenar visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+text(band=header alignment="2" text="Listado de Clientes" border="0" color="0" x="814" y="220" height="64" width="3301" html.valueishtml="0"  name=t_1 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="page() + ' de ' + pagecount() + ' - ' + f_user()"border="0" color="0" x="3950" y="140" height="64" width="603" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="3950" y="52" height="64" width="603" format="dd/mm/yyyy hh:mm" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Pag:" border="0" color="0" x="3726" y="140" height="72" width="197" html.valueishtml="0"  name=t_2 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="Fecha:" border="0" color="0" x="3726" y="52" height="72" width="197" html.valueishtml="0"  name=t_3 visible="1"  font.face="Times New Roman" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="2" text="Filtros Establecidos" border="0" color="0" x="37" y="44" height="52" width="590" html.valueishtml="0"  name=t_6 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="Categoria :" border="0" color="0" x="50" y="112" height="48" width="261" html.valueishtml="0"  name=t_7 visible="1"  font.face="Times New Roman" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="0" text="" border="0" color="0" x="315" y="112" height="48" width="713" html.valueishtml="0"  name=filtro1 visible="1"  font.face="Times New Roman" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=footer x1="0" y1="0" x2="4795" y2="0"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="12632256" )
+column(band=detail id=5 alignment="0" tabsequence=50 border="0" color="0" x="2551" y="100" height="48" width="187" format="[general]" html.valueishtml="0"  name=contacto visible="0" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Cod" border="0" color="8388608" x="32" y="308" height="56" width="174" html.valueishtml="0"  name=servicios_nro_servicio_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Nombre Cliente" border="0" color="8388608" x="210" y="308" height="56" width="695" html.valueishtml="0"  name=servicios_fecha_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Teléfono" border="0" color="8388608" x="2025" y="308" height="56" width="329" html.valueishtml="0"  name=proveedores_nombre_proveedor_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="32" y="4" height="48" width="174" format="[general]" html.valueishtml="0"  name=cod_cliente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="210" y="4" height="48" width="695" format="[general]" html.valueishtml="0"  name=nombre_cliente visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=40 border="0" color="0" x="2025" y="4" height="48" width="329" format="[general]" html.valueishtml="0"  name=telefono visible="1" edit.limit=15 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=130 border="0" color="0" x="2373" y="4" height="48" width="539" html.valueishtml="0"  name=clientes_cate_categoria_cliente visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=120 border="0" color="0" x="2926" y="4" height="48" width="325" html.valueishtml="0"  name=zonas_descripcion_zona visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Vendedor" border="0" color="8388608" x="3264" y="308" height="56" width="425" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=110 border="0" color="0" x="3264" y="4" height="48" width="425" format="[general]" html.valueishtml="0"  name=vendedores_nombre_apellido visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="1" text="Saldo Disponible" border="0" color="8388608" x="4453" y="308" height="56" width="370" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="1" text="Limite Crédito" border="0" color="8388608" x="3703" y="308" height="56" width="370" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="1" tabsequence=60 border="0" color="0" x="3703" y="4" height="48" width="370" format="#,##0.00~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=limite_credito visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression=" limite_credito - total_deuda "border="0" color="0" x="4453" y="4" height="48" width="370" format="#,##0~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="1" text="Total Deuda" border="0" color="8388608" x="4078" y="308" height="56" width="370" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression=" vencido + a_vencer + ch_vencidos "border="0" color="0" x="4078" y="4" height="48" width="370" format="#,##0~tProfileString(~"PEGASUS.INI~", ~"FORMATOS~" , ~"FORMATO_IMPORTE~", ~"#,##0.00~")" html.valueishtml="0"  name=total_deuda visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="23" y1="376" x2="4827" y2="376"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+line(band=summary x1="23" y1="0" x2="4827" y2="0"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="12632256" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="0" color="0" x="1221" y="4" height="48" width="786" format="[general]" html.valueishtml="0"  name=direccion visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Dirección" border="0" color="8388608" x="1221" y="308" height="56" width="786" html.valueishtml="0"  name=clientes_nombre_cliente_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="1" tabsequence=70 border="0" color="0" x="919" y="4" height="48" width="279" format="[general]" html.valueishtml="0"  name=clientes_ruc visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="R.U.C." border="0" color="8388608" x="919" y="308" height="56" width="279" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Categoría" border="0" color="8388608" x="2373" y="308" height="56" width="539" html.valueishtml="0"  name=servicios_total_cobrar_t visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Zona" border="0" color="8388608" x="2926" y="308" height="56" width="325" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

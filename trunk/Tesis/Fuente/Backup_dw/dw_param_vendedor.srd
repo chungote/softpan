@@ -1,0 +1,13 @@
+$PBExportHeader$dw_param_vendedor.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes key=yes name=cod_vendedor dbname="Proveedores.Cod_proveedor" initial="0" )
+ retrieve="  SELECT Proveedores.Cod_proveedor  
+    FROM dbo.Proveedores   
+" update="Proveedores" updatewhere=1 updatekeyinplace=no )
+text(band=detail alignment="0" text="Vendedor:"border="0" color="0" x="0" y="4" height="56" width="325"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="0" x="334" y="0" height="56" width="1221" format="[general]"  name=cod_vendedor dddw.name=dw_combo_vendedores dddw.displaycolumn=nombre_apellido dddw.datacolumn=cod_vendedor dddw.percentwidth=85 dddw.lines=10 dddw.limit=0 dddw.allowedit=yes dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

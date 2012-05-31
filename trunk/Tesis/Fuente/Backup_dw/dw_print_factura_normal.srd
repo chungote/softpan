@@ -1,0 +1,250 @@
+$PBExportHeader$dw_print_factura_normal.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 0 print.margin.right = 0 print.margin.top = 0 print.margin.bottom = 2300 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+summary(height=0 color="553648127" )
+footer(height=0 color="536870912" )
+detail(height=1520 color="536870912"  height.autosize=yes)
+table(column=(type=datetime updatewhereclause=yes name=factura_cliente_fecha dbname="factura_cliente.Fecha" )
+ column=(type=number updatewhereclause=yes name=factura_cliente_nro_registro dbname="factura_cliente.nro_registro" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_cod_tipo_comprobante dbname="factura_cliente.cod_tipo_comprobante" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_nro_factura dbname="nro_factura" )
+ column=(type=char(50) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.Nombre_cliente" )
+ column=(type=char(11) updatewhereclause=yes name=clientes_ruc dbname="CLIENTES.Ruc" )
+ column=(type=char(50) updatewhereclause=yes name=clientes_direccion dbname="CLIENTES.Direccion" )
+ column=(type=char(15) updatewhereclause=yes name=clientes_telefono dbname="CLIENTES.Telefono" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_cod_moneda dbname="factura_cliente.Cod_moneda" )
+ column=(type=char(50) updatewhereclause=yes name=factura_cliente_remisiones dbname="factura_cliente.Remisiones" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_cod_condicion dbname="factura_cliente.Cod_condicion" )
+ column=(type=decimal(6) updatewhereclause=yes name=detalle_factura_cliente_unidades dbname="detalle_factura_cliente_Unidades" )
+ column=(type=char(14) updatewhereclause=yes name=detalle_factura_cliente_cod_producto dbname="detalle_factura_cliente.cod_producto" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_cod_vendedor dbname="factura_cliente.cod_vendedor" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_cod_cliente dbname="factura_cliente.Cod_cliente" )
+ column=(type=char(50) updatewhereclause=yes name=factura_cliente_nombre_cliente dbname="factura_cliente.nombre_cliente" )
+ column=(type=char(11) updatewhereclause=yes name=factura_cliente_ruc dbname="factura_cliente.ruc" )
+ column=(type=char(50) updatewhereclause=yes name=factura_cliente_direccion dbname="factura_cliente.direccion" )
+ column=(type=char(15) updatewhereclause=yes name=factura_cliente_telefono dbname="factura_cliente.telefono" )
+ column=(type=long updatewhereclause=yes name=factura_cliente_cod_aso dbname="factura_cliente.COD_ASO" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_aso_nombre_asociado dbname="CLIENTES_ASO.NOMBRE_ASOCIADO" )
+ column=(type=char(15) updatewhereclause=yes name=clientes_aso_telefono dbname="CLIENTES_ASO.TELEFONO" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_aso_direccion dbname="CLIENTES_ASO.DIRECCION" )
+ column=(type=char(50) updatewhereclause=yes name=factura_cliente_descripcion_producto dbname="factura_cliente.Descripcion_producto" )
+ column=(type=decimal(5) updatewhereclause=yes name=detalle_factura_cliente_precio dbname="Precio" )
+ column=(type=decimal(2) updatewhereclause=yes name=detalle_factura_cliente_descuento dbname="detalle_factura_cliente.descuento" )
+ column=(type=long updatewhereclause=yes name=productos_tipo_fiscal dbname="PRODUCTOS.Tipo_fiscal" )
+ column=(type=decimal(3) updatewhereclause=yes name=productos_imp_imp dbname="PRODUCTOS.Imp_imp" )
+ column=(type=char(20) updatewhereclause=yes name=cod_tipo_comprobantetos_tipo_descripcion dbname="cod_tipo_comprobanteTOS.Tipo_descripcion" )
+ column=(type=decimal(5) updatewhereclause=yes name=detalle_factura_cliente_total_detalle dbname="detalle_factura_cliente.total_detalle" )
+ column=(type=long updatewhereclause=yes name=cod_tipo_comprobantetos_tipo_opcion dbname="cod_tipo_comprobanteTOS.Tipo_opcion" )
+ column=(type=char(14) updatewhereclause=yes name=c_cod_producto dbname="PRODUCTOS.cod_producto_barras" )
+ column=(type=decimal(6) updatewhereclause=yes name=factura_cliente_importe_exento dbname="factura_cliente_Importe_exento" )
+ column=(type=decimal(6) updatewhereclause=yes name=factura_cliente_importe_gravado dbname="factura_cliente_Importe_gravado" )
+ column=(type=decimal(6) updatewhereclause=yes name=factura_cliente_importe_impuesto dbname="factura_cliente_Importe_impuesto" )
+ column=(type=number updatewhereclause=yes name=factura_cliente_iva_incluido dbname="factura_cliente.Iva_incluido" )
+ column=(type=decimal(5) updatewhereclause=yes name=detalle_factura_cliente_total_impuesto dbname="detalle_factura_cliente.total_impuesto" )
+ column=(type=decimal(5) updatewhereclause=yes name=detalle_factura_cliente_precio_bruto dbname="detalle_factura_cliente.precio_bruto" )
+ column=(type=long updatewhereclause=yes name=detalle_factura_cliente_tipo_fiscal dbname="detalle_factura_cliente.Tipo_fiscal" )
+ column=(type=decimal(3) updatewhereclause=yes name=detalle_factura_cliente_imp_imp dbname="detalle_factura_cliente.Imp_imp" )
+ column=(type=long updatewhereclause=yes name=clientes_lista_precio dbname="CLIENTES.Lista_precio" )
+ column=(type=decimal(5) updatewhereclause=yes name=pre_list dbname="Pre_list" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=detalle_factura_cliente_nro_detalle dbname="detalle_factura_cliente.nro_detalle" )
+ column=(type=long update=yes updatewhereclause=yes name=clientes_cod_descuento dbname="CLIENTES.Cod_descuento" )
+ column=(type=char(30) updatewhereclause=yes name=clientes_contacto dbname="CLIENTES.Contacto" )
+ column=(type=char(25) updatewhereclause=yes name=condiciones_pagos_condicion dbname="condiciones_pagos.CONDICION" )
+ column=(type=char(100) updatewhereclause=yes name=factura_cliente_observacion dbname="factura_cliente.Observacion" )
+ column=(type=decimal(5) updatewhereclause=yes name=productos_porc_gravado dbname="PRODUCTOS.porc_gravado" )
+ column=(type=long updatewhereclause=yes name=descuento_cheques dbname="factura_cliente.descuento_cheques" )
+ column=(type=char(200) updatewhereclause=yes name=choferes_nombre_apellido dbname="choferes.nombre_apellido" )
+ column=(type=char(20) updatewhereclause=yes name=choferes_ci_ruc dbname="choferes.ci_ruc" )
+ column=(type=char(200) updatewhereclause=yes name=camiones_descripcion dbname="camiones.descripcion" )
+ column=(type=char(15) updatewhereclause=yes name=camiones_nro_chapa dbname="camiones.nro_chapa" )
+ retrieve="  SELECT factura_cliente.Fecha,   
+			factura_cliente.nro_registro,   
+			factura_cliente.cod_tipo_comprobante,
+			case :v_porc_vta
+				when 0 then   
+         			factura_cliente.nro_factura    
+				else
+						factura_cliente.nro_factura_otras
+			end as nro_factura,
+			
+			 Personas.nombre_fantasia,
+         Personas.nro_documento,
+         Personas.Direccion,
+         Personas.Telefono,
+         factura_cliente.Cod_moneda,
+         0 as remisiones,
+         factura_cliente.Cod_condicion
+			
+        	case :v_porc_vta
+				when 0 then   
+         			detalle_factura_cliente.cantidad    
+				else
+						round((detalle_factura_cliente.cantidad * :v_porc_vta/100),0)
+				end as cantidad,
+				detalle_factura_cliente.cod_producto,
+         factura_cliente.cod_vendedor,
+         factura_cliente.cod_persona as cod_cliente,
+         '' as nombre_cliente,
+         '' as ruc,
+         '' as direccion,
+         '' as telefono,
+           0 as cod_aso,
+         '' as nombre_asociado,
+			'' as telefono,
+			'' as direccion,
+			Productos.Descripcion as Descripcion_producto,
+			 detalle_factura_cliente.Precio,
+         detalle_factura_cliente.descuento,
+			 case
+               when (select porcentage_iva from tipo_iva where cod_tipo_iva=productos.cod_tipo_iva)=0 then
+                        1
+               else
+                        0
+         end as tipo_fiscal, 
+         (select porcentage_iva from tipo_iva where cod_tipo_iva=productos.cod_tipo_iva)*100  as imp_imp  
+         tipo_comprobante.descripcion_tipo_comprobante , 
+         detalle_factura_cliente.total_detalle,   
+         tipo_comprobante.Tipo_opcion,   
+         '' as codigo_barras,			
+			case :v_porc_vta
+				when 0 then   
+         			 factura_cliente.Importe_exento    
+				else
+						round((factura_cliente.Importe_exento * :v_porc_vta/100),0)
+				end as  factura_cliente_Importe_exento,
+  
+        	case :v_porc_vta
+				when 0 then   
+         			 (factura_cliente.Importe_gravado_10+factura_cliente.Importe_gravado_5)  
+				else
+						round(((factura_cliente.Importe_gravado_10+factura_cliente.Importe_gravado_5) * :v_porc_vta/100),0)
+				end as  factura_cliente_Importe_gravado,
+   
+   		case :v_porc_vta
+				when 0 then   
+         			 (factura_cliente.Importe_impuesto_10+Importe_impuesto_5)   
+				else
+						round(((factura_cliente.Importe_impuesto_10+Importe_impuesto_5) * :v_porc_vta/100),0)
+				end as  factura_cliente_Importe_impuesto,
+          
+         factura_cliente.Iva_incluido,   
+         detalle_factura_cliente.total_impuesto,   
+         detalle_factura_cliente.precio_bruto,   
+         detalle_factura_cliente.Tipo_fiscal,   
+         ((select porcentage_iva from tipo_iva where cod_tipo_iva=productos.cod_tipo_iva)*100)  as imp_imp,   
+         Personas.nro_lista,
+         (SELECT lista_precios_det.PRECIO
+                FROM lista_precios_det
+                WHERE ( lista_precios_det.cod_producto = Productos.cod_producto ) and
+         ( lista_precios_det.NRO_LISTA = Personas.nro_lista ) ) as Pre_list,
+
+         detalle_factura_cliente.nro_detalle,   
+         0 as Cod_descuento,   
+         condiciones_pagos.descripcion_condicion,
+         factura_cliente.observaciones,
+
+         '' as nombre_chofer,
+         '' as ci_ruc_chofer,
+         '' as descripcion_camiones,
+         ''as  chapa_camiones
+			
+FROM 		factura_cliente,
+         detalle_factura_cliente,
+         Personas,
+         Productos,
+         tipo_comprobante,
+         condiciones_pagos,
+         Pedido_cliente
+
+   WHERE ( factura_cliente.nro_registro = detalle_factura_cliente.nro_registro ) and
+         ( factura_cliente.cod_persona = Personas.cod_persona ) and
+         ( detalle_factura_cliente.cod_producto = Productos.cod_producto ) and
+         ( factura_cliente.cod_tipo_comprobante = tipo_comprobante.cod_tipo_comprobante ) and
+         ( factura_cliente.Cod_condicion = condiciones_pagos.Cod_condicion ) and
+         ( Pedido_cliente.Nro_pedido = factura_cliente.nro_pedido) and
+         ( ( factura_cliente.nro_registro = :v_nroReg) )
+			
+			
+" arguments=(("v_NroReg", number),("v_porc_vta", number))  sort="detalle_factura_cliente_nro_detalle A " )
+compute(band=header alignment="1" expression="if( factura_cliente_iva_incluido <> 0, ( (detalle_factura_cliente_total_detalle + detalle_factura_cliente_total_impuesto )    / detalle_factura_cliente_unidades ) ,( detalle_factura_cliente_total_detalle  / detalle_factura_cliente_unidades ) )"border="0" color="65280" x="1998" y="1576" height="60" width="370" format="#,##0" html.valueishtml="0"  name=par_a visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="if( factura_cliente_iva_incluido <> 0, ( (detalle_factura_cliente_total_detalle + detalle_factura_cliente_total_detalle )    / detalle_factura_cliente_unidades ) ,( detalle_factura_cliente_total_detalle  / detalle_factura_cliente_unidades ) )"border="0" color="255" x="2386" y="1580" height="60" width="370" format="#,##0" html.valueishtml="0"  name=compute_1 visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=32 alignment="0" tabsequence=32766 border="0" color="0" x="5" y="872" height="48" width="544" format="[general]" html.valueishtml="0"  name=c_cod_producto visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="if(  factura_cliente_iva_incluido =0, if(  detalle_factura_cliente_tipo_fiscal = 1, detalle_factura_cliente_precio , if(productos_imp_imp <> 10,if(productos_imp_imp <> 5,if(productos_porc_gravado <> 100,( detalle_factura_cliente_precio )  + (  productos_imp_imp * 10 ),0)
+,((detalle_factura_cliente_precio) + ((detalle_factura_cliente_precio *  productos_imp_imp ) / 100))),((detalle_factura_cliente_precio) + ((detalle_factura_cliente_precio *  productos_imp_imp ) / 100)))), detalle_factura_cliente_precio )"border="0" color="0" x="2162" y="872" height="48" width="453" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=precio visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="if(factura_cliente_iva_incluido = 0 , if(  detalle_factura_cliente_tipo_fiscal = 1,  detalle_factura_cliente_unidades *  detalle_factura_cliente_precio , if(productos_imp_imp <> 10,if(productos_imp_imp <> 5,if(productos_porc_gravado <> 100,( detalle_factura_cliente_unidades *  detalle_factura_cliente_precio )  - (( (  productos_imp_imp * 10 )  *  ( detalle_factura_cliente_unidades *  detalle_factura_cliente_precio  )  )  / 100),0),0),0)), ( detalle_factura_cliente_unidades *  detalle_factura_cliente_precio ))"border="0" color="0" x="2629" y="872" height="48" width="462" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=par_b visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="if( factura_cliente_iva_incluido =0, sum(if(  productos_tipo_fiscal =0  and  productos_imp_imp <>5,  detalle_factura_cliente_total_detalle + detalle_factura_cliente_total_impuesto , 0 ) for all), sum(if(  productos_tipo_fiscal =0  and  productos_imp_imp <>5,  detalle_factura_cliente_total_detalle  , 0 ) for all))"border="0" color="0" x="3145" y="872" height="48" width="462" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=par_c visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="if(  productos_imp_imp = 2, '10%', productos_imp_imp  + '%'  )"border="0" color="0" x="2007" y="872" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=compute_13 visible="1~tif(  productos_tipo_fiscal = 1, 0, 1 )"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round(  detalle_factura_cliente_unidades  , 0) =   detalle_factura_cliente_unidades  , string(  detalle_factura_cliente_unidades  , '#,##0'), string(  detalle_factura_cliente_unidades  , '#,##0.00') )"border="0" color="0" x="576" y="936" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_cantidad visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( precio , 0) =   precio  , string( precio  , '#,##0'), string(  precio  , '#,##0') )"border="0" color="0" x="2181" y="936" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_precio visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( par_b , 0) =   par_b  , string( par_b  , '#,##0'), string( par_b  , '#,##0') )"border="0" color="0" x="2469" y="936" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_exento visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="if( factura_cliente_iva_incluido =0, sum(if(  productos_tipo_fiscal =0  and  productos_imp_imp =5,  detalle_factura_cliente_total_detalle + detalle_factura_cliente_total_impuesto , 0 ) for all), sum(if(  productos_tipo_fiscal =0  and  productos_imp_imp =5,  detalle_factura_cliente_total_detalle  , 0 ) for all))"border="0" color="0" x="3643" y="872" height="48" width="462" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=par_d visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="if(round( par_c , 0) =   par_c  , string( par_c  , '#,##0'), string( par_c  , '#,##0') )"border="0" color="0" x="2967" y="936" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_gravado10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( par_d , 0) =   par_d  , string( par_d  , '#,##0'), string( par_d  , '#,##0') )"border="0" color="0" x="2747" y="936" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_gravado5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="/* if( clientes_lista_precio = 0 , productos_precio_venta_a ,if( clientes_lista_precio = 1 , productos_precio_venta_b ,if( clientes_lista_precio = 2 , productos_precio_venta_c ,if( clientes_lista_precio = 3 , productos_precio_venta_d ,if( clientes_lista_precio = 4 , productos_precio_venta_e ,0))))) */"border="0" color="16777215" x="448" y="1444" height="60" width="402" format="[general]" html.valueishtml="0"  name=precio_lista visible="1~t0"  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+column(band=detail id=42 alignment="0" tabsequence=32766 border="0" color="16777215" x="1586" y="1436" height="64" width="402" format="#,##0.00" html.valueishtml="0"  name=pre_list visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Draft 17cpi" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=detail alignment="1" expression="/* (detalle_factura_cliente_unidades*precio_lista) */"border="0" color="16777215" x="2025" y="1444" height="60" width="370" format="#,##0" html.valueishtml="0"  name=val_a visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=detail alignment="1" expression="( par_b + par_c )"border="0" color="16777215" x="2418" y="1444" height="60" width="370" format="#,##0" html.valueishtml="0"  name=val_b visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=detail alignment="1" expression="sum(if( productos_tipo_fiscal = 0,  if( productos_imp_imp = 5,( (detalle_factura_cliente_unidades *  detalle_factura_cliente_precio) *  productos_imp_imp )  / 100, 0),0) for all)"border="0" color="0" x="901" y="1164" height="60" width="384" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=iva_5 visible="1~tif( cumulativeSum( if(  productos_imp_imp = 5, 1, 0 ) for all ) > 0, 1, 0 )"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15793151" )
+compute(band=detail alignment="0" expression="' I.V.A. 10 %' "border="0" color="0" x="1445" y="1164" height="60" width="571" format="[GENERAL]" html.valueishtml="0"  name=compute_17 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="' I.V.A. 5 %' "border="0" color="0" x="311" y="1164" height="60" width="571" format="[GENERAL]" html.valueishtml="0"  name=compute_14 visible="1~tif( cumulativeSum( if(  productos_imp_imp = 5, 1, 0 ) for all ) > 0, 1, 0 )"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression=" round((factura_cliente_importe_exento + factura_cliente_importe_gravado + factura_cliente_importe_impuesto ),0)"border="0" color="0" x="3031" y="1296" height="64" width="462" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=total_fac visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="3" expression="left(if(factura_cliente_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds), 70)"border="0" color="0" x="763" y="1300" height="64" width="2117" format="[general]" html.valueishtml="0"  name=letras1 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="3" expression="if(len(if(factura_cliente_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds))> 70, right(if(factura_cliente_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds), len(if(factura_cliente_cod_moneda  = 1 ,~" ~" +  Cantidad_gs , ~" ~" +  cantidad_ds)) -70), '') + '-'"border="0" color="0" x="763" y="1404" height="64" width="2117" format="[general]" html.valueishtml="0"  name=letras2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="string(iva_5  , '#,##0')"border="0" color="0" x="987" y="1076" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=s_imp_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(iva_10 , '#,##0')"border="0" color="0" x="1234" y="1076" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=s_imp_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( factura_cliente_importe_impuesto , 0) =   factura_cliente_importe_impuesto  , string(  factura_cliente_importe_impuesto  , '#,##0'), string(  factura_cliente_importe_impuesto  , '#,##0') )"border="0" color="0" x="3109" y="1212" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=s_imp visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round(factura_cliente_importe_exento , 0) =   factura_cliente_importe_exento  , string(  factura_cliente_importe_exento  , '#,##0'), string( factura_cliente_importe_exento , '#,##0') )"border="0" color="0" x="2551" y="1072" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=t_exe visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( grav_5 , 0) =  grav_5  , string( grav_5 , '#,##0'), string( grav_5 , '#,##0') )"border="0" color="0" x="2935" y="1072" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=t_gravado5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( grav_10 , 0) =  grav_10 , string( grav_10 , '#,##0'), string( grav_10 , '#,##0') )"border="0" color="0" x="3401" y="1072" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=t_gravado10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="sum( par_c for all )"border="0" color="0" x="2747" y="1072" height="48" width="146" format="[General]" html.valueishtml="0"  name=grav_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="sum( par_d for all )"border="0" color="0" x="3191" y="1072" height="48" width="146" format="[General]" html.valueishtml="0"  name=grav_5 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if(round( total_fac , 0) =   total_fac  , string(  total_fac  , '#,##0'), string(  total_fac  , '#,##0') )"border="0" color="0" x="3177" y="1376" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=c_total_fac visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(letras1)"border="0" color="0" x="421" y="1304" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=t_letras1 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(letras2)"border="0" color="0" x="425" y="1412" height="48" width="146" format="[GENERAL]" html.valueishtml="0"  name=t_letras2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="if( factura_cliente_cod_aso  > 0 ,  clientes_aso_direccion , factura_cliente_direccion)"border="0" color="0" x="512" y="584" height="60" width="1824" format="[general]" html.valueishtml="0"  name=c_direccion visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="722" y="648" height="60" width="622" format="[general]" html.valueishtml="0"  name=factura_cliente_remisiones visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="722" y="712" height="60" width="425" format="#,##0" html.valueishtml="0"  name=factura_cliente_nro_registro visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="1" expression="if( cod_tipo_comprobantetos_tipo_opcion  = 0,  'X','')"border="0" color="0" x="2661" y="40" height="60" width="91" format="[general]" html.valueishtml="0"  name=credito visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="1" tabsequence=32766 border="0" color="0" x="608" y="440" height="60" width="91" format="dd" html.valueishtml="0"  name=factura_cliente_fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="2" expression="mes(month(  factura_cliente_fecha  ))"border="0" color="0" x="960" y="440" height="60" width="695" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="1742" y="440" height="60" width="325" format="yyyy" html.valueishtml="0"  name=factura_cliente_fecha_1 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=14 alignment="1" tabsequence=32766 border="0" color="0" x="2400" y="440" height="60" width="119" format="[general]" html.valueishtml="0"  name=factura_cliente_cod_vendedor visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="factura_cliente_ruc"border="0" color="0" x="2400" y="520" height="60" width="750" format="@@@@ @@@@@@ @" html.valueishtml="0"  name=c_ruc visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(if( factura_cliente_cod_aso  > 0 ,   clientes_aso_telefono ,  factura_cliente_telefono) )"border="0" color="0" x="2400" y="584" height="60" width="750" format="[general]" html.valueishtml="0"  name=c_telefono visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="condiciones_pagos_condicion "border="0" color="0" x="2514" y="648" height="60" width="613" format="[general]" html.valueishtml="0"  name=c_condicion visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="if( cod_tipo_comprobantetos_tipo_opcion  = 0,  '','X')"border="0" color="0" x="2843" y="40" height="60" width="91" format="[general]" html.valueishtml="0"  name=contado visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string( factura_cliente_nro_factura  , '#,##0')"border="0" color="0" x="2565" y="180" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_nro_factura visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(day(  factura_cliente_fecha  ))"border="0" color="0" x="599" y="352" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_dia visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(mes( month( factura_cliente_fecha ) ))"border="0" color="0" x="951" y="352" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_mes visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(year(  factura_cliente_fecha  ))"border="0" color="0" x="1243" y="352" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_anio visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression=" if( factura_cliente_cod_aso  > 0 ,  clientes_aso_nombre_asociado  , factura_cliente_nombre_cliente )  + '(' +   string(factura_cliente_cod_cliente) + ')'"border="0" color="0" x="512" y="520" height="60" width="1824" format="[general]" html.valueishtml="0"  name=c_cliente visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(factura_cliente_nro_registro , '#,##0')"border="0" color="0" x="722" y="792" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_nro_registro visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=41 alignment="0" tabsequence=32766 border="0" color="16777215" x="5" y="32" height="72" width="471" format="[general]" html.valueishtml="0"  name=clientes_lista_precio visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=detail alignment="0" expression="if (long(left(right(string((  total_fac + 0.001  ) ),3),2))  > 0 , num_letras(string(round(total_fac, 0) )) + ~" - ~"  ,num_letras(string(total_fac ))  + ~" - ~")"border="0" color="16777215" x="1102" y="32" height="64" width="471" format="[general]" html.valueishtml="0"  name=cantidad_gs visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+compute(band=detail alignment="0" expression="if (long(right(string((  total_fac + 0.001   ) ),2)) > 0 , if (long(left(right(string((  total_fac + 0.001  ) ),3),2)) > 0 , num_letras(string(truncate((  total_fac + 0.001  ), 0) )) + ~" CON ~" + left(right(string((  total_fac + 0.001  ) ),3),2) + ~"/100 -~", num_letras(string(truncate((  total_fac + 0.001  ), 0) )) )  ,num_letras(string(truncate((  total_fac + 0.001   ), 0) )) + ~" - ~") "border="0" color="16777215" x="539" y="32" height="64" width="471" format="[general]" html.valueishtml="0"  name=cantidad_ds visible="1~t0"  font.face="Times New Roman" font.height="-9" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="128" )
+text(band=detail alignment="0" text="   " border="0" color="0" x="1893" y="32" height="64" width="55" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=49 alignment="0" tabsequence=32766 border="0" color="0" x="3369" y="344" height="48" width="55" format="[general]" html.valueishtml="0"  name=descuento_cheques visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(  descuento_cheques   , '#,##0')"border="0" color="0" x="2569" y="296" height="64" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_descuento_cheques visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="0" x="4105" y="0" height="48" width="1568" format="[general]" html.valueishtml="0"  name=detalle_factura_cliente_unidades visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=33 alignment="0" tabsequence=32766 border="0" color="0" x="5673" y="0" height="48" width="1568" format="[general]" html.valueishtml="0"  name=factura_cliente_importe_exento visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=34 alignment="0" tabsequence=32766 border="0" color="0" x="7241" y="0" height="48" width="1568" format="[general]" html.valueishtml="0"  name=factura_cliente_importe_gravado visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=35 alignment="0" tabsequence=32766 border="0" color="0" x="8809" y="0" height="48" width="1568" format="[general]" html.valueishtml="0"  name=factura_cliente_importe_impuesto visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="2848" y="164" height="56" width="375" format="[general]" html.valueishtml="0"  name=factura_cliente_nro_factura visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1090519039" )
+compute(band=detail alignment="1" expression="sum(if( productos_tipo_fiscal = 0,  if( productos_imp_imp <> 5,( (detalle_factura_cliente_unidades *  detalle_factura_cliente_precio) *  productos_imp_imp )  / 100, 0),0) for all)"border="0" color="0" x="2048" y="1164" height="60" width="384" format="#,##0~tif(  factura_cliente_cod_moneda  = 2 , ~"#,##0.00~",  ~"#,##0~")" html.valueishtml="0"  name=iva_10 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217752" )
+column(band=detail id=24 alignment="0" tabsequence=32766 border="0" color="0" x="6478" y="104" height="48" width="901" format="[general]" html.valueishtml="0"  name=factura_cliente_descripcion_producto visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=50 alignment="0" tabsequence=32766 border="0" color="0" x="7378" y="104" height="48" width="544" format="[general]" html.valueishtml="0"  name=choferes_nombre_apellido visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=52 alignment="0" tabsequence=32766 border="0" color="0" x="7378" y="176" height="48" width="544" format="[general]" html.valueishtml="0"  name=camiones_descripcion visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=51 alignment="0" tabsequence=32766 border="0" color="0" x="7049" y="288" height="48" width="311" format="[general]" html.valueishtml="0"  name=choferes_ci_ruc visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="string(  choferes_ci_ruc  , '#,##0')"border="0" color="0" x="7378" y="288" height="64" width="311" format="[GENERAL]" html.valueishtml="0"  name=c_ci_ruc visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="'Marca Vehiculo : '+string(  camiones_nro_chapa , '#,##0')"border="0" color="0" x="7826" y="288" height="64" width="311" format="[GENERAL]" html.valueishtml="0"  name=c_chapa visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=53 alignment="0" tabsequence=32766 border="0" color="0" x="8174" y="288" height="64" width="270" format="[general]" html.valueishtml="0"  name=camiones_nro_chapa visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(detalle_factura_cliente_unidades *   detalle_factura_cliente_precio for all)"border="0" color="16777215" x="2258" y="80" height="60" width="480" format="#,##0~tif(  factura_cliente_cod_moneda  = 1 , ~"#,##0~" , ~"#,##0.00~")" html.valueishtml="0"  name=tot_neto visible="1~t0"  font.face="Roman 17cpi" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="128" )
+text(band=summary alignment="0" text="Desc. Otorgados :" border="0" color="0" x="718" y="0" height="48" width="366" html.valueishtml="0"  name=tex1 visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="100 - (tot_neto  * 100 / tot_bruto)"border="0" color="0" x="1088" y="0" height="48" width="430" format="#,##0.00" html.valueishtml="0"  name=tex2 visible="1~t0"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(detalle_factura_cliente_unidades *  detalle_factura_cliente_precio_bruto for all)"border="0" color="16777215" x="1838" y="8" height="36" width="480" format="#,##0~tif(  factura_cliente_cod_moneda  = 1 , ~"#,##0~" , ~"#,##0.00~")" html.valueishtml="0"  name=tot_bruto visible="1~t0"  font.face="Draft 17cpi" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="128" )
+compute(band=summary alignment="1" expression="tot_bruto - tot_neto"border="0" color="16777215" x="2350" y="4" height="36" width="480" format="#,##0~tif(  factura_cliente_cod_moneda  = 1 , ~"#,##0~" , ~"#,##0.00~")" html.valueishtml="0"  name=compute_10 visible="1~t0"  font.face="Draft 17cpi" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="2" background.color="128" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

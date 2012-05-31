@@ -1,0 +1,75 @@
+$PBExportHeader$dw_abm_ajuste_stock_detalle.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=128 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes name=ajus_stock_det_nro_ajuste dbname="AJUS_STOCK_DET.Nro_ajuste" initial="0" )
+ column=(type=char(14) update=yes updatewhereclause=yes name=codigo dbname="AJUS_STOCK_DET.Codigo" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=ajus_stock_det_cantidad dbname="AJUS_STOCK_DET.Cantidad" initial="0" )
+ column=(type=decimal(5) update=yes updatewhereclause=yes name=ajus_stock_det_costo dbname="AJUS_STOCK_DET.Costo" initial="0" )
+ column=(type=decimal(5) update=yes updatewhereclause=yes name=ajus_stock_det_precio dbname="AJUS_STOCK_DET.Precio" initial="0" )
+ column=(type=decimal(5) update=yes updatewhereclause=yes name=ajus_stock_det_cantidad_stock dbname="AJUS_STOCK_DET.Cantidad_stock" initial="0" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes identity=yes name=ajus_stock_det_primario dbname="AJUS_STOCK_DET.Primario" initial="0" )
+ column=(type=long update=yes updatewhereclause=yes name=ajus_stock_det_confirmado dbname="AJUS_STOCK_DET.Confirmado" initial="0" values="	1/	0" )
+ column=(type=char(50) updatewhereclause=yes name=productos_descripcion_producto dbname="PRODUCTOS.Descripcion_producto" )
+ column=(type=char(4) updatewhereclause=yes name=productos_unidad dbname="PRODUCTOS.Unidad" )
+ column=(type=char(100) update=yes updatewhereclause=yes name=ajus_stock_det_observacion dbname="AJUS_STOCK_DET.Observacion" initial=" " )
+ column=(type=long update=yes updatewhereclause=yes name=ajus_stock_det_cod_proveedor_ajus dbname="AJUS_STOCK_DET.cod_proveedor_ajus" )
+ column=(type=long update=yes updatewhereclause=yes name=ajus_stock_det_cod_moneda_ajus dbname="AJUS_STOCK_DET.cod_moneda_ajus" )
+ column=(type=long update=yes updatewhereclause=yes name=ajus_stock_det_tipo_fiscal dbname="AJUS_STOCK_DET.tipo_fiscal" )
+ column=(type=decimal(3) update=yes updatewhereclause=yes name=ajus_stock_det_imp_imp dbname="AJUS_STOCK_DET.imp_imp" )
+ retrieve="  SELECT Ajus_stock_det.Nro_ajuste,   
+         Ajus_stock_det.Codigo,   
+         Ajus_stock_det.Cantidad,   
+         Ajus_stock_det.Costo,   
+         Ajus_stock_det.Precio,  
+         Ajus_stock_det.Cantidad_stock,   
+         Ajus_stock_det.Primario,   
+         Ajus_stock_det.Confirmado,   
+         Productos.Descripcion_producto,   
+         Productos.Unidad,   
+         Ajus_stock_det.Observacion,
+			Ajus_stock_det.cod_proveedor_ajus,
+			Ajus_stock_det.cod_moneda_ajus,
+			Ajus_stock_det.tipo_fiscal,
+			Ajus_stock_det.imp_imp
+    FROM dbo.Ajus_stock_det,   
+         dbo.Productos   
+   WHERE ( Ajus_stock_det.Codigo = Productos.Codigo ) and  
+         ( Productos.Codigo = Ajus_stock_det.Codigo ) and  
+         (( Ajus_stock_det.Nro_ajuste = :V_NroAjus ) AND  
+         ( :V_Cod_Depo = :V_Cod_Depo ) )    
+" update="Ajus_stock_det" updatewhere=0 updatekeyinplace=yes arguments=(("V_NroAjus", number),("V_Cod_Depo", number)) )
+text(band=header alignment="2" text="Nro Reg" border="2" color="0" x="3515" y="60" height="56" width="242" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Detalle de Ajuste - Inventario" border="2" color="0" x="23" y="8" height="56" width="3355" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Código" border="2" color="0" x="23" y="68" height="56" width="384" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Producto" border="2" color="0" x="411" y="68" height="56" width="992" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="U/M" border="2" color="0" x="1637" y="68" height="56" width="133" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Cantidad" border="2" color="0" x="1774" y="68" height="56" width="224" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Costo" border="2" color="0" x="2002" y="68" height="56" width="224" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Total" border="2" color="0" x="2231" y="68" height="56" width="320" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Confir." border="2" color="0" x="2555" y="68" height="56" width="169" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Observación" border="2" color="0" x="2729" y="68" height="56" width="649" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Actual" border="2" color="0" x="1408" y="68" height="56" width="224" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="2" color="0" x="23" y="0" height="56" width="384" format="[general]" html.valueishtml="0"  name=codigo  tag="dddw:dw_busca_producto;1=2;2=9" visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="2" color="0" x="411" y="0" height="56" width="992" format="[general]" html.valueishtml="0"  name=productos_descripcion_producto visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=10 alignment="2" tabsequence=32766 border="2" color="0" x="1637" y="0" height="56" width="133" format="[general]" html.valueishtml="0"  name=productos_unidad visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="1" tabsequence=20 border="2" color="0" x="1774" y="0" height="56" width="224" format="#,##0.00" html.valueishtml="0"  name=ajus_stock_det_cantidad visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="1" tabsequence=30 border="2" color="0" x="2002" y="0" height="56" width="224" format="#,##0.00" html.valueishtml="0"  name=ajus_stock_det_costo visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression=" ajus_stock_det_cantidad * ajus_stock_det_costo "border="2" color="0" x="2231" y="0" height="56" width="320" format="#,##0.0" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="2" color="0" x="3515" y="0" height="56" width="242" format="[general]" html.valueishtml="0"  name=ajus_stock_det_nro_ajuste visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16776960" )
+column(band=detail id=11 alignment="0" tabsequence=50 border="2" color="0" x="2729" y="0" height="56" width="649" format="[general]" html.valueishtml="0"  name=ajus_stock_det_observacion visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="2" tabsequence=40 border="2" color="0" x="2555" y="0" height="56" width="169" format="[general]" html.valueishtml="0" protect="0~t1"  name=ajus_stock_det_confirmado visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="2" color="0" x="1408" y="0" height="56" width="224" format="#,##0.00" html.valueishtml="0"  name=ajus_stock_det_cantidad_stock visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=60 border="0" color="0" x="3758" y="0" height="56" width="69" format="[general]" html.valueishtml="0"  name=ajus_stock_det_cod_proveedor_ajus visible="0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="0" tabsequence=70 border="0" color="0" x="3831" y="0" height="56" width="23" format="[general]" html.valueishtml="0"  name=ajus_stock_det_cod_moneda_ajus visible="0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=14 alignment="0" tabsequence=80 border="0" color="0" x="3858" y="0" height="56" width="23" format="[general]" html.valueishtml="0"  name=ajus_stock_det_tipo_fiscal visible="0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=15 alignment="0" tabsequence=90 border="0" color="0" x="3886" y="0" height="56" width="27" format="[general]" html.valueishtml="0"  name=ajus_stock_det_imp_imp visible="0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+ 

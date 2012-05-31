@@ -1,0 +1,26 @@
+$PBExportHeader$filtro_clientes.srf
+$PBExportComments$x
+global type filtro_clientes from function_object
+end type
+
+forward prototypes
+global function string filtro_clientes (long mi_cliente)
+end prototypes
+
+global function string filtro_clientes (long mi_cliente);string v_Clientes
+
+if driver() = 2 then
+	select Nombre_cliente
+	into :v_Clientes
+	from Clientes
+	where Clientes.Cod_cliente = :Mi_Cliente ;
+else
+	select Nombre_cliente
+	into :v_Clientes
+	from dbo.Clientes
+	where Clientes.Cod_cliente = :Mi_Cliente ;
+end if
+
+return v_Clientes
+end function
+

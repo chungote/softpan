@@ -1,0 +1,78 @@
+$PBExportHeader$dw_abm_anticipo_cab.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=840 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes key=yes name=nro_anticipo dbname="ANTICIPO_CAB.NRO_ANTICIPO" initial="0" )
+ column=(type=datetime update=yes updatewhereclause=yes name=fecha dbname="ANTICIPO_CAB.FECHA" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_cliente dbname="ANTICIPO_CAB.COD_CLIENTE" initial="0" )
+ column=(type=char(50) updatewhereclause=yes name=clientes_nombre_cliente dbname="CLIENTES.NOMBRE_CLIENTE" )
+ column=(type=long update=yes updatewhereclause=yes name=cod_cobrador dbname="ANTICIPO_CAB.COD_COBRADOR" initial="0" )
+ column=(type=char(35) updatewhereclause=yes name=cobradores_nombre_cobrador dbname="COBRADORES.NOMBRE_COBRADOR" )
+ column=(type=long update=yes updatewhereclause=yes name=anticipo_cab_cod_moneda dbname="ANTICIPO_CAB.COD_MONEDA" initial="0" )
+ column=(type=char(15) updatewhereclause=yes name=monedas_moneda dbname="MONEDAS.moneda" )
+ column=(type=long update=yes updatewhereclause=yes name=anticipo_cab_cod_cajero dbname="ANTICIPO_CAB.cod_cajero" initial="0" )
+ column=(type=char(35) updatewhereclause=yes name=cajeros_nombre_cajero dbname="CAJEROS.NOMBRE_CAJERO" )
+ column=(type=long update=yes updatewhereclause=yes name=anticipo_cab_tipo_documen dbname="ANTICIPO_CAB.tipo_documen" initial="0" )
+ column=(type=number update=yes updatewhereclause=yes name=nro_recibo dbname="ANTICIPO_CAB.NRO_RECIBO" initial="0" )
+ column=(type=char(100) update=yes updatewhereclause=yes name=observacion dbname="ANTICIPO_CAB.Observacion" )
+ column=(type=long update=yes updatewhereclause=yes name=anticipo_cab_cod_sucursal dbname="ANTICIPO_CAB.cod_sucursal" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=anticipo_cab_valor dbname="ANTICIPO_CAB.VALOR" initial="0" )
+ retrieve="  SELECT ANTICIPO_CAB.NRO_ANTICIPO,   
+         ANTICIPO_CAB.FECHA,   
+         ANTICIPO_CAB.COD_CLIENTE,   
+         clientes.NOMBRE_CLIENTE,   
+         ANTICIPO_CAB.COD_COBRADOR, 
+         cobradores.NOMBRE_COBRADOR, 
+         ANTICIPO_CAB.COD_MONEDA, 
+		   monedas.moneda,
+
+			ANTICIPO_CAB.cod_cajero, 
+			CAJEROS.NOMBRE_CAJERO,
+
+			ANTICIPO_CAB.tipo_documen,
+
+			ANTICIPO_CAB.NRO_RECIBO,  
+         ANTICIPO_CAB.Observacion,
+			ANTICIPO_CAB.cod_sucursal,
+			ANTICIPO_CAB.VALOR 
+    FROM ANTICIPO_CAB ,
+			clientes,
+			cobradores,
+		   monedas,
+			CAJEROS
+  
+   WHERE (ANTICIPO_CAB.COD_CLIENTE = clientes.COD_CLIENTE) AND
+			(ANTICIPO_CAB.COD_COBRADOR = cobradores.COD_COBRADOR) AND
+			(ANTICIPO_CAB.COD_MONEDA = monedas.COD_MONEDA) AND
+(ANTICIPO_CAB.cod_cajero = CAJEROS.cod_cajero) AND
+			(ANTICIPO_CAB.NRO_ANTICIPO = :V_NroCob)     
+" update="ANTICIPO_CAB" updatewhere=0 updatekeyinplace=yes arguments=(("V_NroCob", number)) )
+groupbox(band=detail text=""border="5" color="553648127" x="2363" y="232" height="188" width="658"  font.face="MS Sans Serif" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=15 alignment="2" tabsequence=32766 border="5" color="0" x="2418" y="284" height="88" width="553" format="#,##0.00"  name=anticipo_cab_valor edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15793151" )
+text(band=detail alignment="0" text="Nro anticipo:"border="0" color="0" x="87" y="28" height="56" width="343"  name=nro_pago_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="2" tabsequence=10 border="5" color="0" x="448" y="32" height="56" width="238" format="#,##0"  name=nro_anticipo edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Cliente:"border="0" color="0" x="87" y="104" height="56" width="352"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=20 border="5" color="0" x="448" y="104" height="56" width="251" format=""  name=cod_cliente  tag="dddw:dw_bus_cliente;1=3;2=4:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="1" color="0" x="727" y="104" height="56" width="1015" format="[general]"  name=clientes_nombre_cliente edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="0" text="Cobrador:"border="0" color="0" x="87" y="188" height="56" width="352"  name=cod_cobrador_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=30 border="5" color="0" x="448" y="188" height="56" width="251" format=""  name=cod_cobrador  tag="dddw:dw_bus_cobrador;1=5;2=6:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="1" color="0" x="727" y="188" height="56" width="1015" format="[general]"  name=cobradores_nombre_cobrador edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="0" text="Moneda:"border="0" color="0" x="87" y="268" height="56" width="352"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=40 border="5" color="0" x="448" y="268" height="56" width="251" format=""  name=anticipo_cab_cod_moneda  tag="dddw:dw_bus_moneda;1=7;2=8:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="1" color="0" x="727" y="268" height="56" width="1015" format="[general]"  name=monedas_moneda edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="0" text="Cajero:"border="0" color="0" x="87" y="348" height="56" width="352"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=50 border="5" color="0" x="448" y="348" height="56" width="251" format=""  name=anticipo_cab_cod_cajero  tag="dddw:dw_bus_cajero;1=9;2=10:@" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="1" color="0" x="727" y="348" height="56" width="1015" format="[general]"  name=cajeros_nombre_cajero edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=detail alignment="0" text="Sucursal:"border="0" color="0" x="87" y="432" height="56" width="279"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=60 border="5" color="0" x="448" y="432" height="56" width="914" format=""  name=anticipo_cab_cod_sucursal dddw.name=dw_combo_sucursal dddw.displaycolumn=nombre_sucursal dddw.datacolumn=cod_sucursal dddw.percentwidth=165 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Fecha Cobro:"border="0" color="0" x="87" y="512" height="56" width="352"  name=fecha_pago_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=70 border="5" color="0" x="448" y="512" height="56" width="439" format="dd/mm/yy"  name=fecha editmask.mask="DD/MM/YY" editmask.spinrange="nombre_cliente" editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Tipo Doc:"border="0" color="0" x="87" y="596" height="56" width="352"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=80 border="5" color="0" x="448" y="596" height="56" width="914" format="[general]"  name=anticipo_cab_tipo_documen dddw.name=dw_combo_tipo_doc_anticipo dddw.displaycolumn=tipo_descripcion dddw.datacolumn=tipo_documen dddw.percentwidth=100 dddw.lines=10 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.autohscroll=yes dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Nro recibo:"border="0" color="0" x="87" y="676" height="56" width="352"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="2" tabsequence=90 border="5" color="0" x="448" y="676" height="56" width="288" format="#,##0"  name=nro_recibo edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="0" text="Observacion:"border="0" color="0" x="87" y="756" height="56" width="352"  name=observacion_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=100 border="5" color="0" x="448" y="756" height="56" width="1477" format="[general]"  name=observacion edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

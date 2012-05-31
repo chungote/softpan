@@ -1,0 +1,27 @@
+$PBExportHeader$parsys_codmoneda.srf
+$PBExportComments$x
+global type parsys_codmoneda from function_object
+end type
+
+forward prototypes
+global function double parsys_codmoneda ()
+end prototypes
+
+global function double parsys_codmoneda ();double v_moneda
+
+if driver() = 2 then
+	select Cod_moneda
+	into :v_moneda
+	from par_sys;
+else
+	select Cod_moneda
+	into :v_moneda
+	from dbo.par_sys;
+end if
+
+
+return v_moneda
+
+
+end function
+
