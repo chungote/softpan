@@ -1,0 +1,55 @@
+SELECT factura_proveedor.Nro_registro,
+         factura_proveedor.Fecha,
+         factura_proveedor.Fecha_factura,
+         factura_proveedor.tipo_cambio,
+         Deposito.descripcion_deposito,
+         factura_proveedor.cod_moneda,
+         tipo_comprobante.descripcion_tipo_comprobante,
+         factura_proveedor.Nro_factura,
+         Personas.telefono,
+         detalle_factura_proveedor.cod_producto,
+         Productos.descripcion,
+       /*  Productos.Unidad,*/
+         detalle_factura_proveedor.Cantidad as cantidad,
+         factura_proveedor.DESCUENTO as descuento,
+         detalle_factura_proveedor.cantidad_bonif as bonificacion,
+         f_cambiar(  factura_proveedor.Cod_moneda,  factura_proveedor.Fecha ,ifnull(par.cod_moneda,1), detalle_factura_proveedor.Precio, ifnull(factura_proveedor.tipo_cambio,1) ) AS Precio,
+
+         detalle_factura_proveedor.Primario,
+         detalle_factura_proveedor.importe_impuesto,
+         Personas.cod_persona,
+         Personas.nombre_fantasia,
+         f_cambiar(  factura_proveedor.Cod_moneda, factura_proveedor.Fecha,ifnull(par.cod_moneda,1),
+                             (case factura_proveedor.iva_incluido
+                                                when 1 then
+                                                               ((detalle_factura_proveedor.Cantidad + detalle_factura_proveedor.cantidad_bonif) * detalle_factura_proveedor.Precio)
+                                                else
+                                                        (case tipo_comprobante.calcula_imp
+                                                                when 1 then
+                                                                        ((detalle_factura_proveedor.Cantidad + detalle_factura_proveedor.cantidad_bonif) * detalle_factura_proveedor.Precio)
+                                                                else
+                                                                        ((detalle_factura_proveedor.Cantidad + detalle_factura_proveedor.cantidad_bonif) * detalle_factura_proveedor.Precio)
+                                                                 end)
+                                                 end) , factura_proveedor.tipo_cambio ) AS tot,
+         f_cambiar(  factura_proveedor.Cod_moneda,  factura_proveedor.Fecha,ifnull(par.cod_moneda,1),
+                             (case tipo_comprobante.calcula_imp
+                                                        when 1 then
+                                                                ((( (detalle_factura_proveedor.cantidad + detalle_factura_proveedor.cantidad_bonif ) * detalle_factura_proveedor.precio) * detalle_factura_proveedor.porc_iva *100) / 100)
+                                                        when 0 then
+                                                                0
+                                                        end)
+
+                                                         , factura_proveedor.tipo_cambio ) AS IMPORTE_IMPUESTO,
+        factura_proveedor.Cod_moneda
+    FROM factura_proveedor,
+         detalle_factura_proveedor,
+         Deposito,
+         tipo_comprobante,
+         Personas,
+         parametros_empresas par,
+         Productos
+   WHERE ( factura_proveedor.Nro_registro = detalle_factura_proveedor.Nro_registro ) and
+         ( factura_proveedor.Cod_deposito = Deposito.Cod_deposito ) and
+         ( factura_proveedor.cod_tipo_comprobante = tipo_comprobante.cod_tipo_comprobante ) and
+         ( factura_proveedor.cod_persona = Personas.cod_persona) and
+         ( detalle_factura_proveedor.cod_producto = Productos.cod_producto )

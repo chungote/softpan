@@ -1,0 +1,133 @@
+/************disparador de insercion del trigger**************/
+DROP TRIGGER tai_recepcion_pedidos 
+CREATE TRIGGER tai_recepcion_pedidos AFTER INSERT ON recepcion_pedidos
+FOR EACH ROW
+ BEGIN
+   DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+
+        if (select sum(recepcion_pedidos.cod_deposito) from recepcion_pedidos
+        where recepcion_pedidos.nro_pedido = new.nro_pedido )<> (select sum(recepcion_pedidos.cod_deposito) from recepcion_pedidos
+        where recepcion_pedidos.nro_pedido = new.nro_pedido and recepcion_pedidos.cod_deposito = new.cod_deposito) then
+         begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = '¡Las recepciones de una OC deben tener el mismo depósito!';
+         end;
+
+        end if;
+         update Ordenes_compra  set Estado = 'R' where nro_oc = new.nro_oc;
+
+
+ END
+
+
+/************disparador de modificacion del trigger**************/
+DROP TRIGGER tau_recepcion_pedidos 
+CREATE TRIGGER tau_recepcion_pedidos AFTER UPDATE ON recepcion_pedidos
+FOR EACH ROW
+ BEGIN
+   DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+
+        if (select sum(recepcion_pedidos.cod_deposito) from recepcion_pedidos
+        where recepcion_pedidos.nro_pedido = new.nro_pedido )<> (select sum(recepcion_pedidos.cod_deposito) from recepcion_pedidos
+        where recepcion_pedidos.nro_pedido = new.nro_pedido and recepcion_pedidos.cod_deposito = new.cod_deposito) then
+         begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = '¡Las recepciones de una OC deben tener el mismo depósito!';
+         end;
+
+        end if;
+         update Ordenes_compra  set Estado = 'R' where nro_oc = new.nro_oc;
+	 update Ordenes_compra  set Estado = 'G' where nro_oc = old.nro_oc;
+	 
+
+
+ END
+
+
+/************disparador de borrado del trigger**************/
+ CREATE TRIGGER tad_recepcion_pedidos AFTER DELETE ON recepcion_pedidos
+FOR EACH ROW
+ BEGIN
+	
+           delete from Lotes where cod_producto =old.cod_producto 
+			       and nro_lote=old.nro_lote;
+           update Ordenes_compra  set Estado = 'G' where nro_oc = old.nro_oc;
+ END
+
+
+
+
+
+/************DETALLES RECEPCION PEDIDO**************/
+/************disparador de insercion del trigger**************/
+
+DELIMITER |
+DROP TRIGGER tai_detalle_recepcion_pedidos;
+CREATE TRIGGER tai_detalle_recepcion_pedidos AFTER INSERT ON detalle_recepcion_pedidos
+FOR EACH ROW
+ BEGIN
+    declare v_cod_producto decimal(6);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+
+   set v_cod_producto =new.cod_producto;
+
+
+
+  if (Select es_perecedero from productos where productos.cod_producto = v_cod_producto) = 1 then
+
+           if new.nro_lote='' or new.nro_lote is null or new.Fecha_ven is null then
+                begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = '¡El producto es perecedero, debe tener nro de lote y vencimiento!';
+                end;
+           end if;
+
+            INSERT INTO Lotes (Nro_lote, Fecha_vence, cod_producto,Cantidad)
+            SELECT 1000, Fecha_ven, cod_producto, sum(cant_ped)
+                from detalle_recepcion_pedidos
+                Where cod_producto=v_cod_producto
+                group by Nro_lote, Fecha_ven, cod_producto;
+  End if;
+
+
+ END
+/************disparador de modificacion del trigger**************/
+DROP TRIGGER tau_detalle_recepcion_pedidos
+CREATE TRIGGER tau_detalle_recepcion_pedidos AFTER update ON detalle_recepcion_pedidos
+FOR EACH ROW
+ BEGIN
+    declare v_cod_producto decimal(6);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+
+  if (Select es_perecedero from productos where productos.cod_producto = v_cod_producto) = 1 then
+
+           delete from Lotes where cod_producto =v_cod_producto;
+
+           if new.nro_lote='' or new.nro_lote is null or new.Fecha_ven is null then
+                begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = '¡El producto es perecedero, debe tener nro de lote y vencimiento!';
+                end;
+           end if;
+
+            INSERT INTO Lotes (Nro_lote, Fecha_vence, cod_producto,Cantidad)
+            SELECT Nro_lote, Fecha_ven, cod_producto, sum(cant_ped)
+                from detalle_recepcion_pedidos
+                Where cod_producto=old.cod_producto
+                group by Nro_lote, Fecha_ven, cod_producto;
+  End if;
+
+
+ END
+
+/*************disparador de borrado del trigger*******************/
+CREATE TRIGGER tad_Detalle_recepcion_pedidos AFTER DELETE ON detalle_recepcion_pedidos
+FOR EACH ROW
+ BEGIN
+        delete from Lotes where cod_producto =old.cod_producto
+                               and nro_lote=old.nro_lote;
+ END

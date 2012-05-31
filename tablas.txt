@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS `softpan`.`detalle_factura_cliente`;
+CREATE TABLE  `softpan`.`detalle_factura_cliente` (
+  `cod_producto` decimal(6,0) NOT NULL,
+  `nro_registro` decimal(12,0) NOT NULL,
+  `nro_detalle` int(11) NOT NULL,
+  `cantidad` float NOT NULL DEFAULT '1',
+  `precio` float NOT NULL DEFAULT '0',
+  `cod_tipo_iva` decimal(1,0) DEFAULT NULL,
+  `porc_iva` double DEFAULT NULL,
+  `precio_bruto` float DEFAULT NULL,
+  `descuento` float NOT NULL DEFAULT '0',
+  `total_impuesto` float NOT NULL DEFAULT '0',
+  `total_detalle` float NOT NULL DEFAULT '0',
+  `total_costo` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`nro_detalle`),
+  KEY `nro_registro` (`nro_registro`),
+  CONSTRAINT `detalle_factura_cliente_ibfk_1` FOREIGN KEY (`nro_registro`) REFERENCES `factura_cliente` (`nro_registro`),
+  CONSTRAINT `detalle_factura_cliente_ibfk_2` FOREIGN KEY (`cod_producto`) REFERENCES `productos` (`cod_producto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

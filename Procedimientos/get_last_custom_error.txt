@@ -1,0 +1,9 @@
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SOFTPAN`.`get_last_custom_error` $$
+CREATE PROCEDURE `SOFTPAN`.`get_last_custom_error` ()SQL SECURITY INVOKER DETERMINISTIC
+BEGIN
+  SELECT @error_code, @error_message;
+END $$
+
+DELIMITER ;

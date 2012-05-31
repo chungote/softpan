@@ -1,0 +1,6 @@
+
+CREATE TRIGGER tbd_ordenes_compras before delete ON ordenes_compra
+FOR EACH ROW
+  BEGIN
+    delete from detalle_ordenes_compra where nro_oc=old.nro_oc;
+  END

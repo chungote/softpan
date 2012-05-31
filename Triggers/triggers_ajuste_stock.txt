@@ -1,0 +1,105 @@
+DROP TRIGGER tai_detalle_ajuste_stock
+CREATE TRIGGER tai_detalle_ajuste_stock after insert ON Detalle_ajuste_stock
+FOR EACH ROW
+BEGIN
+        declare v_fecha date;
+        declare v_mes smallint;
+        declare v_anio smallint;
+        declare v_cod_producto float;
+        declare v_valor float;
+        declare v_cod_deposito int;
+        declare v_cod_producto1 float;
+        declare v_cod_dep integer;
+        declare v_fecha1 date;
+        declare my_error CONDITION FOR SQLSTATE '45000';
+
+
+        select fecha into v_fecha
+        from ajuste_stock where nro_ajuste=new.nro_ajuste;
+        set v_mes=month(v_fecha);
+        set v_anio=month(v_anio);
+
+  if (select count(*) from detalle_ajuste_stock where nro_ajuste = new.nro_ajuste and cod_producto = new.cod_producto) > 1 and new.nro_targeta > 0 then
+   begin
+                SIGNAL SQLSTATE VALUE '45000'
+                  SET MESSAGE_TEXT = 'Ya se generaron targetas para algunos productos del detalle';
+                /*SET MESSAGE_TEXT = ' '+concat('Ya se genero targeta para el producto ', cast(new.cod_producto as char),'-', cast(new.nro_tarjeta as char)) ;*/
+
+   END;
+  end if;
+
+  if new.confirmado = 1 then
+
+     set v_cod_producto = new.cod_producto;
+     set v_valor =  new.Cantidad;
+     set v_cod_deposito = (Select Cod_deposito from Ajuste_stock  where  Nro_ajuste = new.Nro_ajuste);
+     call Stock (v_cod_producto, v_deposito, v_cantidad , 1);
+    set v_cod_producto1= new.cod_producto;
+    set v_cod_dep=v_cod_deposito;
+    set v_fecha1 = (v_fecha + 1);
+/*  execute sp_cierre_inventario @v_cod, @v_dep,  @v_fec*/
+ end if;
+END;
+
+/***TRIGERS DE ACTUALIZACION**/
+DROP TRIGGER tau_detalle_ajuste_stock
+CREATE TRIGGER tau_detalle_ajuste_stock after update ON Detalle_ajuste_stock
+FOR EACH ROW
+BEGIN
+        declare v_fecha date;
+        declare v_mes smallint;
+        declare v_anio smallint;
+        declare v_cod_producto float;
+        declare v_valor float;
+        declare v_valor1 float;
+        declare v_cod_deposito int;
+         declare v_cod_dep integer;
+        declare my_error CONDITION FOR SQLSTATE '45000';
+
+
+        select fecha into v_fecha
+        from ajuste_stock where nro_ajuste=new.nro_ajuste;
+        set v_mes=month(v_fecha);
+        set v_anio=month(v_anio);
+
+  if new.confirmado=1 and old.confirmado=1 or (new.cod_producto<> old.cod_producto) or (new.cantidad <> old.cantidad) then
+   begin
+          SIGNAL SQLSTATE VALUE '45000'
+          SET MESSAGE_TEXT = '¡No se puede modificar un ajuste confirmado!';
+
+
+   END;
+  end if;
+  IF new.costo <= 0 then
+   BEGIN
+          SIGNAL SQLSTATE VALUE '45000'
+          SET MESSAGE_TEXT = '¡El ajuste debe tener un costo por motivos contables!';
+
+   END;
+  end if;
+
+  IF (select count(*) from detalle_ajuste_stock where nro_ajuste = new.nro_ajuste and cod_producto = new.cod_producto) > 1 and new.nro_targeta > 0 then
+   begin
+                SIGNAL SQLSTATE VALUE '45000'
+                  SET MESSAGE_TEXT = 'Ya se generaron targetas para algunos productos del detalle';
+
+   END;
+  end if;
+
+  if old.confirmado = 1 then
+
+     set v_cod_producto = old.cod_producto;
+     set v_valor=  old.cantidad;
+     set v_cod_deposito = (Select Cod_deposito from Ajuste_stock  where  Nro_ajuste = old.Nro_ajuste);
+     call Stock (v_cod_producto, v_deposito, v_cantidad , 0);
+  end if;
+
+
+   if new.confirmado = 1 then
+
+     set v_cod_producto = new.cod_producto;
+     set v_valor =  new.Cantidad;
+     set v_cod_deposito = (Select Cod_deposito from Ajuste_stock  where  Nro_ajuste = new.Nro_ajuste);
+     call Stock (v_cod_producto, v_deposito, v_cantidad , 1);
+  end if;
+END;

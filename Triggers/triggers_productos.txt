@@ -1,0 +1,57 @@
+CREATE TRIGGER tbi_productos before insert ON productos
+FOR EACH ROW
+BEGIN
+ set new.fecha_alta=current_date();
+END
+
+
+CREATE TRIGGER tad_productos after delete ON productos
+FOR EACH ROW
+BEGIN
+	if (select count(*) from detalle_pedido_proveedor where cod_producto=old.cod_producto)<>0 then
+                 CALL my_signal('Error: No se pueden borrar productos que tengan pedidos');
+	else
+		 CALL my_signal('Error: No existen pedidos por ende se puede borrar el producto');
+		
+        end if;
+		
+
+END
+
+
+CREATE TRIGGER tad_productos after delete ON productos
+FOR EACH ROW
+BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        if (select count(*) from detalle_pedido_proveedor where cod_producto=old.cod_producto)<>0 then
+           begin
+                SIGNAL SQLSTATE VALUE '99999'
+                SET MESSAGE_TEXT = 'An error occurred';
+           end;
+        else
+           begin
+                SIGNAL SQLSTATE VALUE '99999'
+                SET MESSAGE_TEXT = 'An error occurred';
+           end;
+
+        end if;
+
+
+END
+
+
+
+
+CREATE TRIGGER tad_productos after delete ON productos
+FOR EACH ROW
+BEGIN
+        DECLARE my_error CONDITION FOR SQLSTATE '45000';
+        if (select count(*) from detalle_pedido_proveedor where cod_producto=old.cod_producto)>0 then
+           begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'No se pueden eliminar productos que tienen movimientos';
+           end;
+        end if;
+
+
+END

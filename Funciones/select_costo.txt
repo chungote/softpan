@@ -1,0 +1,48 @@
+SELECT         cod_moneda,
+                fecha,
+                sum(cantidad),
+                sum(cantidad_bonif),
+                sum(cantidad * precio),
+                sum(cantidad * ( precio + (precio * COSTO_BRUTO_ADD / 100)+ Importe_costo_adicional_bruto) /*+ (cant_desc * precio)*/) ,
+                1 as tipo
+      from      factura_proveedor,
+                detalle_factura_proveedor
+      where     factura_proveedor.nro_registro = detalle_factura_proveedor.nro_registro and
+                detalle_factura_proveedor.cod_producto = @v_codigo and
+                ( (factura_proveedor.fecha > @v_fecha_ini or @v_fecha_ini is null) and factura_proveedor.fecha <= @v_fecha )
+      group by  cod_moneda,
+                fecha,
+                cod_tipo_comprobante,
+                nro_factura
+ UNION ALL
+  SELECT         cod_moneda,
+                fecha_nc,
+                sum(cantidad),
+                0,
+                sum(cantidad * precio),
+                sum(cantidad * ( precio + Importe_costo_adicional_bruto) ) ,
+                1 as tipo
+      from      nota_credito_compra,
+                detalle_nota_credito_compra
+      where     nota_credito_compra.nro_registro = detalle_nota_credito_compra.nro_registro and
+                detalle_nota_credito_compra.cod_producto = @v_codigo and
+                ( (nota_credito_compra.fecha_nc > @v_fecha_ini or @v_fecha_ini is null) and nota_credito_compra.fecha_nc <= @v_fecha )
+      group by  cod_moneda,
+                fecha_nc,
+                cod_tipo_nota,
+                nro_nota
+
+ UNION ALL
+   SELECT        1,
+                fecha_proceso,
+                sum(cantidad * -1),
+                0,
+                0 ,
+                0,
+                2 as tipo
+      from      factura_cliente,
+                detalle_factura_cliente
+      where     factura_cliente.nro_registro=detalle_factura_cliente.nro_registro and
+                detalle_factura_cliente.cod_producto = @v_codigo and
+                ((factura_cliente.fecha_proceso > @v_fecha_ini or @v_fecha_ini is null) and factura_cliente.fecha_proceso <= @v_fecha)
+      group by fecha_proceso

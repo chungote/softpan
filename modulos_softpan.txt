@@ -1,0 +1,86 @@
+Parametros
+Ctas Financieras
+Condiciones de Pagos
+Tipo Comprobante
+Condiciones de Compras
+Entidades financieras
+Impuestos
+Tipo de Documentos
+Plazo de Ventas
+Plazo de Compras
+Divisas
+Equivalencias de Medidas
+Cotizaciones
+Medidas
+Departamentos 
+Ciudades
+Motivo Ajuste
+Mantenimiento de Personas
+Vendedores
+Cajeros
+Cobradores
+Categorias
+Grupos 
+Marcas 
+Estantes
+Almacenes
+Mantenimiento de Productos
+Mantenimiento de Usuarios
+Autorizar Grupos y Usuarios
+Cajas
+Apertura/Cierre de Caja
+Tipo Comprobante
+---------------------
+Proveedores Productos
+Pedido Proveedor
+Confirmar/Desconfirmar Pedidos
+Generar Orden Compras
+Recepcion de Pedidos
+Devoluciones
+Compras Proveedor
+Notas de Credito
+---------------------
+Listado de Pedidos Proveedor
+Listado de Estados de Pedidos
+Listado de Ocs
+Listado de Compras
+Grafico de Compras por Valor
+Extracto de Cuentas a Pagar
+Cruce de Informacion
+Totales de Compras
+Resumen de Compras
+---------------------
+Generar Chequeras a Ctas
+Generar Cheques al Proveedor
+Mantenimiento de Ctas a Pagar
+Anticipos al Proveedor
+Pagos al Proveedor
+---------------------
+Listado de Cobradores
+Listado de Cajeros
+Extracto Ctas. Proveedores
+Resumido por Proveedor
+Anticipos al Proveedor
+Detalle de Pagos Realizados
+---------------------
+Elaborar Recetas
+Registrar Orden Produccion
+Registrar Productos Terminados
+---------------------
+Listado de Recetas por Niveles
+Costo Estimado en Produccion
+OP-Pedido de Materiales
+Materia Prima Empleada 
+Pedidos de Reposicion-OT
+Historico de Produccion
+---------------------
+Lista Precios
+Pedido Cliente
+Aprobacion/Desaprobacion Pedidos
+Punto de Venta-POS
+Facturacion de Pedidos
+Ventas Clientes
+Nota Credito Ventas
+Nota Debito Ventas
+Solicitud Anulacion Ventas
+

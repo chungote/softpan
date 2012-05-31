@@ -1,0 +1,179 @@
+/*detalle del pedido proveedor insercion*/
+DROP TRIGGER /*IF EXISTS*/ tai_detalle_pedido_proveedor
+CREATE TRIGGER tai_detalle_pedido_proveedor AFTER insert ON detalle_pedido_proveedor
+FOR EACH ROW
+ BEGIN
+
+ if (select act_pvta_min_desde_pedido from parametros_empresas)=1 then
+   if new.precio_minorista!=(select precio from lista_precios_det l  where l.cod_producto=new.cod_producto)  then
+        update lista_precios_det
+        set precio=new.precio_minorista
+        where cod_producto=new.cod_producto;
+   end if;
+ end if;
+
+   if (select act_pvta_may_desde_pedido from parametros_empresas)=1 then
+     if new.precio_mayorista!=(select precio from lista_precios_det l  where l.cod_producto=new.cod_producto)
+                       and (select count(*) from detalle_pedido_proveedor)>0 then
+        update lista_precios_det
+        set precio=new.precio_minorista
+        where cod_producto=new.cod_producto;
+    end if;
+  end if;
+
+  if (select act_matriz from parametros_empresas)=1 then
+        if(new.precio!=(select precio from proveedores_productos
+                                      where cod_proveedor=(select cod_proveedor from pedido_proveedor p
+                                                           where nro_pedido=new.nro_pedido) and
+                                            cod_producto=new.cod_producto)) then
+
+        update proveedores_productos
+        set precio=new.precio
+        where cod_proveedor=(select cod_proveedor from pedido_proveedor where nro_pedido=new.nro_pedido) and
+              cod_producto=new.cod_producto;
+
+        end if;
+  end if;
+
+
+ END
+|
+DELIMITER ;
+
+/*detalle del pedido proveedor update*/
+
+DROP TRIGGER /*IF EXISTS*/ tau_detalle_pedido_proveedor
+
+CREATE TRIGGER tau_detalle_pedido_proveedor AFTER update ON detalle_pedido_proveedor
+FOR EACH ROW
+ BEGIN
+
+ if (select act_pvta_min_desde_pedido from parametros_empresas)=1 then
+   if new.precio_minorista!=(select precio from lista_precios_det l  where l.cod_producto=new.cod_producto)  then
+        update lista_precios_det
+        set precio=new.precio_minorista
+        where cod_producto=new.cod_producto;
+   end if;
+ end if;
+
+   if (select act_pvta_may_desde_pedido from parametros_empresas)=1 then
+     if new.precio_mayorista!=(select precio from lista_precios_det l  where l.cod_producto=new.cod_producto)
+                       and (select count(*) from detalle_pedido_proveedor)>0 then
+        update lista_precios_det
+        set precio=new.precio_minorista
+        where cod_producto=new.cod_producto;
+    end if;
+  end if;
+
+  if (select act_matriz from parametros_empresas)=1 then
+        if(new.precio!=(select precio from proveedores_productos
+                                      where cod_proveedor=(select cod_proveedor from pedido_proveedor p
+                                                           where nro_pedido=new.nro_pedido) and
+                                            cod_producto=new.cod_producto)) then
+
+        update proveedores_productos
+        set precio=new.precio
+        where cod_proveedor=(select cod_proveedor from pedido_proveedor where nro_pedido=new.nro_pedido) and
+              cod_producto=new.cod_producto;
+
+        end if;
+  end if;
+  
+
+
+ END
+|
+DELIMITER ;
+
+/*Cabecera del pedido proveedor*/
+
+DROP TRIGGER /*IF EXISTS*/ tbi_pedido_proveedor 
+CREATE TRIGGER tbi_pedido_proveedor Before insert ON pedido_proveedor
+FOR EACH ROW
+BEGIN
+ declare v_plazo integer;
+
+  select plazo_entrega_prov into v_plazo from personas where cod_persona=new.cod_proveedor;
+
+  set new.usuario=(select user());
+  set new.iva_incluido=ifnull(new.iva_incluido,0);
+  set new.fecha_entrega= ADDDATE(new.fecha_pedido,v_plazo);
+
+
+END
+CREATE TRIGGER tbu_pedido_proveedor Before update ON pedido_proveedor
+FOR EACH ROW
+BEGIN
+ DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+ if (select count(nro_oc) from detalle_ordenes_compra where nro_pedido=old.nro_pedido)=1 and (select aprobacion from Pedido_proveedor where nro_pedido=old.nro_pedido)<>1 then
+        begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'Existe ordenes de compras asociada a este pedido';
+          end;
+ end if;
+
+  if ((new.aprobacion!=old.aprobacion) and (new.aprobacion=1 and old.aprobacion=0) and new.estado='N') then
+        set new.estado='A';
+  end if;
+  if ((new.aprobacion!=old.aprobacion) and (new.aprobacion=0 and old.aprobacion=1) and new.estado='A') then
+        set new.estado='N';
+  end if;
+ END
+
+/****antes del borrado del detalle verifica si existe una oc asociada al pedido****/
+DROP TRIGGER tbd_detalle_pedido_proveedor
+CREATE TRIGGER tbd_detalle_pedido_proveedor before delete ON detalle_pedido_proveedor
+FOR EACH ROW
+ BEGIN
+ DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+ if (select count(nro_oc) from detalle_ordenes_compra where nro_pedido=old.nro_pedido)=1 and (select aprobacion from Pedido_proveedor where nro_pedido=old.nro_pedido)<>1 then
+        begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'Existe ordenes de compras asociada a este pedido, No es posible modificar';
+          end;
+ end if;
+
+ if (select aprobacion from pedido_proveedor where nro_pedido=old.nro_pedido)=1 then
+        begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'Este registro ya esta aprobado para la generacion de la OC';
+        end;
+
+ end if;
+ END
+
+
+/****BEFORE DELETE *****/
+DROP TRIGGER tbd_pedido_proveedor
+CREATE TRIGGER tbd_pedido_proveedor before delete ON pedido_proveedor
+FOR EACH ROW
+ BEGIN
+ DECLARE my_error CONDITION FOR SQLSTATE '45000';
+ if old.aprobacion=1 then
+        begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'No se puede eliminar Pedido aprobados para OC';
+        end;
+
+ end if;
+
+ END;
+
+
+DROP TRIGGER tad_pedido_proveedor
+CREATE TRIGGER tad_pedido_proveedor after delete ON pedido_proveedor
+FOR EACH ROW
+ BEGIN
+ DECLARE my_error CONDITION FOR SQLSTATE '45000';
+ if old.aprobacion=1 then
+        begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'No se puede eliminar Pedido aprobados para OC';
+        end;
+
+ end if;
+
+ END;
+

@@ -1,0 +1,49 @@
+/************disparador de insercion del trigger**************/
+
+DELIMITER |
+DROP TRIGGER tai_detalle_ordenes_compras;
+CREATE TRIGGER tai_detalle_ordenes_compras AFTER INSERT ON detalle_ordenes_compra
+FOR EACH ROW
+ BEGIN
+    UPDATE pedido_proveedor SET estado = 'O',
+    NRO_OC =new.nro_oc
+    WHERE NRO_PEDIDO = new.nro_pedido;
+ END
+|
+DELIMITER ;
+/************disparador de borrado del trigger**************/
+
+DELIMITER |
+DROP TRIGGER tad_detalle_ordenes_compras
+CREATE TRIGGER tad_detalle_ordenes_compras AFTER delete ON detalle_ordenes_compra
+FOR EACH ROW
+ BEGIN
+    UPDATE pedido_proveedor SET estado = 'N',
+    NRO_OC =0,
+    aprobacion=0
+    WHERE NRO_PEDIDO = old.nro_pedido;
+ END
+|
+DELIMITER ;
+/************disparador de actuzalizacion del trigger**************/
+DELIMITER |
+DROP TRIGGER tau_detalle_ordenes_compra 
+CREATE TRIGGER tau_detalle_ordenes_compras AFTER Update ON detalle_ordenes_compra
+FOR EACH ROW
+ BEGIN
+   
+	if (select count(*) from pedido_proveedor p , detalle_ordenes_compra ocd
+			where ocd.nro_oc = new.nro_oc and
+    				ocd.nro_pedido = p.nro_pedido and 
+				ocd.cod_proveedor != p.cod_proveedor) > 0 then
+		CALL raise_application_error(3001,'Algún proveedor de los pedidos no corresponde a la OC!');
+	end if;
+
+
+    UPDATE pedido_proveedor SET estado = 'A',
+    NRO_OC =0,
+    aprobacion=0
+    WHERE NRO_PEDIDO = old.nro_pedido;
+ END
+|
+DELIMITER ;

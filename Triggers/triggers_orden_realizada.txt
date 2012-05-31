@@ -1,0 +1,97 @@
+/*funciona sobre el detalle*/
+/***insercion**/
+CREATE TRIGGER tai_detalle_orden_realizada after insert ON detalle_orden_realizada
+FOR EACH ROW
+BEGIN
+
+declare v_nro_orden float;
+declare v_cant_prod float;
+declare v_deposito float;
+
+  select orden_nro into v_nro_orden
+  from orden_realizada,detalle_orden_realizada
+  where orden_realizada.nro_registro=detalle_orden_realizada.nro_registro
+  and detalle_orden_realizada.nro_registro=new.nro_registro limit 1;
+
+  select cod_deposito into v_deposito from orden_produccion where orden_nro=v_nro_orden;
+
+  call Stock (new.cod_producto, v_deposito, new.cantidad_producida , 1);
+
+  if ((select count(*) from detalle_orden_produccion
+                      where orden_nro=v_nro_orden)=(select count(*)from detalle_orden_realizada
+                                                                   where nro_registro=new.nro_registro)) then
+
+                      update orden_produccion
+                      set cod_estado=2
+                      where orden_nro=v_nro_orden;
+  end if;
+
+
+
+end
+
+
+/**borrado*****/
+drop trigger tad_detalle_orden_realizada
+CREATE TRIGGER tad_detalle_orden_realizada after delete ON detalle_orden_realizada
+FOR EACH ROW
+BEGIN
+
+declare v_nro_orden float;
+declare v_cant_prod float;
+declare v_deposito float;
+
+  select orden_realizada.orden_nro into v_nro_orden
+  from orden_realizada,detalle_orden_realizada
+  where orden_realizada.nro_registro=detalle_orden_realizada.nro_registro
+  and detalle_orden_realizada.nro_registro=old.nro_registro limit 1;
+
+  select cod_deposito into v_deposito from orden_produccion where orden_nro=v_nro_orden;
+
+  call Stock (old.cod_producto, v_deposito, old.cantidad_producida , 0);
+
+  if ((select count(*) from detalle_orden_produccion
+                      where orden_nro=v_nro_orden)=(select count(*)from detalle_orden_realizada
+                                                                   where nro_registro=old.nro_registro)) then
+
+                      update orden_produccion
+                      set cod_estado=1
+                      where orden_nro=v_nro_orden;
+  end if;
+
+
+
+end
+
+/***********before*************/
+/*drop trigger tbd_detalle_orden_realizada*/
+CREATE TRIGGER tbd_detalle_orden_realizada before delete ON detalle_orden_realizada
+FOR EACH ROW
+BEGIN
+
+declare v_nro_orden float;
+declare v_cant_prod float;
+declare v_deposito float;
+
+  select  orden_realizada.orden_nro
+  into v_nro_orden
+  from orden_realizada,detalle_orden_realizada
+  where orden_realizada.nro_registro=detalle_orden_realizada.nro_registro
+  and detalle_orden_realizada.nro_registro=old.nro_registro limit 1;
+
+  select cod_deposito into v_deposito from orden_produccion where orden_nro=v_nro_orden;
+
+  call Stock (old.cod_producto, v_deposito, old.cantidad_producida , 0);
+
+  if ((select count(*) from detalle_orden_produccion
+                      where orden_nro=v_nro_orden)=(select count(*)from detalle_orden_realizada
+                                                                   where nro_registro=old.nro_registro)) then
+
+                      update orden_produccion
+                      set cod_estado=1
+                      where orden_nro=v_nro_orden;
+  end if;
+
+
+
+end

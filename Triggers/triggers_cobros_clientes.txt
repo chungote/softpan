@@ -1,0 +1,350 @@
+/********before insert********/
+drop trigger tbi_detalle_cobros_clientes
+CREATE TRIGGER tbi_detalle_cobros_clientes before insert  ON detalle_cobros_clientes
+FOR EACH ROW
+ BEGIN
+  DECLARE my_error CONDITION FOR SQLSTATE '45000';
+   if exists(select *  from detalle_cobros_clientes   where   new.cod_banco  != 0 and  new.nro_cheque  != 0 and   new.cod_banco  = detalle_cobros_clientes.cod_banco and  new.nro_cheque  = detalle_cobros_clientes.nro_cheque ) then
+        begin
+          SIGNAL SQLSTATE VALUE '45000'
+           SET MESSAGE_TEXT = 'Cheque ya registrado en el sistema, no se puede registrar nuevamente';
+        end;
+ end if;
+
+ END
+
+
+/******************************INSERCION******************************************/
+DROP TRIGGER tai_cobros_factura_clientes
+CREATE TRIGGER tai_cobros_factura_clientes after insert  ON cobros_facturas_doc
+FOR EACH ROW
+ BEGIN
+  DECLARE v_fecha varchar(200);
+  DECLARE v_recibo varchar(20);
+  DECLARE v_monto_pag float;
+  DECLARE v_cod_moneda integer;
+  DECLARE v_valor_cobrado float;
+  DECLARE vf_fecha varchar(200);
+  DECLARE vf_valor_cobrado float;
+  DECLARE v_tipo_doc integer;
+  DECLARE v_nro_documento float;
+  DECLARE v_cuota integer;
+  DECLARE done int;
+
+       /*declaramos un cursor de cobros*/
+         declare cursor_cobros cursor for
+         select  concat(cast(day(cobros_clientes.fecha_cobro) as char(2)),'-',cast(month(cobros_clientes.fecha_cobro) as char(2)),'-',cast(year(cobros_clientes.fecha_cobro) as char(4))) as fecha_cobro,
+          cast(cobros_clientes.nro_recibo as char) as nro_recibo,
+          cobros_clientes.cod_moneda as moneda,
+          cobros_facturas_doc.valor_cobrado as valor
+         from cobros_clientes, cobros_facturas_doc
+         where cobros_clientes.nro_cobro = cobros_facturas_doc.nro_cobro and
+          cobros_facturas_doc.cod_tipo_comprobante = new.cod_tipo_comprobante and
+          cobros_facturas_doc.nro_documento =new.nro_documento and
+          cobros_facturas_doc.nro_cuota = new.nro_cuota and
+          cobros_clientes.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+           DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
+          OPEN cursor_cobros;
+       REPEAT
+        FETCH cursor_cobros
+        INTO v_fecha,v_recibo,v_cod_moneda,v_monto_pag;
+        if not done then
+                set v_fecha = concat(v_fecha, '|' , v_fecha);
+                set v_recibo = concat(v_nro_recibo , '-' , v_nro_recibo);
+                set v_monto_pag = ifnull(v_monto_pag, 0) + v_monto_pag;
+        end if;
+      UNTIL done  END REPEAT;
+       CLOSE cursor_cobros;
+
+       UPDATE Ctas_cobrar
+     SET Ctas_cobrar.nro_recibos = ifnull(v_recibo, ''),
+         Ctas_cobrar.fecha_cobro = ifnull(v_fecha, ''),
+         Ctas_cobrar.valor_cobrado = ifnull(v_monto_pag,0)
+     where Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+         Ctas_cobrar.nro_factura = new.nro_documento and
+         Ctas_cobrar.Nro_cuota = new.nro_cuota and
+         Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+
+
+          if  ((select (Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo
+          FROM Ctas_cobrar
+          where Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+                Ctas_cobrar.nro_factura = new.nro_documento and
+                Ctas_cobrar.Nro_cuota = new.nro_cuota and
+                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1)) >= 0
+                and
+                (select (Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo FROM Ctas_cobrar
+                where Ctas_cobrar.cod_tipo_comprobante =  new.cod_tipo_comprobante AND
+                        Ctas_cobrar.nro_factura= new.nro_documento and
+                        Ctas_cobrar.Nro_cuota =  new.nro_cuota and
+                        Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1)) <=  0)  then
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 1
+                        where   Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = new.nro_documento and
+                                Ctas_cobrar.Nro_cuota = new.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+          else
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 0
+                        where   Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = new.nro_documento and
+                                Ctas_cobrar.Nro_cuota = new.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+          end if;
+
+
+ END
+
+/***********************************BORRADO*****************************************/
+DROP TRIGGER tad_cobros_factura_clientes
+CREATE TRIGGER tad_cobros_factura_clientes after delete  ON cobros_facturas_doc
+FOR EACH ROW
+ BEGIN
+  DECLARE v_fecha varchar(200);
+  DECLARE v_recibo varchar(20);
+  DECLARE v_monto_pag float;
+  DECLARE v_cod_moneda integer;
+  DECLARE v_valor_cobrado float;
+  DECLARE vf_fecha varchar(200);
+  DECLARE vf_valor_cobrado float;
+  DECLARE v_tipo_doc integer;
+  DECLARE v_nro_documento float;
+  DECLARE v_cuota integer;
+  DECLARE done int;
+
+       /*declaramos un cursor de cobros*/
+         declare cursor_cobros cursor for
+         select  concat(cast(day(cobros_clientes.fecha_cobro) as char(2)),'-',cast(month(cobros_clientes.fecha_cobro) as char(2)),'-',cast(year(cobros_clientes.fecha_cobro) as char(4))) as fecha_cobro,
+          cast(cobros_clientes.nro_recibo as char) as nro_recibo,
+          cobros_clientes.cod_moneda as moneda,
+          cobros_facturas_doc.valor_cobrado as valor
+         from cobros_clientes, cobros_facturas_doc
+         where cobros_clientes.nro_cobro = cobros_facturas_doc.nro_cobro and
+          cobros_facturas_doc.cod_tipo_comprobante = old.cod_tipo_comprobante and
+          cobros_facturas_doc.nro_documento =old.nro_documento and
+          cobros_facturas_doc.nro_cuota = old.nro_cuota and
+          cobros_clientes.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+           DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
+          OPEN cursor_cobros;
+       REPEAT
+        FETCH cursor_cobros
+        INTO v_fecha,v_recibo,v_cod_moneda,v_monto_pag;
+        if not done then
+                set v_fecha = concat(v_fecha, '|' , v_fecha);
+                set v_recibo = concat(v_nro_recibo , '-' , v_nro_recibo);
+                set v_monto_pag = ifnull(v_monto_pag, 0) + v_monto_pag;
+        end if;
+      UNTIL done  END REPEAT;
+       CLOSE cursor_cobros;
+
+       UPDATE Ctas_cobrar
+     SET Ctas_cobrar.nro_recibos = ifnull(v_recibo, ''),
+         Ctas_cobrar.fecha_cobro = ifnull(v_fecha, ''),
+         Ctas_cobrar.valor_cobrado = ifnull(v_monto_pag,0)
+     where Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+         Ctas_cobrar.nro_factura = old.nro_documento and
+         Ctas_cobrar.Nro_cuota = old.nro_cuota and
+         Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+
+
+          if  ((select (-1*Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo
+          FROM Ctas_cobrar
+          where Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+                Ctas_cobrar.nro_factura = old.nro_documento and
+                Ctas_cobrar.Nro_cuota = old.nro_cuota  and
+               Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1)) >= 0
+                and         (select (Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo FROM Ctas_cobrar
+                where Ctas_cobrar.cod_tipo_comprobante =  old.cod_tipo_comprobante AND
+                        Ctas_cobrar.nro_factura= old.nro_documento and
+                        Ctas_cobrar.Nro_cuota =  old.nro_cuota and
+                        Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1)) <=  0)  then
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 1
+                        where   Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = old.nro_documento and
+                                Ctas_cobrar.Nro_cuota = old.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+          else
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 0
+                        where   Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = old.nro_documento and
+                                Ctas_cobrar.Nro_cuota = old.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+          end if;
+
+
+ END
+/*******************************MODIFICACION********************************************/
+DROP TRIGGER tau_cobros_factura_clientes
+CREATE TRIGGER tau_cobros_factura_clientes after update  ON cobros_facturas_doc
+FOR EACH ROW
+ BEGIN
+  DECLARE v_fecha varchar(200);
+  DECLARE v_recibo varchar(20);
+  DECLARE v_monto_pag float;
+  DECLARE v_cod_moneda integer;
+  DECLARE v_valor_cobrado float;
+  DECLARE vf_fecha varchar(200);
+  DECLARE vf_valor_cobrado float;
+  DECLARE v_tipo_doc integer;
+  DECLARE v_nro_documento float;
+  DECLARE v_cuota integer;
+  DECLARE done int;
+
+        /*declaramos un cursor de cobros para new*/
+           declare cursor_cobros cursor for
+         select  concat(cast(day(cobros_clientes.fecha_cobro) as char(2)),'-',cast(month(cobros_clientes.fecha_cobro) as char(2)),'-',cast(year(cobros_clientes.fecha_cobro) as char(4))) as fecha_cobro,
+          cast(cobros_clientes.nro_recibo as char) as nro_recibo,
+          cobros_clientes.cod_moneda as moneda,
+          cobros_facturas_doc.valor_cobrado as valor
+         from cobros_clientes, cobros_facturas_doc
+         where cobros_clientes.nro_cobro = cobros_facturas_doc.nro_cobro and
+          cobros_facturas_doc.cod_tipo_comprobante = new.cod_tipo_comprobante and
+          cobros_facturas_doc.nro_documento =new.nro_documento and
+          cobros_facturas_doc.nro_cuota = new.nro_cuota and
+          cobros_clientes.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+
+       /*declaramos un cursor de cobros para old*/
+         declare cursor_cobros1 cursor for
+         select  concat(cast(day(cobros_clientes.fecha_cobro) as char(2)),'-',cast(month(cobros_clientes.fecha_cobro) as char(2)),'-',cast(year(cobros_clientes.fecha_cobro) as char(4))) as fecha_cobro,
+          cast(cobros_clientes.nro_recibo as char) as nro_recibo,
+          cobros_clientes.cod_moneda as moneda,
+          cobros_facturas_doc.valor_cobrado as valor
+         from cobros_clientes, cobros_facturas_doc
+         where cobros_clientes.nro_cobro = cobros_facturas_doc.nro_cobro and
+          cobros_facturas_doc.cod_tipo_comprobante = old.cod_tipo_comprobante and
+          cobros_facturas_doc.nro_documento =old.nro_documento and
+          cobros_facturas_doc.nro_cuota = old.nro_cuota and
+          cobros_clientes.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+            /***************realizamos operaciones con el cursor abierto el de new*******************/
+       DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
+       OPEN cursor_cobros1;
+       REPEAT
+        FETCH cursor_cobros1
+        INTO v_fecha,v_recibo,v_cod_moneda,v_monto_pag;
+        if not done then
+                set v_fecha = concat(v_fecha, '|' , v_fecha);
+                set v_recibo = concat(v_nro_recibo , '-' , v_nro_recibo);
+                set v_monto_pag = ifnull(v_monto_pag, 0) + v_monto_pag;
+        end if;
+      UNTIL done  END REPEAT;
+       CLOSE cursor_cobros1;
+        UPDATE Ctas_cobrar
+     SET Ctas_cobrar.nro_recibos = ifnull(v_recibo, ''),
+         Ctas_cobrar.fecha_cobro = ifnull(v_fecha, ''),
+         Ctas_cobrar.valor_cobrado = ifnull(v_monto_pag,0)
+     where Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+         Ctas_cobrar.nro_factura = old.nro_documento and
+         Ctas_cobrar.Nro_cuota = old.nro_cuota and
+         Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+
+
+          if  ((select (-1*Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo
+          FROM Ctas_cobrar
+          where Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+                Ctas_cobrar.nro_factura = old.nro_documento and
+                Ctas_cobrar.Nro_cuota = old.nro_cuota  and
+               Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1)) >= 0
+                and         (select (Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo FROM Ctas_cobrar
+                where Ctas_cobrar.cod_tipo_comprobante =  old.cod_tipo_comprobante AND
+                        Ctas_cobrar.nro_factura= old.nro_documento and
+                        Ctas_cobrar.Nro_cuota =  old.nro_cuota and
+                        Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1)) <=  0)  then
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 1
+                        where   Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = old.nro_documento and
+                                Ctas_cobrar.Nro_cuota = old.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+          else
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 0
+                        where   Ctas_cobrar.cod_tipo_comprobante = old.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = old.nro_documento and
+                                Ctas_cobrar.Nro_cuota = old.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=old.nro_cobro limit 1);
+          end if;
+
+
+             /***************fin operaciones con el cursor abierto el de old*******************/
+             /***************inicio operaciones con el cursor abierto el de new*******************/
+
+
+     /*DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;*/
+      OPEN cursor_cobros;
+       REPEAT
+        FETCH cursor_cobros
+        INTO v_fecha,v_recibo,v_cod_moneda,v_monto_pag;
+        if not done then
+                set v_fecha = concat(v_fecha, '|' , v_fecha);
+                set v_recibo = concat(v_nro_recibo , '-' , v_nro_recibo);
+                set v_monto_pag = ifnull(v_monto_pag, 0) + v_monto_pag;
+        end if;
+      UNTIL done  END REPEAT;
+       CLOSE cursor_cobros;
+         UPDATE Ctas_cobrar
+     SET Ctas_cobrar.nro_recibos = ifnull(v_recibo, ''),
+         Ctas_cobrar.fecha_cobro = ifnull(v_fecha, ''),
+         Ctas_cobrar.valor_cobrado = ifnull(v_monto_pag,0)
+     where Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+         Ctas_cobrar.nro_factura = new.nro_documento and
+         Ctas_cobrar.Nro_cuota = new.nro_cuota and
+         Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+
+
+          if  ((select (-1*Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo
+          FROM Ctas_cobrar
+          where Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+                Ctas_cobrar.nro_factura = new.nro_documento and
+                Ctas_cobrar.Nro_cuota = new.nro_cuota  and
+               Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1)) >= 0
+                and         (select (Ctas_cobrar.Valor - Ctas_cobrar.valor_cobrado) as saldo FROM Ctas_cobrar
+                where Ctas_cobrar.cod_tipo_comprobante =  new.cod_tipo_comprobante AND
+                        Ctas_cobrar.nro_factura= new.nro_documento and
+                        Ctas_cobrar.Nro_cuota =  new.nro_cuota and
+                        Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1)) <=  0)  then
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 1
+                        where   Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = new.nro_documento and
+                                Ctas_cobrar.Nro_cuota = new.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+          else
+
+                        UPDATE Ctas_cobrar
+                        SET Ctas_cobrar.cobrado = 0
+                        where   Ctas_cobrar.cod_tipo_comprobante = new.cod_tipo_comprobante AND
+                                Ctas_cobrar.nro_factura = new.nro_documento and
+                                Ctas_cobrar.Nro_cuota = new.nro_cuota and
+                                Ctas_cobrar.cod_cliente = (select cod_cliente from cobros_clientes where nro_cobro=new.nro_cobro limit 1);
+          end if;
+
+
+
+
+
+ END
+
+/*********************TRIGGERS DE COBROS CLIENTES******************/
+DROP TRIGGER tbi_cobros_clientes
+CREATE TRIGGER tbi_cobros_clientes before update  ON cobros_clientes
+FOR EACH ROW
+ BEGIN
+ DECLARE my_error CONDITION FOR SQLSTATE '45000';
+   if new.fecha_cobro!=old.fecha_cobro then
+       begin
+                SIGNAL SQLSTATE VALUE '45000'
+                SET MESSAGE_TEXT = 'Fecha de cobro no puede ser modificada';
+        end;
+    end if;
+
+ END

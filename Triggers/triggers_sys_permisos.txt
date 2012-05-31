@@ -1,0 +1,38 @@
+drop trigger tau_sys_grupos_usuarios
+CREATE TRIGGER tau_sys_grupos_usuarios after update ON sys_grupos_usuarios
+FOR EACH ROW
+BEGIN
+      if new.confirmado=1 and old.confirmado=0 then
+         insert into sys_permisos(menu,id,tipo,orden,ver,grabar,borrar,incluir, cod_grupo)
+         select menu,id,tipo,orden,1,0,0,0,new.cod_grupo from sys_menus;
+      else
+        if new.confirmado=0 and old.confirmado=1 then
+           delete from sys_permisos where sys_permisos.cod_grupo=old.cod_grupo;
+        end if;
+      end if;
+
+
+END
+
+
+/***************************************************************************/
+drop trigger tad_sys_grupos_usuarios
+CREATE TRIGGER tad_sys_grupos_usuarios after delete ON sys_grupos_usuarios
+FOR EACH ROW
+BEGIN
+     delete from sys_permisos where sys_permisos.cod_grupo=old.cod_grupo;
+END
+
+/***************************************************************************/
+drop trigger tai_sys_grupos_usuarios
+CREATE TRIGGER tai_sys_grupos_usuarios after insert ON sys_grupos_usuarios
+FOR EACH ROW
+BEGIN
+      if new.confirmado=1 then
+         insert into sys_permisos(menu,id,tipo,orden,ver,grabar,borrar,incluir, cod_grupo)
+         select menu,id,tipo,orden,1,0,0,0,new.cod_grupo from sys_menus WHERE activo = 1;
+
+      end if;
+
+
+END

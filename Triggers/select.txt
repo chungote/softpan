@@ -1,0 +1,41 @@
+  SELECT p.nro_pedido as nro_pedido,
+        ifnull(pe.nombre_fantasia,(pe.nombres+' '+pe.apellidos)) as nombre_fantasia,
+         p.fecha_pedido as fecha_pedido,
+         p.fecha_entrega as fecha_entrega,
+                 (case ti.porcentage_iva
+                          when 0.1 then
+                           round(sum(((dt.cantidad*dt.precio)*0.1)+(dt.cantidad*dt.precio)),0)
+                           else
+                            0
+                        end) as Gravadas_10,
+                        (case ti.porcentage_iva
+                           when 0.05 then
+                            round(sum(((dt.cantidad*dt.precio)*0.05)+(dt.cantidad*dt.precio)),0)
+                                else
+                                0
+                        end) as Gravadas_5,
+                        ifnull(case ti.porcentage_iva
+                          when 0 then
+                             ifnull(sum(dt.cantidad*dt.precio),0)
+                          end,0) as Exentas,
+        round(sum(((dt.cantidad*dt.precio)*ti.porcentage_iva)+(dt.cantidad*dt.precio)),0) as total_pedido,
+        p.estado_pedido  as estado_pedido
+    FROM pedido_cliente  p,
+         detalle_pedido_cliente dt,
+         productos ps,
+         tipo_iva ti,
+         personas  pe
+   WHERE p.nro_pedido= dt.nro_pedido and
+  		 dt.cod_producto=ps.cod_producto and
+   		ps.cod_tipo_iva=ti.cod_tipo_iva and
+        p.cliente = pe.cod_persona   and
+        ((f_fecha(p.fecha_pedido) >=:a_fecha_desde  or :a_fecha_desde is null)and
+		  (f_fecha(p.fecha_pedido)<=:a_fecha_hasta or :a_fecha_hasta is null)) and
+		  ((f_fecha(p.fecha_entrega)>=:a_fec_ent_ini or :a_fec_ent_ini is null) and
+        (f_fecha(p.fecha_entrega)<=:a_fec_ent_fin or :a_fec_ent_fin is null)) and
+        (p.nro_pedido=:a_codigo or :a_codigo=0) and
+        (p.estado_pedido=:a_estado or :a_estado=0) and
+        (pe.cod_persona=:a_cliente or :a_cliente=0)
+
+        GROUP BY p.nro_pedido,pe.nombre_fantasia,p.fecha_pedido,p.fecha_entrega, p.estado_pedido,pe.nombres,pe.apellidos,ti.porcentage_iva
+   ORDER BY p.nro_pedido

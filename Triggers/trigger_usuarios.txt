@@ -1,0 +1,13 @@
+CREATE TRIGGER tbi_usuarios before insert ON sys_usuarios
+FOR EACH ROW
+BEGIN
+ declare v_pass char(48);
+
+   select user.password into v_pass
+   from user
+   where user.user=new.usuario;
+
+   set new.contrasenia=v_pass;
+
+
+END

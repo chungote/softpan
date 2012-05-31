@@ -1,0 +1,9 @@
+DELIMITER |
+DROP TRIGGER tbi_marcas 
+CREATE TRIGGER tbi_marcas BEFORE INSERT ON marca
+  FOR EACH ROW
+ BEGIN
+    set new.fecha_alta=current_date();
+ END
+|
+DELIMITER ;
