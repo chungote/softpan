@@ -1,0 +1,11 @@
+CREATE TRIGGER tbi_anula_factura_cliente before insert ON anulacion_factura_cliente
+FOR EACH ROW
+ BEGIN
+ declare v_nro_reg float;
+         select ifnull(max(nro_reg_anula),0)+1 into v_nro_reg from anulacion_factura_cliente;
+         set new.nro_reg_anula=v_nro_reg;
+         set new.fecha_anula=now();
+
+
+
+ END
