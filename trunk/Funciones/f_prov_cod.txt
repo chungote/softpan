@@ -1,0 +1,15 @@
+CREATE FUNCTION f_prov_cod(v_codigo float)
+RETURNS float
+BEGIN
+ declare v_retorno int;
+
+	set v_retorno = (ifnull((select proveedores_productos.cod_proveedor from proveedores_productos, proveedores
+			where proveedores_productos.cod_producto = v_codigo and
+					proveedores_productos.cod_proveedor = proveedores.cod_proveedor and
+					proveedores_productos.principal = 1), 	
+	ifnull((select proveedores_productos.cod_proveedor from proveedores_productos, proveedores
+			where proveedores_productos.cod_producto = v_codigo and
+					proveedores_productos.cod_proveedor = proveedores.cod_proveedor limit 1) , 0) ) );
+
+   return v_retorno;
+END
