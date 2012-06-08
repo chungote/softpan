@@ -4,7 +4,14 @@ FOR EACH ROW
  declare v_nro_reg float;
          select ifnull(max(nro_reg_anula),0)+1 into v_nro_reg from anulacion_factura_cliente;
          set new.nro_reg_anula=v_nro_reg;
-         set new.fecha_anula=now();
+         set new.fecha_anula=now();	
+	
+	 UPDATE solicitud_anulacion_factura
+	 SET anulado=1
+	 Where cod_tipo_comprobante=new.cod_tipo_comprobante 
+	  and solicitud_anulacion_factura.nro_factura=new.nro_factura;
+
+
 
 
 
