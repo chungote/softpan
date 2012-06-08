@@ -1,0 +1,16 @@
+CREATE FUNCTION f_prov_nombre(v_codigo float)
+RETURNS float
+BEGIN
+  declare v_retorno varchar(50);
+
+        set v_retorno = (ifnull((select concat(proveedores.nombre_proveedor,'(',  cast(proveedores.cod_proveedor as char(10)),')') from proveedores_productos, proveedores
+                        where proveedores_productos.cod_producto = v_codigo and
+                                        proveedores_productos.cod_proveedor = proveedores.cod_proveedor and
+                                        proveedores_productos.principal = 1),
+        ifnull((select proveedores.nombre_proveedor from proveedores_productos,proveedores
+                        where proveedores_productos.cod_producto = v_codigo and
+                                        proveedores_productos.cod_proveedor = proveedores.cod_proveedor limit 1) , 0) ) );
+
+
+   return v_retorno;
+END
