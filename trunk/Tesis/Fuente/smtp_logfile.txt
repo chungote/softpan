@@ -1,0 +1,184 @@
+
+of_SendSSLMail Start: 22/06/2012 12:54:05
+
+HELO HUGOMAN
+
+
+of_SendSSLMail Start: 22/06/2012 12:56:36
+
+HELO HUGOMAN
+
+250 mx.google.com at your service
+
+AUTH LOGIN
+
+334 VXNlcm5hbWU6
+
+c29jaWVkYWQucG9ldGFzLmNvbnRlbXBvcmFuZW9zQGdtYWlsLmNvbQ==
+
+334 UGFzc3dvcmQ6
+
+YW5hY29uZGExMjM=
+
+235 2.7.0 Accepted
+
+MAIL FROM:<sociedad.poetas.contemporaneos@gmail.com>
+
+250 2.1.0 OK t11sm49400446anm.5
+
+RCPT TO:<hugogomez2004@yahoo.com>
+
+250 2.1.5 OK t11sm49400446anm.5
+
+DATA
+
+354  Go ahead t11sm49400446anm.5
+
+From: Manuel <sociedad.poetas.contemporaneos@gmail.com>
+To: Hugo Gomez Melgarejo <hugogomez2004@yahoo.com>
+Reply-To: <sociedad.poetas.contemporaneos@gmail.com>
+Subject: Prueba de Envio de Alerta
+Date: Fri, 22 Jun 2012 12:56:38 -0400
+MIME-Version: 1.0
+X-Mailer: TopWiz PowerBuilder SMTP Object
+Return-Path: sociedad.poetas.contemporaneos@gmail.com
+X-Priority: 3
+X-MSMail-Priority: Normal
+Content-Type: text/plain;
+	charset="iso-8859-1";format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hola esto es una prueba, para ver si se aplica alertas de mail
+
+.
+
+250 2.0.0 OK 1340383770 t11sm49400446anm.5
+
+QUIT
+
+221 2.0.0 closing connection t11sm49400446anm.5
+
+of_SendSSLMail End: 22/06/2012 12:56:40
+
+of_SendSSLMail Start: 22/06/2012 13:12:41
+
+HELO HUGOMAN
+
+250 mx.google.com at your service
+
+AUTH LOGIN
+
+334 VXNlcm5hbWU6
+
+c29jaWVkYWQucG9ldGFzLmNvbnRlbXBvcmFuZW9zQGdtYWlsLmNvbQ==
+
+334 UGFzc3dvcmQ6
+
+YW5hY29uZGExMjM=
+
+235 2.7.0 Accepted
+
+MAIL FROM:<sociedad.poetas.contemporaneos@gmail.com>
+
+250 2.1.0 OK t22sm9030227anh.20
+
+RCPT TO:<hugogomez2004@yahoo.com>
+
+250 2.1.5 OK t22sm9030227anh.20
+
+DATA
+
+354  Go ahead t22sm9030227anh.20
+
+From: Manuel <sociedad.poetas.contemporaneos@gmail.com>
+To: Hugo Gomez Melgarejo <hugogomez2004@yahoo.com>
+Reply-To: <sociedad.poetas.contemporaneos@gmail.com>
+Subject: Prueba de Envio de Alerta
+Date: Fri, 22 Jun 2012 13:12:43 -0400
+MIME-Version: 1.0
+X-Mailer: TopWiz PowerBuilder SMTP Object
+Return-Path: sociedad.poetas.contemporaneos@gmail.com
+X-Priority: 3
+X-MSMail-Priority: Normal
+Content-Type: multipart/mixed;
+ boundary="000_570E183A-5A28-49A9-345F-480C000D0400"
+
+This is a multi-part message in MIME format.
+--000_570E183A-5A28-49A9-345F-480C000D0400
+Content-Type: text/plain;
+	charset="iso-8859-1";format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hola esto es una prueba, para ver si se aplica alertas de mail
+
+--000_570E183A-5A28-49A9-345F-480C000D0400
+Content-Type: application/pdf;
+	name="PedidoReposicionNro1728.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="PedidoReposicionNro1728.pdf"
+
+JVBERi0xLjMKJaqrrK0KNCAwIG9iago8PCAvVHlwZSAvSW5mbwovUHJvZHVjZXIg
+KG51bGwpID4+CmVuZG9iago1IDAgb2JqCjw8IC9MZW5ndGggMTYzNCAvRmlsdGVy
+IC9GbGF0ZURlY29kZSAKID4+CnN0cmVhbQp4nJ2aX1PcNhTF3/dT+BE6IPTHkuzH
+zQIpTYZQAp1Omz5sF8IwCdkU6Pfvta0rS45kXXcyYXeZe825x8fSb7375mZ1drP6
+ZyWqB/j/diUaxitra/iprYGfx1Z3D8/31d+rX1dvpuUt00JWlsOjqWTNrLHVsRBM
+Kjnt4V1Pqp4zbvvqzz9W13Vl2oZJqB7K4NjKmlR1XTNpW3K5k4LlGS0n56LqLLn5
+vOLdw27orTj8E5VqWaMEjKMYF6a6ear+PBCH1V/VzS+xT7Xuj+vmVnAoqeZ8StZn
+feqqyXNbKG413dVBCZZnpHQ2tYNN6I3uGlsYQTLRNs6bluuUPaDJwpl24wpl+lMz
+40+6IWsQlJtgiNLMUsi+boGlNghqTg4648UHzvy8vr64XB9Wx9J2cTu4OgmeX384
+vd1sLj5cpryTQjHTGp8Vw+ysdcn6rHN9taRfhFJzVgu6dajG5yspJ7gK0UQpNJNN
+fOnVmh9xPhr38JI0TIuhs58fVo0WXs0ZlqrPG9ZV84ZuQGuW1Q9qsDwjx7tkhcta
+YFPLB5t+tEbVnXjrsyGYVmbOm3RD1pyuXCj64qOsBPmKXu/k+DSl9SRWK2XgL4Gy
+6KJUSZNka8PFuVasbuYDlGzIJ6grXzAyZwuWKtTi85MWk7jgFCyKeholflTrL+nL
+zO+vhjViARtMGkpw0OhgrS3DAbEctbjyjJYJBpiWwx+RgzNyBgNwRDIHTBoKIECc
+EUGA6qCT4soXg4Bp4ITpGkGgVjMggPPSSWDaUUQB4tQeBeim2iCWRBSIvFn/cbtZ
+X5dQgDE2RwM+MVQciBvKPED1D3mA7LeTgzGj84BlmtfxRSgiHNjdvW5ngAAdIBPB
+pKGMBFQPEAnIHg9yXHkJCRrOzMQnWeABHw4yEEw6ykRAnNUTAbUe9WCeFhCBBSKY
+rFuzQODzQCaCSUcJCcgzD0hAjpuNVvYFSMDhF/3aEWQJ2FLYAhM0dX9wOhPEDSUm
+6DJiGjITEMtRiysnMoGFZUkiT84xgRuRzgRxQ4EJiDMiE1AddFJc+XImsLC8C0QC
+O4sEbtwFSDDpKCIBcWiPBHRPbZBKKhIE1rw/+219ensd3B44vz77uAle/z4+ffd+
+lgswNWQuiBrKXEA1EbmAbLqTg1Gjc0ELlU18IUpNv0+ABtCxIG4oYwHVAsQCssWD
+HFdevFNg4I2vjH3SpRsFPh10MIg7ymBAnNaDAbUe9WCgloNBcIXOcwEGgs4FcUeJ
+C8gjD1xAzpuNVvf/wQVhliBKsnSvwIIY2SzggrihxAWm259qMhcQy1GLKydygYGy
+xlFlPccFbkQ6F8QNBS4gzohcQHXQSXHly7nAKNYad49JWpX8TMVvlMO8C8Bg0lEE
+A+LUHgzoptogllQwCL1Zv71dz273GAbydh81lLd7qjW43ZOtdHIwQQs/FoguL8UX
+fCyABtC3+7ihvN1TLcDtnmzxIMeVEz8YiIwyxQ8GfDzo+33cUd7vieP6/Z5aj3ow
+Ucv3+/DCm9/wMRL0DT/uKG345JmHDZ+cOBst20s+GzCs7eAxTBM/Urntvv+SgYFN
+2XQngg9ZkrJ/HF06OVeVqOO/JGBh6ORbDccQ7pbD1fpyvLpPb99vzsaXInxnlLxl
+CmpsC8srjNtaWyml+oGPheyvkIkePtHjmhUszq0d5Hw6+OnTYXDPdvu8HV99DZ5/
+f97f/bvbPe6/jb+7D56/e/y6f3jePu1fxt/d3Y/Po88YwEUuYMl88M/QaKkGMOnm
+M/1c3csUVSXK80xl+wXGgiPjQgPHFoCKKSQQ/eGo5YMUV5yR0p2PSRA7Fquhz0By
+h5Nx8Xr/9FLyqUu60H50z1pZp9INedaC0MJaRR3ewtHVAmudGFeeEYMWwcZgdGTR
+Zn/3+LAveYTfWnAjj7iVNSnTUcIt6tiIW2RXnRxXXsItIWFD4nGYTu9fds+P34cr
+dt4u/zULjIgjsKxb6YYigZHdcgRGd9fJwVQl5YzYBbhRx2Zttt9eH++2d0Wn3Pcr
+3NwevPJOJRuK4EWe3IEX3dlBjisvgZeWcB5k0im3cczb5b9ygTlBFMv6lekoohjV
+AEQxcj3qwWil9Xi4qA3jjYoc+/i6330pBqs7kUFOkMbywUo2zMDYsqAoeO/f3UhZ
+FMQgWGk5400XzVS/HI42XW1fn8Ol6j8HTYVGCmVuZHN0cmVhbQplbmRvYmoKNiAw
+IG9iago8PCAvVHlwZSAvUGFnZQovUGFyZW50IDEgMCBSCi9NZWRpYUJveCBbIDAg
+MCA2MTIgNzkyIF0KL1Jlc291cmNlcyAzIDAgUgovQ29udGVudHMgNSAwIFIKPj4K
+ZW5kb2JqCjcgMCBvYmoKPDwgL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9O
+YW1lIC9GMwovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkCi9FbmNvZGluZyAvV2lu
+QW5zaUVuY29kaW5nID4+CmVuZG9iago4IDAgb2JqCjw8IC9UeXBlIC9Gb250Ci9T
+dWJ0eXBlIC9UeXBlMQovTmFtZSAvRjEKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0Vu
+Y29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgPj4KZW5kb2JqCjEgMCBvYmoKPDwgL1R5
+cGUgL1BhZ2VzCi9Db3VudCAxCi9LaWRzIFs2IDAgUiBdID4+CmVuZG9iagoyIDAg
+b2JqCjw8IC9UeXBlIC9DYXRhbG9nCi9QYWdlcyAxIDAgUgogPj4KZW5kb2JqCjMg
+MCBvYmoKPDwgCi9Gb250IDw8IC9GMyA3IDAgUiAvRjEgOCAwIFIgPj4gCi9Qcm9j
+U2V0IFsgL1BERiAvSW1hZ2VDIC9UZXh0IF0gPj4gCmVuZG9iagp4cmVmCjAgOQow
+MDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDIwOTggMDAwMDAgbiAKMDAwMDAwMjE1
+NiAwMDAwMCBuIAowMDAwMDAyMjA2IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAg
+biAKMDAwMDAwMDA2NSAwMDAwMCBuIAowMDAwMDAxNzczIDAwMDAwIG4gCjAwMDAw
+MDE4NzkgMDAwMDAgbiAKMDAwMDAwMTk5MSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9T
+aXplIDkKL1Jvb3QgMiAwIFIKL0luZm8gNCAwIFIKPj4Kc3RhcnR4cmVmCjIyOTQK
+JSVFT0YK
+--000_570E183A-5A28-49A9-345F-480C000D0400--
+.
+
+250 2.0.0 OK 1340384736 t22sm9030227anh.20
+
+QUIT
+
+221 2.0.0 closing connection t22sm9030227anh.20
+
+of_SendSSLMail End: 22/06/2012 13:12:47
