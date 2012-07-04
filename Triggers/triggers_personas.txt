@@ -1,27 +1,31 @@
 /*after insert*/
+
+DROP TRIGGER tau_personas
 CREATE TRIGGER tai_personas after insert ON personas
 FOR EACH ROW
 BEGIN
- if new.es_proveedor>0 then
+ if new.es_proveedor>0 or new.es_cliente>0  then
     delete from proveedor_condiciones where cod_persona=new.cod_persona;
  end if;
 END
 
 /*after update*/
+DROP TRIGGER tau_personas
 CREATE TRIGGER tau_personas after update ON personas
 FOR EACH ROW
 BEGIN
- if old.es_proveedor>0 then
+ if old.es_proveedor>0  or old.es_cliente>0 then
     delete from proveedor_condiciones where cod_persona=old.cod_persona;
  end if;
 END
 
 /*after delete*/
 
+DROP TRIGGER tad_personas
 CREATE TRIGGER tad_personas after delete ON personas
 FOR EACH ROW
 BEGIN
- if old.es_proveedor>0 then
+ if old.es_proveedor>0 or old.es_cliente then
     delete from proveedor_condiciones where cod_persona=old.cod_persona;
  end if;
 END

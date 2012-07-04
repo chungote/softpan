@@ -160,14 +160,16 @@ FOR EACH ROW
                    v_cant_cuotas_iregular
             from plazos_ventas where plazos_ventas.cod_plazo= new.cod_condicion ;
 
-            /* if exists(select * from ctas_cobrar where cod_cliente=new.cod_persona and nro_factura=new.nro_factura and cod_tipo_comprobante=new.cod_tipo_comprobante and nro_cuota=new.cant_cuotas) then
+            if exists(select * from ctas_cobrar where cod_cliente=new.cod_persona and nro_factura=new.nro_factura and cod_tipo_comprobante=new.cod_tipo_comprobante and nro_cuota=new.cant_cuotas) then
               begin
                 SIGNAL SQLSTATE VALUE '45000'
                 SET MESSAGE_TEXT = 'Ya se registraron ctas a cobrar con ese nro de documento, proveedor y tipo de comprobante';
               end;
-            end if;*/
+            end if;
+
             /* Eliminamos las ctas a cobrar a fin de reingresarlas nuevamente*/
-            delete from ctas_cobrar where nro_factura=old.nro_factura and cod_tipo_comprobante= old.cod_tipo_comprobante and cod_cliente=old.cod_persona;
+		
+        	delete from ctas_cobrar where nro_factura=old.nro_factura and cod_tipo_comprobante= old.cod_tipo_comprobante and cod_cliente=old.cod_persona;
 
              if (Select ifnull(Tipo_opcion, 1) FROM tipo_comprobante where cod_tipo_comprobante = new.cod_tipo_comprobante)=0 then /*contado*/
                    set v_cant_cuotas = 1;
@@ -234,6 +236,8 @@ FOR EACH ROW
 
 
 /****************Borrado de la Factura Cliente Cabecera********************/
+/****Observacion: No usar este trigger*****/
+Drop TRIGGER tad_factura_cliente 
 CREATE TRIGGER tad_factura_cliente after delete ON factura_cliente
 FOR EACH ROW
  BEGIN
@@ -253,18 +257,23 @@ FOR EACH ROW
  END
 
 /*******before delete, es decir antes del borrado de la venta de la cabecera**********/
-DROP TRIGGER tbd_pedido_cliente
-CREATE TRIGGER tbd_pedido_cliente before delete ON factura_cliente
+DROP TRIGGER tbd_factura_cliente
+CREATE TRIGGER tbd_factura_cliente before delete ON factura_cliente
 FOR EACH ROW
  BEGIN
         DECLARE v_nro_registro  float;
         DECLARE my_error CONDITION FOR SQLSTATE '45000';
-        IF (SELECT Sum(Ctas_cobrar.valor_cobrado) FROM  Ctas_cobrar where cod_tipo_comprobante = old.cod_tipo_comprobante  AND nro_factura = old.Nro_factura) > 0 then
+        IF (SELECT Sum(Ctas_cobrar.cobrado) FROM  Ctas_cobrar where cod_tipo_comprobante = old.cod_tipo_comprobante  AND nro_factura = old.Nro_factura  ) > 0 then
                 begin
                 SIGNAL SQLSTATE VALUE '45000'
                         SET MESSAGE_TEXT = '¡Esta venta ya tuvo cobros y no puede borrarse, para poder borrar, borre primero los cobros!';
                 end;
         END IF;
+
+        update pedido_cliente
+        set estado_pedido=1,
+            nro_factura=0
+        where nro_pedido=old.nro_pedido;
 
        IF EXISTS(SELECT * FROM detalle_factura_cliente where nro_registro=old.nro_registro) then
          DELETE  FROM detalle_factura_cliente  where nro_registro = old.nro_registro;
@@ -274,8 +283,7 @@ FOR EACH ROW
         DELETE Ctas_cobrar FROM  Ctas_cobrar where cod_tipo_comprobante = old.cod_tipo_comprobante  AND nro_factura = old.Nro_factura;
       END IF;
 
- END
-
+ END 
 /***************************************************************************************************************/
 drop trigger tbi_factura_cliente
 drop trigger tbi_factura_cliente
