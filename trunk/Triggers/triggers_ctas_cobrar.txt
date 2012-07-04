@@ -1,4 +1,4 @@
-drop trigger tbd_ctas_cobrar 
+Drop TRIGGER tbd_ctas_cobrar
 CREATE TRIGGER tbd_ctas_cobrar after delete  ON ctas_cobrar
 FOR EACH ROW
  BEGIN
@@ -10,11 +10,28 @@ FOR EACH ROW
                 SET MESSAGE_TEXT = 'Esta venta ya tuvo cobros y no puede ser borrada ni alterada';
     end;
    end if;
-   if(select sum(old.valor_cobrado) from par_sys)<> 0 then
+  /* if(select sum(old.valor_cobrado) from par_sys)<> 0 then
      begin
                 SIGNAL SQLSTATE VALUE '45000'
                 SET MESSAGE_TEXT = 'Esta venta ya tuvo cobros, para borrar, elimine primero los cobros del cliente';
     end;
-   end if;
+   end if;*/
+
+ end
+
+
+/**no usar este triger por ahora**/
+drop trigger tau_ctas_cobrar
+CREATE TRIGGER tau_ctas_cobrar after update ON ctas_cobrar
+FOR EACH ROW
+ BEGIN
+ DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+   if new.cobrado=1 then
+    begin
+        Update factura_cliente set estado_factura=2 where nro_factura=new.nro_factura and cod_tipo_comprobante=new.cod_tipo_comprobante and cod_persona=new.cod_cliente;
+    end;
+     end if;
+
 
  end
